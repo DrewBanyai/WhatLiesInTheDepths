@@ -1,0 +1,413 @@
+What Lies In The Depths Source Code License
+Version 1.0
+
+Copyright (c) 2026 Drew Banyai. All rights reserved.
+
+PLEASE READ FIRST
+This is a custom, source-available license. It is NOT the MIT License, the
+Apache License 2.0, the BSD License, or any other standard license, and it has
+not been approved by the Open Source Initiative or certified by the Free
+Software Foundation. It differs from those licenses in two ways that matter:
+
+  (1) it requires visible attribution inside any distributed product that
+      incorporates the code (Section 4), and
+  (2) it grants no rights whatsoever in the project's artwork, audio, story,
+      characters, branding, or other creative assets (Section 3).
+
+Everything else about it is intended to be permissive: commercial use is
+allowed, modification is allowed, and you are never required to publish your
+own source code.
+
+================================================================================
+0. DEFINITIONS
+================================================================================
+
+"Licensor" means Drew Banyai, the copyright holder of the Covered Code and of
+the Creative Assets.
+
+"The Project" means the software project titled "What Lies In The Depths",
+including the repository in which this License file is distributed.
+
+"This License" means this document, Version 1.0.
+
+"You" (or "Your") means any individual or legal entity exercising rights
+granted by this License.
+
+"Covered Code" means only those files in the Project that are owned by the
+Licensor and that fall within Section 1.1.
+
+"Creative Assets" means the materials described in Section 3.1, whether or not
+they are stored in the same repository, directory, archive, or package as the
+Covered Code.
+
+"Derivative Work" means any work based on, adapted from, translated from, or
+otherwise derived from the Covered Code, including modified versions of it and
+any work into which it is incorporated.
+
+"Product" means any software product, application, game, library, service,
+firmware, or other work that You Distribute and that incorporates the Covered
+Code or any Derivative Work of it, in source form, compiled form, or any other
+form.
+
+"Distribute" means to make available to one or more third parties by any means,
+including sale, licensing, gift, download, physical media, preinstallation,
+app-store or digital-storefront publication, or bundling with other software.
+Running software solely for Your own internal purposes, or solely on Your own
+computers, is not Distribution.
+
+================================================================================
+1. SCOPE: WHAT THIS LICENSE COVERS
+================================================================================
+
+1.1 Covered Code. Subject to Section 1.2, Covered Code means files in the
+    Project that are of the following kinds:
+
+    (a) source code written in a programming language, including (by way of
+        example, not limitation) files with the extensions .cs, .c, .cc, .cpp,
+        .h, .hpp, .js, .ts, .py, .java, .rs, .go, .lua, .sh, .ps1;
+
+    (b) shader, compute-shader, and material-program source, including files
+        with the extensions .shader, .compute, .cginc, .hlsl, .glsl, .shadergraph
+        when expressed as program source;
+
+    (c) build, packaging, tooling, editor-extension, test, and configuration
+        files, including assembly definition files (.asmdef, .asmref), package
+        manifests, project and solution configuration, continuous-integration
+        configuration, and dot-files such as .gitignore;
+
+    (d) documentation that describes the operation of the files above, where
+        that documentation is written by the Licensor and does not itself
+        contain Creative Assets; and
+
+    (e) Unity sidecar metadata files (.meta) that accompany a file described in
+        (a) through (d).
+
+1.2 Files that are NOT Covered Code. The following are not Covered Code, and no
+    rights in them are granted by this License:
+
+    (a) anything within the definition of Creative Assets in Section 3.1;
+
+    (b) serialized engine data files that embody game, level, encounter,
+        narrative, visual, or animation design rather than program logic,
+        including (by way of example, not limitation) Unity scene files
+        (.unity), prefabs (.prefab), serialized asset files (.asset), animation
+        clips (.anim), animator controllers (.controller), timeline and
+        playable assets, and their accompanying .meta files; and
+
+    (c) any file owned by a third party rather than by the Licensor (see
+        Section 6).
+
+1.3 Rule of construction. If it is unclear whether a particular file is Covered
+    Code, it is NOT Covered Code for the purposes of this License, and You must
+    obtain the Licensor's written permission before using it. The presence of a
+    file in the same repository, directory, archive, or package as Covered Code
+    does not place that file under this License.
+
+================================================================================
+2. GRANT OF RIGHTS IN THE COVERED CODE
+================================================================================
+
+2.1 Grant. Subject to the terms and conditions of this License, the Licensor
+    grants You a worldwide, royalty-free, non-exclusive, perpetual license to:
+
+    (a) use, run, and execute the Covered Code for any purpose;
+    (b) reproduce and copy the Covered Code, in whole or in part;
+    (c) fork the repository and create and maintain copies of it;
+    (d) modify the Covered Code and prepare Derivative Works of it;
+    (e) merge, combine, and incorporate the Covered Code and Derivative Works
+        of it into other software, including software that is entirely
+        unrelated to the Project;
+    (f) publicly display and publicly perform the Covered Code and Derivative
+        Works of it; and
+    (g) Distribute the Covered Code and Derivative Works of it, in source form,
+        compiled form, or any other form.
+
+2.2 Commercial use. The rights granted in Section 2.1 may be exercised for
+    commercial purposes. You may sell, license for a fee, monetize, and
+    otherwise commercially exploit software that incorporates the Covered Code
+    or Derivative Works of it, without any payment or royalty to the Licensor.
+
+2.3 Sublicensing. You may sublicense the rights granted in Section 2.1 as part
+    of Distributing a Product or a Derivative Work, and You may license Your own
+    contributions and Your own Product under terms of Your choosing, including
+    proprietary terms. However, no sublicense may relieve any recipient of the
+    attribution obligations in Section 4 with respect to the Covered Code, and
+    no sublicense may purport to grant any right in the Creative Assets.
+
+2.4 Independent reimplementation. Reading the Covered Code and independently
+    writing your own implementation of the ideas, algorithms, techniques, or
+    system designs it expresses, without copying its expression, is not a use of
+    the Covered Code and triggers no obligation under this License.
+
+2.5 Reservation. All rights not expressly granted in this License are reserved
+    by the Licensor.
+
+================================================================================
+3. CREATIVE ASSETS ARE NOT LICENSED
+================================================================================
+
+3.1 Definition. "Creative Assets" means all materials of the Project other than
+    Covered Code, including without limitation:
+
+    - artwork, illustrations, concept art, and images;
+    - sprites, sprite sheets, tilesets, textures, and materials as artistic works;
+    - 3D models, meshes, rigs, and their associated art data;
+    - animations and motion data;
+    - music and musical compositions;
+    - sound effects and audio design;
+    - voice and other audio recordings, and their performances;
+    - the story, plot, narrative structure, and script;
+    - dialogue and written narrative text;
+    - lore, worldbuilding, setting, and mythology;
+    - characters, character names, and character designs;
+    - logos, icons, key art, and marketing materials;
+    - branding, trade dress, visual identity, and the look and feel of the
+      Project's presentation;
+    - the title and name "What Lies In The Depths"; and
+    - any other creative or intellectual property of the Project that is not
+      Covered Code.
+
+3.2 No grant. NO LICENSE OF ANY KIND IS GRANTED IN THE CREATIVE ASSETS BY THIS
+    LICENSE. The Licensor retains all copyright, trademark, moral, and other
+    rights in the Creative Assets. You may not copy, reproduce, modify, adapt,
+    publicly display, publicly perform, or Distribute the Creative Assets, or
+    prepare derivative works of them, except as permitted by applicable law
+    without a license, or under a separate written agreement signed by the
+    Licensor.
+
+3.3 Co-location is not a grant. The fact that Creative Assets are stored in the
+    same repository, directory, archive, package, commit, or distribution as the
+    Covered Code does not place them under this License, does not grant any
+    right in them, and does not waive any of the Licensor's rights in them.
+
+3.4 Forks and mirrors. You may fork or mirror the repository as a whole for the
+    purpose of exercising the rights granted in Section 2 with respect to the
+    Covered Code. This permission is limited to reproducing the repository as it
+    was received, does not permit the separate exploitation, extraction,
+    modification, or redistribution of Creative Assets, and does not permit the
+    inclusion of Creative Assets in any Product. If the Licensor requests in
+    writing that You remove Creative Assets from a public fork or mirror, You
+    must do so within thirty (30) days.
+
+3.5 Separate licensing. The Licensor may license Creative Assets separately, on
+    written terms, at the Licensor's sole discretion. Nothing in this License
+    obliges the Licensor to do so.
+
+================================================================================
+4. ATTRIBUTION REQUIREMENTS
+================================================================================
+
+4.1 Attribution in source form. If You Distribute the Covered Code or a
+    Derivative Work in source form, You must retain, in that source
+    distribution, a complete and unmodified copy of this License and the
+    copyright notice at the top of it.
+
+4.2 Attribution in a Product. This is the principal condition of this License.
+    If You Distribute a Product, You must display the following attribution
+    notice in or with that Product:
+
+        What Lies In The Depths - Code by Drew Banyai
+
+    The notice must appear verbatim, except that You may render the separator as
+    an em dash ("What Lies In The Depths — Code by Drew Banyai") and You may add
+    surrounding explanatory text such as "This product includes source code from
+    the following projects:". You may not alter the project title or the
+    author's name, and You may not present the notice in a way that is false or
+    misleading.
+
+    In addition to the notice, You must include a complete copy of this License,
+    or a functioning link to it, in the Product's third-party notices,
+    licenses screen, legal section, or accompanying documentation.
+
+4.3 Where the notice must appear. The notice required by Section 4.2 must appear
+    in at least one of the following locations within the Product:
+
+    (a) the credits;
+    (b) an acknowledgements screen or section;
+    (c) an "About" screen, box, or section;
+    (d) a "Licenses", "Legal", "Third-Party Notices", or "Open Source Notices"
+        screen or section reachable from the Product's menus or settings; or
+    (e) documentation that is distributed together with the Product, where the
+        Product has no user interface capable of displaying the notice.
+
+4.4 Minimum standard of display. In order to satisfy Section 4.2, the notice
+    must meet all of the following minimum requirements. These requirements
+    exist so that "attribution" has a definite meaning rather than resting on
+    judgment:
+
+    (a) it must be human-readable text, legible at the Product's normal display
+        settings, and in the same script and language as the Product's other
+        credits or legal notices;
+    (b) it must be at least as prominent as the attribution the Product gives to
+        any other third-party software component, and no less prominent than the
+        smallest credit the Product gives to any individual contributor;
+    (c) it must be reachable by an ordinary user of the Product through no more
+        than three ordinary interactions (for example: open menu, open settings,
+        open credits) from the Product's main menu, title screen, or equivalent
+        entry point;
+    (d) it must not be conditioned on completing the Product, achieving any
+        result within it, making a purchase, creating an account, or any other
+        achievement or transaction;
+    (e) if the notice appears in scrolling or timed credits, the credits must be
+        viewable on demand from a menu, and the notice must remain on screen
+        long enough to be read; and
+    (f) it must not be hidden, obscured, placed in a file that is not presented
+        to the user, encrypted, or removed by any Product update.
+
+4.5 When attribution is required, and when it is not. The obligation in
+    Section 4.2 arises only when the Covered Code, or a Derivative Work of it,
+    is actually incorporated into a Product that You Distribute, in any form and
+    in whole or in part. It does not arise from:
+
+    (a) running, studying, or modifying the Covered Code without Distributing a
+        Product;
+    (b) internal use within Your organization where no Distribution occurs;
+    (c) forking or mirroring the repository (Section 4.1 applies instead); or
+    (d) independent reimplementation as described in Section 2.4.
+
+4.6 Modified versions. Modifying the Covered Code does not remove the obligation
+    in Section 4.2; a Product that incorporates a modified version of the
+    Covered Code must carry the notice exactly as a Product incorporating the
+    unmodified version must. You may, and are encouraged to, state that the code
+    has been modified. You must not remove or alter the copyright notice or this
+    License text where Section 4.1 requires them to be retained.
+
+4.7 No endorsement. The attribution notice is a statement of origin only. You
+    must not use it, or any other statement, to suggest that the Licensor
+    endorses, sponsors, approves, is affiliated with, or is responsible for Your
+    Product or Your modifications.
+
+================================================================================
+5. TRADEMARKS AND BRANDING
+================================================================================
+
+5.1 No trademark license. This License grants no right to use any trade name,
+    trademark, service mark, logo, or product name of the Licensor or of the
+    Project, including the name "What Lies In The Depths", for any purpose other
+    than the attribution required or permitted by Section 4.
+
+5.2 Attribution use permitted. Reproducing the notice in Section 4.2 as plain
+    text, for the purpose of giving the attribution this License requires, is
+    permitted and does not infringe the Licensor's rights in that name.
+
+5.3 No confusing use. You must not name, title, brand, or market Your Product in
+    a way that is likely to cause confusion with the Project, or that implies
+    Your Product is the Project, a sequel to it, or an official version of it.
+
+================================================================================
+6. THIRD-PARTY MATERIALS
+================================================================================
+
+6.1 Not covered. The Project may include, reference, depend upon, or be built
+    with software, packages, engines, plugins, fonts, or assets owned by third
+    parties, including the Unity engine and packages obtained through it. Those
+    materials are not Covered Code and are not licensed by this License.
+
+6.2 Your responsibility. Your use of any third-party material is governed solely
+    by the license that accompanies it. You are responsible for identifying and
+    complying with those licenses, including any attribution or notice
+    requirements they impose. The Licensor makes no representation about the
+    licensing status of any third-party material.
+
+================================================================================
+7. NO COPYLEFT; YOUR CODE REMAINS YOURS
+================================================================================
+
+7.1 No source disclosure. This License does not require You to publish,
+    disclose, or make available the source code of Your Product, of Your
+    modifications to the Covered Code, or of anything else. You may keep all of
+    it confidential and proprietary.
+
+7.2 No license-back. This License does not require You to license Your own
+    code, assets, or Product under this License or any particular license, and
+    it imposes no terms on any part of Your Product other than the Covered Code
+    itself and the attribution obligations of Section 4.
+
+7.3 No other restrictions. The Licensor imposes no restriction on the subject
+    matter, genre, platform, price, distribution channel, or business model of
+    Your Product.
+
+================================================================================
+8. TERMINATION
+================================================================================
+
+8.1 Termination on breach. If You materially breach this License, the rights
+    granted to You in Section 2 terminate automatically.
+
+8.2 Cure and reinstatement. If Your breach is curable and You cure it within
+    thirty (30) days after You become aware of it, whether on Your own or after
+    notice from the Licensor, Your rights are reinstated as of the date the
+    breach was cured, provided this is the first time You have been notified of
+    a breach of this License by the Licensor. Otherwise, the Licensor may
+    reinstate Your rights only in writing.
+
+8.3 Downstream protection. Termination of Your rights does not terminate the
+    rights of any person who received the Covered Code, a Derivative Work, or a
+    Product from You while You were in compliance, provided that person remains
+    in compliance.
+
+8.4 Survival. Sections 0, 3, 5, 6, 7.1, 9, 10, and 11 survive termination.
+
+8.5 Other remedies. Termination is in addition to, and not instead of, any other
+    remedy available to the Licensor at law or in equity, including remedies for
+    copyright infringement arising from use of the Covered Code outside the
+    scope of this License or from any use of the Creative Assets.
+
+================================================================================
+9. DISCLAIMER OF WARRANTY
+================================================================================
+
+THE COVERED CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE, TITLE, AND NONINFRINGEMENT. THE LICENSOR DOES NOT
+WARRANT THAT THE COVERED CODE IS ERROR-FREE, SECURE, OR SUITABLE FOR ANY
+PURPOSE. YOU BEAR THE ENTIRE RISK OF USING IT, AND THE ENTIRE RISK OF
+DETERMINING ITS SUITABILITY FOR YOUR PURPOSES.
+
+================================================================================
+10. LIMITATION OF LIABILITY
+================================================================================
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL THE
+LICENSOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT (INCLUDING NEGLIGENCE), OR OTHERWISE, ARISING FROM, OUT
+OF, OR IN CONNECTION WITH THE COVERED CODE OR THE USE OR OTHER DEALINGS IN THE
+COVERED CODE, INCLUDING ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES, LOSS OF PROFITS, LOSS OF DATA, OR BUSINESS INTERRUPTION,
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+Some jurisdictions do not allow the exclusion of certain warranties or the
+limitation of certain liabilities. To the extent such an exclusion or limitation
+is unenforceable, it shall be limited to the minimum extent necessary to make it
+enforceable, and the remainder of Sections 9 and 10 shall remain in effect.
+
+================================================================================
+11. MISCELLANEOUS
+================================================================================
+
+11.1 Severability. If any provision of this License is held unenforceable, that
+     provision shall be modified to the minimum extent necessary to make it
+     enforceable, or if it cannot be so modified, severed, and the remaining
+     provisions shall remain in full force and effect.
+
+11.2 No waiver. The Licensor's failure to enforce any provision is not a waiver
+     of that provision or of any other.
+
+11.3 Entire terms. This License is the complete statement of the rights granted
+     in the Covered Code, and supersedes any prior or contemporaneous
+     understanding on that subject. It may be supplemented only by a separate
+     written agreement signed by the Licensor.
+
+11.4 Versions. This License applies as Version 1.0. The Licensor may publish
+     revised versions for future releases of the Project. A version once applied
+     to a release continues to apply to that release; You may continue to rely
+     on it for the code You received under it.
+
+11.5 Acceptance. Exercising any right granted in Section 2 constitutes
+     acceptance of this License. If You do not accept it, You have no rights in
+     the Covered Code.
+
+11.6 Contact. For permission beyond the scope of this License, including any use
+     of the Creative Assets, contact the Licensor.
+
+END OF LICENSE
