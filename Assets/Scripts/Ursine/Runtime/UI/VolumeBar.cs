@@ -21,15 +21,20 @@ namespace Ursine.UI
 
         public event Action<float> Changed;
 
-        float _v = 0.7f;
-        public float Value => _v;
+        /// <summary>Where it starts. Serialized, so a builder that draws the fill and the knob
+        /// at a value does not also have to hope the component agrees with it.</summary>
+        [Range(0f, 1f)] public float level = 0.7f;
+
+        public float Value => level;
+
+        void Awake() => Set(level, false);
 
         public void Set(float v, bool notify)
         {
-            _v = Mathf.Clamp01(v);
-            if (fill != null) fill.sizeDelta = new Vector2(width * _v, fill.sizeDelta.y);
-            if (knob != null) knob.anchoredPosition = new Vector2(width * _v, knob.anchoredPosition.y);
-            if (notify) Changed?.Invoke(_v);
+            level = Mathf.Clamp01(v);
+            if (fill != null) fill.sizeDelta = new Vector2(width * level, fill.sizeDelta.y);
+            if (knob != null) knob.anchoredPosition = new Vector2(width * level, knob.anchoredPosition.y);
+            if (notify) Changed?.Invoke(level);
         }
 
         public void OnPointerDown(PointerEventData e) => Drag(e);
