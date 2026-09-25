@@ -17,7 +17,7 @@ deeper, and every veil is closer to the thing waiting at the bottom: a nightmare
 been growing in the dark while you were busy dreaming, and that you will have to face.
 
 The descent is an incremental game. You gather what the dream offers (reverie, silt,
-moonsilver, whispers), bind wisps to the work of gathering it, and put your own attention
+moonsilver, whispers), bind Oneiri to the work of gathering it, and put your own attention
 wherever it counts most. Along the way you:
 
 - **Focus** your effort on tasks that turn one resource into another.
@@ -49,7 +49,7 @@ It is meant to be lifted out and dropped into the next incremental game as it st
 installs at startup.
 
 **What Lies In The Depths** (`Assets/Scripts/WhatLiesInTheDepths`, with its editor code in
-`Assets/Scripts/Editor`) is everything specific to this game: its colour tokens and
+`Assets/Scripts/Editor`) is everything specific to this game: its color tokens and
 palettes, its screens and their views, its data and placeholder content, and the builders
 that turn the interface specification into prefabs. Where something could be written
 generally, it went into Ursine and the game supplies only the particulars: the game's
@@ -57,7 +57,7 @@ generally, it went into Ursine and the game supplies only the particulars: the g
 type roles, and the game's road is a path Ursine's line renderer knows how to draw.
 
 The rule of thumb for a new file: if another incremental game could use it unchanged, it
-belongs in Ursine; if it needs to know what a veil, a revelation or a wisp is, it belongs
+belongs in Ursine; if it needs to know what a veil, a revelation or an Oneiri is, it belongs
 to the game.
 
 ## License
