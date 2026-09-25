@@ -78,6 +78,7 @@ namespace WhatLiesInTheDepths.UI
             Build();
             if (fieldHover != null) fieldHover.Hovered += OnFieldHover;
             if (readoutHover != null) readoutHover.Hovered += OnReadoutHover;
+            HookKept();
             // Realizing is a single click, no confirmation. The sigil leaves the field (a
             // greater one is taken into the mass) and the field is drawn again without it.
             if (realize != null)
@@ -199,7 +200,7 @@ namespace WhatLiesInTheDepths.UI
                 if (v.Def.state == was) continue;
                 v.Paint();
                 if (v.group != null)
-                    v.group.alpha = (_open == null || _open == v ? 1f : 0.18f) * v.BaseAlpha;
+                    v.group.alpha = ((_open == null && _keptOpen < 0) || _open == v ? 1f : 0.18f) * v.BaseAlpha;
             }
         }
 
@@ -239,7 +240,7 @@ namespace WhatLiesInTheDepths.UI
             if (entering)
             {
                 _closeAt = -1f;                   // reaching a sigil in time keeps or swaps it
-                if (_open != v) Open(v);
+                if (_open != v) { if (_keptOpen >= 0) Close(); Open(v); }
             }
             else if (_touchedReadout && _open == v)
             {
@@ -272,9 +273,35 @@ namespace WhatLiesInTheDepths.UI
         {
             _open = v;
             var d = v.Def;
-            Art.Apply(markGlyph, Art.Sigil(string.IsNullOrEmpty(d.g) ? d.k : d.g));
+            Purchasable(true);
             if (readout != null) readout.SetActive(true);
+            FillBody(d);
+            if (costs != null && costPillPrefab != null)
+            {
+                foreach (Transform c in costs) Destroy(c.gameObject);
+                _pills.Clear();
+                foreach (var a in d.cost)
+                {
+                    var pill = Instantiate(costPillPrefab, costs);
+                    pill.ShowGlyph(false);   // the readout names a cost in words alone
+                    _pills.Add(pill);
+                }
+            }
+            PaintCost(d);
 
+            // The field yields: mass to .25, unhovered sigils to .18, and the caption goes.
+            if (massGroup != null) massGroup.alpha = 0.25f;
+            _captionWant = 0f;
+            foreach (var s in _sigils)
+                if (s.group != null) s.group.alpha = (s == v ? 1f : 0.18f) * s.BaseAlpha;
+        }
+
+        /// <summary>The part of the readout that says what a realization is: its mark, kind,
+        /// name, text and effects, gold for a greater one. Shared by a sigil still in the
+        /// field and a greater one already kept in the mass.</summary>
+        void FillBody(RevelationDef d)
+        {
+            Art.Apply(markGlyph, Art.Sigil(string.IsNullOrEmpty(d.g) ? d.k : d.g));
             if (kindCaption != null)
             {
                 kindCaption.text = (d.kind ?? string.Empty).ToUpperInvariant();
@@ -310,25 +337,6 @@ namespace WhatLiesInTheDepths.UI
                     }
                 }
             }
-
-            if (costs != null && costPillPrefab != null)
-            {
-                foreach (Transform c in costs) Destroy(c.gameObject);
-                _pills.Clear();
-                foreach (var a in d.cost)
-                {
-                    var pill = Instantiate(costPillPrefab, costs);
-                    pill.ShowGlyph(false);   // the readout names a cost in words alone
-                    _pills.Add(pill);
-                }
-            }
-            PaintCost(d);
-
-            // The field yields: mass to .25, unhovered sigils to .18, and the caption goes.
-            if (massGroup != null) massGroup.alpha = 0.25f;
-            _captionWant = 0f;
-            foreach (var s in _sigils)
-                if (s.group != null) s.group.alpha = (s == v ? 1f : 0.18f) * s.BaseAlpha;
         }
 
         readonly List<CostPill> _pills = new List<CostPill>();
@@ -393,6 +401,8 @@ namespace WhatLiesInTheDepths.UI
         void Close()
         {
             _open = null;
+            _keptOpen = -1;
+            Purchasable(true);
             _laidOut = null;
             _touchedReadout = false;
             _closeAt = -1f;
@@ -403,5 +413,88 @@ namespace WhatLiesInTheDepths.UI
                 if (s.group != null) s.group.alpha = s.BaseAlpha;
         }
 
+
+        // ---- A greater realization kept in the mass reads back out, as a golden Vision does
+        // from the iris: resting on its mark opens the readout for it, with nothing to pay and
+        // nothing to press. The readout lets the pointer through while it shows a kept one, so
+        // the mark underneath keeps it open and the pointer can step from one mark to the next.
+
+        int _keptOpen = -1;
+        bool _keptHooked;
+
+        void HookKept()
+        {
+            if (_keptHooked || absorbedSlots == null) return;
+            _keptHooked = true;
+            for (int i = 0; i < absorbedSlots.Length; i++)
+            {
+                var slot = absorbedSlots[i];
+                if (slot == null) continue;
+                slot.raycastTarget = true;
+                var btn = slot.GetComponent<UiButton>();
+                if (btn == null) btn = slot.gameObject.AddComponent<UiButton>();
+                int captured = i;
+                btn.Hovered += h => OnKeptHover(captured, h);
+            }
+        }
+
+        void OnKeptHover(int i, bool entering)
+        {
+            if (entering)
+            {
+                _closeAt = -1f;
+                if (_keptOpen != i) OpenKept(i);
+            }
+            else if (_keptOpen == i)
+            {
+                ScheduleClose();
+            }
+        }
+
+        void OpenKept(int i)
+        {
+            var s = GameState.I;
+            if (s == null || i < 0 || i >= s.absorbed.Count) return;
+            var d = s.revelations.Find(r => r.k == s.absorbed[i]);
+            if (d == null) return;
+            if (_open != null) Close();
+            _keptOpen = i;
+            _touchedReadout = false;
+            if (readout != null) readout.SetActive(true);
+            FillBody(d);
+            Purchasable(false);
+            if (readoutContents != null)
+            {
+                readoutContents.alpha = 1f;
+                LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)readoutContents.transform);
+            }
+            if (markPanel != null)
+            {
+                var mg = markPanel.GetComponent<CanvasGroup>();
+                if (mg != null) mg.alpha = 1f;
+            }
+            _laidOut = null;
+            // The field yields around it as it does for a sigil.
+            if (massGroup != null) massGroup.alpha = 0.25f;
+            _captionWant = 0f;
+            foreach (var v in _sigils)
+                if (v.group != null) v.group.alpha = 0.18f * v.BaseAlpha;
+        }
+
+        /// <summary>Shows or hides the parts of the readout that are about paying: the cost
+        /// pills, Realize and the reason line. A kept realization has none of them, and the
+        /// readout then lets the pointer through to the mark beneath it.</summary>
+        void Purchasable(bool on)
+        {
+            if (costs != null) costs.gameObject.SetActive(on);
+            if (realize != null) realize.gameObject.SetActive(on);
+            if (!on && reasonLine != null) reasonLine.gameObject.SetActive(false);
+            if (readout != null)
+            {
+                var g = readout.GetComponent<CanvasGroup>();
+                if (g == null) g = readout.AddComponent<CanvasGroup>();
+                g.blocksRaycasts = on;
+            }
+        }
     }
 }

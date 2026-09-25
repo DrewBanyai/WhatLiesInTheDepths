@@ -87,6 +87,7 @@ namespace WhatLiesInTheDepths.UI
                     if (tx != null) tx.text = f;
                 }
             }
+            Fit(ExtraFor(c));
 
             if (!_wired)
             {
@@ -110,6 +111,56 @@ namespace WhatLiesInTheDepths.UI
 
             Refresh();
         }
+
+        // ---- height ---------------------------------------------------------------
+
+        /// <summary>The effects panel is drawn for two lines. Each line past that adds a row's
+        /// height (17, plus the stack's 4 gap) to the panel and pushes the foot of the card down
+        /// by the same, so a long list of effects never runs into the price and Build.</summary>
+        const float RowStep = 21f;
+        const int RowsDrawn = 2;
+
+        public static float ExtraFor(ConstructDef c) => Mathf.Max(0, (c?.fx?.Count ?? 0) - RowsDrawn) * RowStep;
+
+        static readonly string[] Foot = { "Rule", "Costs", "Build", "ReasonLine" };
+        float _extra;
+        bool _measured;
+        float _rootHeight, _panelHeight, _rowsHeight;
+        readonly List<RectTransform> _footRects = new List<RectTransform>();
+        readonly List<float> _footY = new List<float>();
+
+        /// <summary>Makes the card <paramref name="extra"/> taller than the prefab, the whole of
+        /// it given to the effects panel. The list calls this with the tallest card's extra so
+        /// every card in a grid keeps its foot on the same line.</summary>
+        public void Fit(float extra)
+        {
+            var root = (RectTransform)transform;
+            var rows = effects;
+            var panel = rows != null ? rows.parent as RectTransform : null;
+            if (!_measured)
+            {
+                _measured = true;
+                _rootHeight = root.sizeDelta.y;
+                if (panel != null) _panelHeight = panel.sizeDelta.y;
+                if (rows != null) _rowsHeight = rows.sizeDelta.y;
+                foreach (var name in Foot)
+                {
+                    var t = transform.Find(name) as RectTransform;
+                    if (t == null) continue;
+                    _footRects.Add(t);
+                    _footY.Add(t.anchoredPosition.y);
+                }
+            }
+            _extra = extra;
+            root.sizeDelta = new Vector2(root.sizeDelta.x, _rootHeight + extra);
+            if (panel != null && panel != root) panel.sizeDelta = new Vector2(panel.sizeDelta.x, _panelHeight + extra);
+            if (rows != null) rows.sizeDelta = new Vector2(rows.sizeDelta.x, _rowsHeight + extra);
+            for (int i = 0; i < _footRects.Count; i++)
+                _footRects[i].anchoredPosition = new Vector2(_footRects[i].anchoredPosition.x, _footY[i] - extra);
+        }
+
+        /// <summary>The card's height as the prefab draws it, before any effects grow it.</summary>
+        public float BaseHeight => _measured ? _rootHeight : ((RectTransform)transform).sizeDelta.y - _extra;
 
         public void Refresh()
         {

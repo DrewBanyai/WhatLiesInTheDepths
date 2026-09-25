@@ -476,6 +476,13 @@ namespace WhatLiesInTheDepths.UI
         {
             if ((_judgeIn -= Time.unscaledDeltaTime) > 0f) return;
             _judgeIn = 0.5f;
+            // Effects on the dive (cost, haul) rebuild the veil's amount lists; follow them.
+            var v = GameState.I != null ? GameState.I.veil : null;
+            if (v != null)
+            {
+                LedgerLine.Resync(_lines, true, v.spend, "");
+                LedgerLine.Resync(_lines, false, v.bring, "");
+            }
             foreach (var l in _lines) l.Paint();
         }
 

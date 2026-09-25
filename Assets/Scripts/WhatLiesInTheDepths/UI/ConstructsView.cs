@@ -131,7 +131,9 @@ namespace WhatLiesInTheDepths.UI
                 var lrt = (RectTransform)lg.transform;
                 lrt.SetParent(listContent, false);
                 var grid1 = lg.GetComponent<GridLayoutGroup>();
-                grid1.cellSize = PrefabRect.Size(cardPrefab);
+                float extra1 = landmarks.Max(c => ConstructCardView.ExtraFor(c));
+                var size1 = PrefabRect.Size(cardPrefab);
+                grid1.cellSize = new Vector2(size1.x, size1.y + extra1);
                 grid1.spacing = new Vector2(16f, 16f);
                 grid1.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
                 grid1.constraintCount = 1;
@@ -139,6 +141,7 @@ namespace WhatLiesInTheDepths.UI
                 {
                     var card = Instantiate(cardPrefab, lrt);
                     card.Bind(c);
+                    card.Fit(extra1);
                     _cards.Add(card);
                 }
             }
@@ -160,8 +163,11 @@ namespace WhatLiesInTheDepths.UI
                 var grt = (RectTransform)grid.transform;
                 grt.SetParent(listContent, false);
                 var g = grid.GetComponent<GridLayoutGroup>();
-                // As in Focus: the cell is the card, not a number that has to match it.
-                g.cellSize = PrefabRect.Size(cardPrefab);
+                // As in Focus: the cell is the card, not a number that has to match it — grown
+                // by the section's longest list of effects, so every foot sits on one line.
+                float extra = inSection.Max(c => ConstructCardView.ExtraFor(c));
+                var size = PrefabRect.Size(cardPrefab);
+                g.cellSize = new Vector2(size.x, size.y + extra);
                 g.spacing = new Vector2(16f, 16f);
                 g.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
                 g.constraintCount = 2;
@@ -170,6 +176,7 @@ namespace WhatLiesInTheDepths.UI
                 {
                     var card = Instantiate(cardPrefab, grt);
                     card.Bind(c);
+                    card.Fit(extra);
                     _cards.Add(card);
                 }
             }

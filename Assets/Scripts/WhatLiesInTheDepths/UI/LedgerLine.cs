@@ -1,11 +1,13 @@
 // What Lies In The Depths — one line of a spent / gained ledger, and whether it can be met.
 //
 // Used by the Focus cards and the Depth Gauge alike, so a cost you are short of looks the
-// same wherever it is written: rose ground, rose edge, rose ink. A gain that would run past
-// its ceiling goes gold the same way.
+// same wherever it is written: rose ground, rose edge, rose ink. A gain whose store is
+// already at its ceiling goes gold the same way.
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Ursine;
 using Ursine.Economy;
 using WhatLiesInTheDepths.Core;
 using WhatLiesInTheDepths.Data;
@@ -45,6 +47,37 @@ namespace WhatLiesInTheDepths.UI
             return l;
         }
 
+        /// <summary>Points each line at the list's current amounts and rewrites any figure
+        /// that has moved. The dream rebuilds its amount lists whenever an effect lands, so a
+        /// line left holding the old one would go on showing the old number. Lines are matched
+        /// to amounts in order within their own column (spent or gained). Answers whether any
+        /// figure changed; a count mismatch means the caller should rebuild instead.</summary>
+        public static bool Resync(List<LedgerLine> lines, bool spent, List<Amount> amounts, string sign)
+        {
+            int i = 0; bool changed = false;
+            foreach (var l in lines)
+            {
+                if (l.spent != spent) continue;
+                if (amounts == null || i >= amounts.Count) return changed;
+                var a = amounts[i++];
+                if (l.amount == null || l.amount.n != a.n || l.amount.k != a.k)
+                {
+                    changed = true;
+                    if (l.figure != null) l.figure.text = sign + Fmt.Count(a.n);
+                }
+                l.amount = a;
+            }
+            return changed;
+        }
+
+        /// <summary>How many lines sit in one column.</summary>
+        public static int CountOf(List<LedgerLine> lines, bool spent)
+        {
+            int n = 0;
+            foreach (var l in lines) if (l.spent == spent) n++;
+            return n;
+        }
+
         /// <summary>Repaints only when the verdict has changed.</summary>
         public void Paint()
         {
@@ -52,8 +85,11 @@ namespace WhatLiesInTheDepths.UI
             if (s == null) return;
             Refusal state = Refusal.None;
             if (spent && s.Short(amount.k, amount.n)) state = Refusal.Short;
+            // Gold means "cannot be added to": the store is already at its ceiling, the same
+            // test that holds the work (Dream.HoldOf). A haul that would only partly fit is
+            // not gold; the work runs and the store tops off.
             else if (!spent && s.Ceiling(amount.k) > 0
-                     && s.Held(amount.k) + amount.n > s.Ceiling(amount.k)) state = Refusal.AboveCeiling;
+                     && s.Held(amount.k) >= s.Ceiling(amount.k)) state = Refusal.AboveCeiling;
             if (state == _shown) return;
             _shown = state;
 

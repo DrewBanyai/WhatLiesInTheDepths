@@ -155,6 +155,23 @@ namespace WhatLiesInTheDepths.UI
         readonly List<LedgerLine> _lines = new List<LedgerLine>();
         float _judgeIn;
 
+        /// <summary>Brings the ledger figures up to the task's current amounts. If an effect
+        /// has added or removed a line, the columns are rebuilt instead.</summary>
+        bool SyncLedger()
+        {
+            int nc = _t.cost != null ? _t.cost.Count : 0, ng = _t.gain != null ? _t.gain.Count : 0;
+            if (LedgerLine.CountOf(_lines, true) != nc || LedgerLine.CountOf(_lines, false) != ng)
+            {
+                _lines.Clear();
+                FillColumn(spentColumn, _t.cost, Tok.RoseD);
+                FillColumn(gainedColumn, _t.gain, Tok.TealD);
+                return true;
+            }
+            bool a = LedgerLine.Resync(_lines, true, _t.cost, "\u2212");
+            bool b = LedgerLine.Resync(_lines, false, _t.gain, "+");
+            return a || b;
+        }
+
         // The prefab's ledger holds one line per column. Each further line (21, plus the
         // column's 5 gap) pushes everything under the ledger down, and the card with it.
         void GrowLedger(FocusTask t)
@@ -253,7 +270,11 @@ namespace WhatLiesInTheDepths.UI
             if ((_judgeIn -= Time.unscaledDeltaTime) <= 0f)
             {
                 _judgeIn = 0.5f;
+                // A Revelation or upgrade rewrites the task's amounts ("Absorb gives +100%");
+                // the card follows, so what it promises is what it will give.
+                bool moved = SyncLedger();
                 foreach (var l in _lines) l.Paint();
+                if (moved) Refresh();
                 var st = GameState.I;
                 bool mineNow = st.attendedTaskId == _t.id;
                 string heldNow = (_t.w > 0 || mineNow) ? HoldLine(st, st.HoldOf(_t), _t.cost, _t.gain) : null;
