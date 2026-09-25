@@ -1,0 +1,22 @@
+{
+    "name": "WhatLiesInTheDepths.Editor",
+    "rootNamespace": "WhatLiesInTheDepths.EditorTools",
+    "references": [
+        "WhatLiesInTheDepths.Runtime",
+        "Ursine.Runtime",
+        "Ursine.Editor",
+        "Unity.TextMeshPro",
+        "Unity.TextMeshPro.Editor",
+        "UnityEngine.UI",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [ "Editor" ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
