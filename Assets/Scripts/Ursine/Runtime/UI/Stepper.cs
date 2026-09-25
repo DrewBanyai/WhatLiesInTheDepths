@@ -29,6 +29,9 @@ namespace Ursine.UI
         [Header("Copy")]
         public string fullMessage = "at capacity";
         public string emptyPoolMessage = "none free";
+        [Tooltip("Strings-file keys for the two messages. Used when set; the plain text above otherwise.")]
+        public string fullMessageKey = "ursine.stepper.full";
+        public string emptyPoolMessageKey = "ursine.stepper.empty";
 
         public event Action<int> Changed;
 
@@ -74,11 +77,14 @@ namespace Ursine.UI
             if (plusGround != null) plusGround.color = Theme.Get(canPlus ? liveGroundToken : deadGroundToken);
         }
 
+        static string Say(string key, string plain)
+            => !string.IsNullOrEmpty(key) && Ursine.Text.Loc.Has(key) ? Ursine.Text.Loc.T(key) : plain;
+
         /// <summary>Which limit binds first, or null when neither does.</summary>
         public string BindingLimit()
         {
-            if (_value >= _cap) return fullMessage;
-            if (_free != null && _free() <= 0) return emptyPoolMessage;
+            if (_value >= _cap) return Say(fullMessageKey, fullMessage);
+            if (_free != null && _free() <= 0) return Say(emptyPoolMessageKey, emptyPoolMessage);
             return null;
         }
     }

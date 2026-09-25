@@ -1,4 +1,4 @@
-// Ursine — a bar that eases to a new width and colour rather than snapping.
+// Ursine — a bar that eases to a new width and color rather than snapping.
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -10,7 +10,7 @@ using Ursine.Theming;
 
 namespace Ursine.UI
 {
-    /// <summary>A bar that eases to its new width and colour rather than snapping, in either
+    /// <summary>A bar that eases to its new width and color rather than snapping, in either
     /// direction. A value going backwards is often correct — a ceiling rose — and it should
     /// read as a movement rather than as a glitch.</summary>
     public sealed class FillBar : MonoBehaviour
@@ -27,13 +27,13 @@ namespace Ursine.UI
 
         public void SetWidth(float w) => _width = w;
 
-        public void Set(float normalised, Color colour, bool immediate = false)
+        public void Set(float normalized, Color color, bool immediate = false)
         {
-            _target = Mathf.Clamp01(normalised);
-            _targetColor = colour;
+            _target = Mathf.Clamp01(normalized);
+            _targetColor = color;
             if (!immediate) return;
             _shown = _target;
-            _shownColor = colour;
+            _shownColor = color;
             Push();
         }
 

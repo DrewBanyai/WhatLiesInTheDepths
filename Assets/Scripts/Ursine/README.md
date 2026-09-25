@@ -15,7 +15,7 @@ error rather than a thing someone notices later.
 | `Runtime/Economy/Ledger.cs` | One purse: spending, granting, judging a cost, the single sentence a refusal is allowed, and tick accrual. Plus `WorkerPool`, for interchangeable workers bound to tasks. |
 | `Runtime/Combat/Odds.cs` | Odds from a strength ratio, straight in log₂, so doubling an army is always worth the same amount of confidence. |
 | `Runtime/Geometry/CubicPath.cs` | A path of SVG-style cubic segments (`C` and `S`), sampled by arc length, so a point can be placed a fraction of the way along it. |
-| `Runtime/Theming/` | `Palette` and `Theme` — swap every colour at once at runtime. `ThemedGraphic` binds a graphic to a token so the swap reaches it. |
+| `Runtime/Theming/` | `Palette` and `Theme` — swap every color at once at runtime. `ThemedGraphic` binds a graphic to a token so the swap reaches it. |
 | `Runtime/Text/TypeKit.cs` | Type roles named for the job rather than the typeface, and `Typeset` for applying them: small caps, figures, and CSS-style line height included. |
 | `Runtime/UI/` | One widget per file: `UiButton`, `FillBar`, `ProgressTrack`, `Stepper`, `CostPill`, `AttentionDot`, `SegmentedToggle`, `ToggleSwitch`, `VolumeBar`, `Fader`, `TintOnHover`, `FixedStage`, plus `PathLine` (an anti-aliased stroked path, solid or dashed), `PrefabRect` (a prefab root's design size) and `SpriteSet` (a name-to-sprite lookup). |
 | `Editor/SpriteImport.cs` | Imports a folder of PNGs as sprites and indexes them by name. |
@@ -30,7 +30,7 @@ handed to it, once, at startup:
 
 ```csharp
 Ursine.Theming.Theme.DefaultPalette = () => Resources.Load<Palette>("MyGame/Palette_Default");
-Ursine.Theming.Theme.ContrastFilter = (token, level, colour) => /* what a contrast step does */;
+Ursine.Theming.Theme.ContrastFilter = (token, level, color) => /* what a contrast step does */;
 Ursine.Text.TypeKit.Default        = () => Resources.Load<TypeKit>("MyGame/TypeKit");
 ```
 
@@ -43,7 +43,7 @@ so editor-time prefab building gets them too.
 
 **Tokens are indices.** A palette is an array; the names live in the game. This is what lets
 one widget be dressed by any project, and it is why every widget takes its tokens as fields
-rather than baking in a colour.
+rather than baking in a color.
 
 **Mouse only.** Nothing here is a `Selectable` and nothing sets up EventSystem navigation.
 Hover, press and pointer enter/exit are the whole vocabulary. A project that needs keyboard

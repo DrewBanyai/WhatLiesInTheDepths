@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Ursine.Text;
 
 namespace Ursine.Economy
 {
@@ -43,7 +44,7 @@ namespace Ursine.Economy
 
         /// <summary>The one sentence a refusal is allowed. When several costs fail it names
         /// only the largest shortfall — the number that will take longest — rather than
-        /// itemising a bill the player did not ask for.</summary>
+        /// itemizing a bill the player did not ask for.</summary>
         public string ReasonLine(IEnumerable<Amount> cost)
         {
             if (cost == null) return null;
@@ -52,12 +53,12 @@ namespace Ursine.Economy
             var over = list.Where(a => AboveCeiling(a.k, a.n))
                            .OrderByDescending(a => a.n - Ceiling(a.k)).FirstOrDefault();
             if (over != null)
-                return $"your {Find(over.k)?.n ?? over.k} ceiling is {Fmt.Count(Ceiling(over.k))}";
+                return Loc.T("ursine.ledger.ceiling", Find(over.k)?.n ?? over.k, Fmt.Count(Ceiling(over.k)));
 
             var shortest = list.Where(a => Short(a.k, a.n))
                                .OrderByDescending(a => a.n - Held(a.k)).FirstOrDefault();
             if (shortest != null)
-                return $"short {Fmt.Count(shortest.n - Held(shortest.k))} {Find(shortest.k)?.n ?? shortest.k}";
+                return Loc.T("ursine.ledger.short", Fmt.Count(shortest.n - Held(shortest.k)), Find(shortest.k)?.n ?? shortest.k);
 
             return null;
         }
@@ -77,7 +78,7 @@ namespace Ursine.Economy
             return true;
         }
 
-        /// <summary>Grants a gain, clamped at the ceiling. Waste is not signalled: producing
+        /// <summary>Grants a gain, clamped at the ceiling. Waste is not signaled: producing
         /// past a ceiling costs nothing but time, so a ledger reports rather than scolds.</summary>
         public void Grant(IEnumerable<Amount> gain)
         {
@@ -91,12 +92,12 @@ namespace Ursine.Economy
             Dirty();
         }
 
-        /// <summary>One tick of accrual. Rates are applied and everything is clamped to
-        /// its ceiling and to zero.</summary>
+        /// <summary>One tick of accrual. Passive rates are applied and everything is clamped
+        /// to its ceiling and to zero.</summary>
         public virtual void Tick()
         {
             foreach (var r in resources)
-                r.c = Math.Max(0, Math.Min(r.m, r.c + r.r));
+                if (r.passive != 0) r.c = Math.Max(0, Math.Min(r.m, r.c + r.passive));
         }
     }
 

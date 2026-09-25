@@ -1,4 +1,4 @@
-// Ursine — swaps a graphic's colour between rest, hover and active tokens.
+// Ursine — swaps a graphic's color between rest, hover and active tokens.
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -10,7 +10,7 @@ using Ursine.Theming;
 
 namespace Ursine.UI
 {
-    /// <summary>Swaps a graphic's colour between rest, hover and active tokens.</summary>
+    /// <summary>Swaps a graphic's color between rest, hover and active tokens.</summary>
     public sealed class TintOnHover : MonoBehaviour
     {
         public Graphic target;

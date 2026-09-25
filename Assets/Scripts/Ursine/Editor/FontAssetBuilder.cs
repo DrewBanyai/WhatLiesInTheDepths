@@ -1,6 +1,6 @@
 // Ursine — TextMeshPro font assets from TTFs in the project.
 //
-// A dynamic atlas rasterises glyphs as they are first used, which keeps a web build's
+// A dynamic atlas rasterizes glyphs as they are first used, which keeps a web build's
 // download down. Subsetting the faces is still worth doing before shipping one.
 using TMPro;
 using UnityEditor;

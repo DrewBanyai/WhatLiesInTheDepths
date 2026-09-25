@@ -1,4 +1,4 @@
-// Ursine — a runtime-swappable colour palette.
+// Ursine — a runtime-swappable color palette.
 //
 // A palette is a whole token set, not a filter. Tokens are indices here rather than an
 // enum, because which tokens exist and what they mean is a decision each game makes;
@@ -13,7 +13,7 @@ using UnityEngine;
 namespace Ursine.Theming
 {
     /// <summary>The live token set. Everything that draws asks Theme, never a constant —
-    /// a colour written as a literal will not follow a palette change.</summary>
+    /// a color written as a literal will not follow a palette change.</summary>
     public static class Theme
     {
         /// <summary>Raised whenever the palette or the contrast step changes.</summary>
@@ -26,8 +26,8 @@ namespace Ursine.Theming
 
         /// <summary>Installed by the game. Ursine cannot know which tokens are ink, which
         /// are rules and which are semantic, so the game decides what a contrast step does.
-        /// It is handed the token, the current step and the palette colour, and returns the
-        /// colour to use. A contrast step must never change a hue or a size, so that no
+        /// It is handed the token, the current step and the palette color, and returns the
+        /// color to use. A contrast step must never change a hue or a size, so that no
         /// layout can move.</summary>
         public static Func<int, int, Color, Color> ContrastFilter;
 

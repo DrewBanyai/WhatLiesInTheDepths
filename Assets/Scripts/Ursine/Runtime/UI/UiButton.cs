@@ -17,7 +17,7 @@ using Ursine.Theming;
 
 namespace Ursine.UI
 {
-    /// <summary>A pointer target. Hover should be colour only — no ground, no movement —
+    /// <summary>A pointer target. Hover should be color only — no ground, no movement —
     /// wherever a separate mark means "this one is open", so the two can never be confused.</summary>
     [RequireComponent(typeof(Graphic))]
     public class UiButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler

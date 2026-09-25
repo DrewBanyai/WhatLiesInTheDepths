@@ -51,8 +51,8 @@ namespace Ursine.EditorTools
             return rt;
         }
 
-        /// <summary>Centres a node on its parent, for anything that orbits or is dead centre.</summary>
-        public static RectTransform Centre(RectTransform rt, float w = 0f, float h = 0f)
+        /// <summary>Centers a node on its parent, for anything that orbits or is dead center.</summary>
+        public static RectTransform Center(RectTransform rt, float w = 0f, float h = 0f)
         {
             rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
             rt.pivot = new Vector2(0.5f, 0.5f);
@@ -123,6 +123,12 @@ namespace Ursine.EditorTools
 
             var viewport = Stretch(Node("Viewport", root));
             viewport.gameObject.AddComponent<RectMask2D>();
+            // The wheel is answered over the whole view, not only where a card happens to be.
+            // uGUI sends a scroll to the graphic under the pointer, so a viewport with nothing
+            // drawn on it hands the gaps between cards to whatever is behind the menu.
+            var catcher = viewport.gameObject.AddComponent<Image>();
+            catcher.color = new Color(0f, 0f, 0f, 0f);
+            catcher.raycastTarget = true;
             scroll.viewport = viewport;
 
             var content = Node("Content", viewport, 0, 0, w, 0);

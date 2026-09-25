@@ -137,19 +137,19 @@ namespace Ursine.UI
         }
 
         // A half-disc on the side the stroke is heading out of, with the same feather.
-        static void Cap(VertexHelper vh, Vector2 centre, Vector2 outward, float inner, float outer, Color32 c)
+        static void Cap(VertexHelper vh, Vector2 center, Vector2 outward, float inner, float outer, Color32 c)
         {
             const int n = 12;
             var clear = c; clear.a = 0;
             float a0 = Mathf.Atan2(outward.y, outward.x) - Mathf.PI * 0.5f;
             int i0 = vh.currentVertCount;
-            vh.AddVert(centre, c, Vector2.zero);
+            vh.AddVert(center, c, Vector2.zero);
             for (int k = 0; k <= n; k++)
             {
                 float t = a0 + k / (float)n * Mathf.PI;
                 var d = new Vector2(Mathf.Cos(t), Mathf.Sin(t));
-                vh.AddVert(centre + d * inner, c, Vector2.zero);
-                vh.AddVert(centre + d * outer, clear, Vector2.zero);
+                vh.AddVert(center + d * inner, c, Vector2.zero);
+                vh.AddVert(center + d * outer, clear, Vector2.zero);
             }
             for (int k = 0; k < n; k++)
             {

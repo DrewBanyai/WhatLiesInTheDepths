@@ -51,6 +51,25 @@ namespace Ursine
             return n % 10 == 0 ? tens[n / 10] : tens[n / 10] + "-" + ones[n % 10];
         }
 
+        /// <summary>A small ordinal written out: "first", "second", "twenty-third".
+        /// Past ninety-ninth it falls back to figures with a suffix: "100th".</summary>
+        public static string OrdinalWords(int n)
+        {
+            string[] ones = { "zeroth", "first", "second", "third", "fourth", "fifth", "sixth", "seventh",
+                              "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth",
+                              "fifteenth", "sixteenth", "seventeenth", "eighteenth", "nineteenth" };
+            string[] tens = { "", "", "twentieth", "thirtieth", "fortieth", "fiftieth", "sixtieth",
+                              "seventieth", "eightieth", "ninetieth" };
+            if (n < 0 || n > 99)
+            {
+                int t = System.Math.Abs(n) % 100, u = System.Math.Abs(n) % 10;
+                string suffix = t >= 11 && t <= 13 ? "th" : u == 1 ? "st" : u == 2 ? "nd" : u == 3 ? "rd" : "th";
+                return n.ToString("N0", Culture) + suffix;
+            }
+            if (n < 20) return ones[n];
+            return n % 10 == 0 ? tens[n / 10] : Words(n - n % 10) + "-" + ones[n % 10];
+        }
+
         public static string Roman(int n)
         {
             if (n <= 0) return string.Empty;

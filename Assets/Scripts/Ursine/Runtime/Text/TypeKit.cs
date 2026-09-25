@@ -2,7 +2,7 @@
 //
 // Three faces is a common house rule for an incremental game: a serif for anything named
 // or written, a monospace for anything that counts (tabular figures, so a changing number
-// does not shift its neighbours), and a sans for labels only. The roles are named for the
+// does not shift its neighbors), and a sans for labels only. The roles are named for the
 // job, not the typeface, so a project can fill them with whatever it likes.
 using TMPro;
 using UnityEngine;
@@ -12,7 +12,7 @@ namespace Ursine.Text
 {
     public enum TypeRole
     {
-        /// <summary>Anything named or written: titles, prose, verb-labelled buttons.</summary>
+        /// <summary>Anything named or written: titles, prose, verb-labeled buttons.</summary>
         Serif,
         /// <summary>The same, italic: blurbs, rate lines, asides.</summary>
         SerifItalic,
@@ -103,7 +103,7 @@ namespace Ursine.Text
             return t;
         }
 
-        /// <summary>Real upper case with tracking, never a synthesised small-caps variant.</summary>
+        /// <summary>Real upper case with tracking, never a synthesized small-caps variant.</summary>
         public static TMP_Text SmallCaps(TMP_Text t, float sizePx, float emTracking, int token,
                                          TypeRole face = TypeRole.Label700)
         {

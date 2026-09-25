@@ -16,10 +16,10 @@ namespace Ursine.UI
         public RectTransform fill;
         public float width = 100f;
 
-        public void Set(float normalised)
+        public void Set(float normalized)
         {
             if (fill == null) return;
-            fill.sizeDelta = new Vector2(width * Mathf.Clamp01(normalised), fill.sizeDelta.y);
+            fill.sizeDelta = new Vector2(width * Mathf.Clamp01(normalized), fill.sizeDelta.y);
         }
     }
 }

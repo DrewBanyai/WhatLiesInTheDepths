@@ -18,9 +18,16 @@ namespace Ursine.Economy
         public string n;        // display name
         public double c;        // current
         public double m;        // ceiling
-        public double r;        // rate per tick
+        public double r;        // rate per tick, as displayed: everything moving it
+        /// <summary>The part of the rate the ledger applies on its own every tick (a
+        /// building's yield, a slow drain). Work that pays out at completion — a task, a dive —
+        /// is not in here, so it is never counted twice; it only shows in <see cref="r"/>.</summary>
+        public double passive;
         public int g;           // group index — decides where it is listed and nothing else
         public string glyph;    // icon key
+        /// <summary>What must have happened before this resource is shown at all. Read by
+        /// the game against its own record of what has happened; empty means always.</summary>
+        public List<string> requires;
 
         public string Id { get => k; set => k = value; }
         public string Name { get => n; set => n = value; }
