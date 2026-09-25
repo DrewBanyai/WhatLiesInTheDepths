@@ -1,0 +1,9 @@
+Karla-Regular.ttf, Karla-Medium.ttf and Karla-Bold.ttf in this folder are modified from the
+upstream Karla release (SIL Open Font License 1.1, see OFL-Karla.txt).
+
+The only change: the font's class-based kerning (GPOS PairPos format 2) has been expanded
+into glyph-pair kerning (PairPos format 1) for every character the font maps. Unity's
+TextCore reads only glyph-pair kerning, so it previously applied Karla's few exception
+pairs without the class kerning they sit on top of, which left spacing uneven. The
+expanded pairs shape identically to the original under HarfBuzz; no outlines, metrics or
+names were changed.
