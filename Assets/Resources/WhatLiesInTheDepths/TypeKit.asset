@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 854592d42c962144697baecb692e0ec1, type: 3}
+  m_Name: TypeKit
+  m_EditorClassIdentifier: Ursine.Runtime::Ursine.Text.TypeKit
+  serif: {fileID: 11400000, guid: 355c24da8eed47843a238f4b6bf56b31, type: 2}
+  serifItalic: {fileID: 11400000, guid: 38ebe6eb8a3a458418eb3ed3d8b84037, type: 2}
+  mono400: {fileID: 11400000, guid: fc60522290581344aaf711b6d819bf9c, type: 2}
+  mono500: {fileID: 11400000, guid: 2716aeafab06eb14eaae6b60f76dd0bf, type: 2}
+  mono700: {fileID: 11400000, guid: 9cff5d7b7d41cbe4ba3fc649a2413b99, type: 2}
+  label400: {fileID: 11400000, guid: 51ba2f2e700ea1f4489e8ef107478d3a, type: 2}
+  label500: {fileID: 11400000, guid: c0c1b1911738ddf4ca935ab621ffb08e, type: 2}
+  label700: {fileID: 11400000, guid: 4938806bde20ca140a6ed01783917428, type: 2}

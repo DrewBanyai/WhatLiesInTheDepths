@@ -1,0 +1,1725 @@
+{
+  "en": {
+    "_comment": "Every word the game shows. One section per language; English ('en') is the fallback. Keys are stable ids; change the text freely. {0}, {1} are filled in by the game. Lists are paragraphs or lines.",
+    "res.reverie": "Reverie",
+    "res.silt": "Silt",
+    "res.echo": "Echo",
+    "res.oneiri": "Oneiri",
+    "res.group.0": "Gathered",
+    "res.group.1": "Yours",
+    "res.group.2": "Against you",
+    "focus.section.stillness": "Stillness",
+    "focus.absorb.name": "Absorb",
+    "focus.absorb.blurb": "Sit on the humming stone and let the dream pour in.",
+    "focus.conjure.name": "Conjure",
+    "focus.conjure.blurb": "Speak into the quiet, and listen for what comes back.",
+    "construct.kind.works": "Works",
+    "construct.kind.dwellings": "Dwellings",
+    "construct.kind.reservoirs": "Reservoirs",
+    "construct.kind.wards": "Wards",
+    "construct.altar.name": "The Silent Altar",
+    "construct.altar.kind": "The center",
+    "construct.altar.blurb": "Formed on the humming stone out of nothing but attention. It holds the way down open.",
+    "construct.altar.line": "Where you sit, and go down.",
+    "construct.hut.name": "Warren",
+    "construct.hut.blurb": "Rooms that lead to rooms, none of them the first one.",
+    "construct.hut.fx": [
+      "Houses <b>1</b> Oneiri"
+    ],
+    "rev.sifting.name": "Sifting the Silt",
+    "rev.sifting.kind": "unlocks a focus",
+    "rev.sifting.text": "What the dives bring up is not only silt. Sort it slowly enough, and something in it answers.",
+    "rev.sifting.fx": [
+      "unlocks the <b>Conjure</b> focus"
+    ],
+    "rev.listening.name": "Someone Is Listening",
+    "rev.listening.kind": "a realization · unlocks a construct",
+    "rev.listening.text": "The echoes are not all yours. Some come back a little changed, as though something heard you and answered. You are not alone here. You could call out to them.",
+    "rev.listening.fx": [
+      "unlocks <b>Warren</b>",
+      "the Journal gains an entry"
+    ],
+    "rev.shown.name": "Shown, Not Told",
+    "rev.shown.kind": "a realization · changes the work",
+    "rev.shown.text": "They will not take orders. They will take an example. Sit beside one and do the work, and it will do it with you, and then without you.",
+    "rev.shown.fx": [],
+    "veil.shallows.name": "The Shallows",
+    "veil.shallows.entry": [
+      "Shallow gray water, and under it a floor that gives a little when you lean on it, as if it has been waiting to be asked.",
+      "It is colder a few fathoms down. It is the cold of a room nobody has been in for a while.",
+      "The floor is thinner than it was. I can feel the next place through it, like a draft through a door."
+    ],
+    "veil.drift.name": "The Drift",
+    "veil.drift.entry": [
+      "Nothing here has a floor. Pieces of things turn past slowly, in no hurry to be anywhere.",
+      "Some of them are mine: a hallway from a house I never lived in, a song I never heard all the way through.",
+      "The further in I go, the more the pieces agree. Something below is pulling them into order."
+    ],
+    "journal.chapter.1": "Arrival",
+    "journal.chapter.2": "The Lamps",
+    "journal.chapter.3": "The Tide",
+    "journal.chapter.4": "The Road",
+    "journal.chapter.5": "The Far End",
+    "journal.doorway.name": "The Doorway",
+    "journal.doorway.p": [
+      "For most of a year now, something has been in my dreams. Not a figure and not a voice. A presence, standing just past the edge of whatever I was dreaming, waiting for me to notice it. I noticed. I have not been able to stop.",
+      "I did what you are supposed to do. I sat with two psychics, a priest, a rabbi, and a monk who would not tell me his order. I saw three therapists and read every book on the shelf with a sunrise on the cover. All of them said the same thing, that it lives in me, and each of them meant something different by it. In the end, only one thing made sense, and none of them had said it: go down to it, and meet it where it lives.",
+      "I have practiced for months. I did the reality checks, kept a notebook by the bed, and woke at four and went back under. Tonight I went to sleep knowing where I was going. There was a doorway in the dream, standing on its own. I knew, the way you know things in dreams, that it did not open onto more dream. It opened beneath it, into whatever the dream is made of. I stepped forward."
+    ],
+    "journal.altar.name": "The Silent Altar",
+    "journal.altar.p": [
+      "The stone is round and smooth, so perfect it does not look made. It hums. It is not a sound exactly, more a pressure behind the ears, like a room where someone has just stopped speaking. I understood that nothing more would happen here until my head was as quiet as the stone.",
+      "So I sat down at the center of it and closed my eyes. Out past the edge of the clearing, the trees began to move, though there was no wind. Something rolled through them, back and forth, like water finding the shape of a bowl.",
+      "A calm took hold of me that I have not felt awake in a long time. I sat there and worked through it: what I had come for, what had to happen next, and how I would move through this place. When I opened my eyes, something stood on the stone that had not been there before, shaped out of nothing but the quiet. I knew which way was down."
+    ],
+    "journal.listening.name": "Someone Is Listening",
+    "journal.listening.p": [
+      "I called out, and they came. They were small at first, at the edge of the clearing, like light caught in the corner of the eye. They do not seem to have a name for themselves. I have started calling them the Oneiri, because as far as I can tell they are the ones who build the places dreams happen in.",
+      "They were not interested in me. They were interested in the Altar, and in the clearing itself. They walked its edge, touched the stone, and looked up at the trees the way you would look at someone else's work. The clearing was not here before I arrived. I think they know that. I think it may be the first new thing they have seen in a very long time.",
+      "One of them stayed. It watched me sit, and when I looked up it did not look away. If they are going to stay, they will need somewhere to live."
+    ],
+    "journal.drift.name": "The Drift",
+    "journal.drift.p": [
+      "I went further in. Not down, exactly. It was more like leaning into a thought until the thought gave way, and then leaning past where it had been.",
+      "On the other side there was room: a great open quiet, and drifting through it, pieces of things. Half a staircase. A kitchen with no walls. A name I almost knew. A street that ended in the middle of a sentence. None of them finished, and none of them in any hurry.",
+      "I understood, slowly, what I was looking at. This is where everything goes that never quite became a dream. Every almost, every half-begun night. It all ends up here, and it all keeps drifting."
+    ],
+    "ach.group.story": "Story",
+    "ach.drift.name": "The Drift",
+    "ach.drift.hint": "Swim past The Shallows.",
+    "ach.drift.req": "Swim past The Shallows.",
+    "ui.numbers": [
+      "zero",
+      "one",
+      "two",
+      "three",
+      "four",
+      "five",
+      "six",
+      "seven",
+      "eight",
+      "nine",
+      "ten",
+      "eleven",
+      "twelve",
+      "thirteen",
+      "fourteen",
+      "fifteen",
+      "sixteen",
+      "seventeen",
+      "eighteen",
+      "nineteen",
+      "twenty"
+    ],
+    "ui.ordinals": [
+      "first",
+      "second",
+      "third",
+      "fourth",
+      "fifth",
+      "sixth",
+      "seventh",
+      "eighth",
+      "ninth",
+      "tenth",
+      "eleventh",
+      "twelfth"
+    ],
+    "ui.oneiri.none": "no Oneiri",
+    "ui.focus.pool": "{0} of {1} Oneiri unbound",
+    "ui.focus.rate": "a completion every {0}",
+    "ui.hold.short": "held: {0}",
+    "ui.hold.full": "held: {0} is full",
+    "ui.hold.fullMany": "held: everything it gives is full",
+    "ui.gauge.ordinal": "{0} veil",
+    "ui.gauge.spent": "Spent",
+    "ui.gauge.brought": "Brought up",
+    "ui.gauge.noDive": "no dive to make",
+    "ui.gauge.nothingDiving": "nothing is diving",
+    "ui.gauge.rate": "a dive every {0}",
+    "ui.gauge.sink": "Sink a fathom",
+    "ui.gauge.sounded": "the shore is fully sounded",
+    "ui.gauge.partSub": "the way back closes behind you",
+    "ui.constructs.menu": "Constructs",
+    "ui.constructs.build": "Build",
+    "ui.revelations.realize": "Realize",
+    "ui.revelations.within.one": "{0} realization within reach",
+    "ui.revelations.within.many": "{0} realizations within reach",
+    "ui.journal.source.revelation": "A realization",
+    "ui.journal.source.vision": "A Vision",
+    "ui.journal.source.assault": "A battle",
+    "ui.journal.source.veil": "A veil",
+    "ui.journal.source.other": "An entry",
+    "ui.journal.source.greater": "A greater {0}",
+    "ui.journal.source.greater.revelation": "realization",
+    "ui.journal.source.greater.vision": "vision",
+    "ui.journal.source.greater.assault": "battle",
+    "ui.journal.source.greater.veil": "veil",
+    "ui.journal.day": "Day",
+    "ui.journal.chapter": "Chapter",
+    "ui.achievements.title": "Achievements",
+    "ui.achievements.rest": "{0} of {1} earned.",
+    "ui.achievements.restHint": "Rest on any mark to read it.",
+    "ui.achievements.count": "{0}/{1}",
+    "ui.achievements.notYet": "Not yet",
+    "ui.achievements.earned": "Earned",
+    "ui.ending.caps": "The dream ends",
+    "ui.ending.title": "What Lies In The Depths",
+    "ui.ending.hardReset": "Hard reset",
+    "ui.ending.continue": "Continue",
+    "ui.ending.exit": "Exit",
+    "ui.question.exit.title": "Leave the dream?",
+    "ui.question.exit.body": "The dream saves itself. Nothing is asked of you here except whether to go.",
+    "ui.question.exit.no": "No, stay",
+    "ui.question.exit.yes": "Yes, leave",
+    "ui.question.reset.title": "Clear it all?",
+    "ui.question.reset.body": "Everything the dream has made will be gone, and it does not come back.",
+    "ui.question.reset.no": "No, go back",
+    "ui.question.reset.yes": "Yes, clear it all",
+    "ui.question.saveNote": "{0} since the last save.",
+    "ui.options.saved": "The dream saved itself {0} ago.",
+    "ui.visions.caption": "{0} visions",
+    "ui.visions.channelling": ", {0} channelling",
+    "ui.visions.kind.golden": "A golden Vision",
+    "ui.visions.kind.repeatable": "Vision · repeatable",
+    "ui.visions.kind.plain": "Vision",
+    "ui.visions.repeat": "{0} pouring · costs up {1}% from the first",
+    "ui.visions.pour": "Pour",
+    "ui.visions.complete": "Complete",
+    "ui.visions.again": "Begin again",
+    "ui.visions.hint.full": "nothing left to pour into",
+    "ui.visions.hint.idle": "once a second, while you can pay",
+    "ui.visions.hint.waiting": "waiting on {0}",
+    "ui.visions.hint.pouring": "pouring {0} {1} a second",
+    "ui.assault.against": "{0} against {1}",
+    "ui.assault.taken": "Taken",
+    "ui.assault.drivenBack": "Driven back",
+    "ui.assault.lost": "you lost {0} of your army — {1} down to {2}",
+    "ui.assault.fields": "{0} fields",
+    "ui.assault.noChance": "no chance",
+    "ui.assault.noChanceHere": "no chance at this strength",
+    "ui.assault.toTake": "{0} to take it",
+    "ui.assault.next": "The next place",
+    "ui.assault.gave": "It gave",
+    "ui.assault.whenWon": "When won",
+    "ui.assault.fielded": "They fielded",
+    "ui.assault.field": "They field",
+    "ui.assault.takenWith": "taken with {0} of your own",
+    "ui.assault.youBring": "you bring {0}",
+    "ui.assault.underWay": "Under way",
+    "ui.assault.giveBattle": "Give battle",
+    "ui.assault.levied": "Levied",
+    "ui.unit.muster": "Muster",
+    "ui.unit.power": "{0} strength, each",
+    "ursine.ledger.ceiling": "your {0} ceiling is {1}",
+    "ursine.ledger.short": "short {0} {1}",
+    "ursine.stepper.full": "at capacity",
+    "ursine.stepper.empty": "none free",
+    "ui.built.resource": "Resource",
+    "ui.built.0_0_s": "0.0 /s",
+    "ui.built.gathered.caps": "GATHERED",
+    "ui.built.section.caps": "SECTION",
+    "ui.built.0_effect": "+0 effect",
+    "ui.built.destination": "Destination",
+    "ui.built.utility.caps": "UTILITY",
+    "ui.built.i.caps": "I",
+    "ui.built.chapter": "Chapter",
+    "ui.built.the_dream_begins": "The dream begins",
+    "ui.built.discord.caps": "DISCORD",
+    "ui.built.reddit.caps": "REDDIT",
+    "ui.built.twitter.caps": "TWITTER",
+    "ui.built.journal": "Journal",
+    "ui.built.focus": "Focus",
+    "ui.built.revelations": "Revelations",
+    "ui.built.constructs": "Constructs",
+    "ui.built.visions": "Visions",
+    "ui.built.assault": "Assault",
+    "ui.built.achievements.caps": "ACHIEVEMENTS",
+    "ui.built.options.caps": "OPTIONS",
+    "ui.built.exit.caps": "EXIT",
+    "ui.built.second_veil.caps": "SECOND VEIL",
+    "ui.built.the_silt_shore": "The Silt Shore",
+    "ui.built.fathoms_sunk.caps": "FATHOMS SUNK",
+    "ui.built.of": "of",
+    "ui.built.spent_each_dive.caps": "SPENT, EACH DIVE",
+    "ui.built.brought_up.caps": "BROUGHT UP",
+    "ui.built.a_dive_every_6_0s": "a dive every 6.0s",
+    "ui.built.oneiri_bound": "Oneiri bound",
+    "ui.built.sink_a_fathom": "Sink a fathom",
+    "ui.built.part_the_veil": "Part the veil",
+    "ui.built.the_way_back_closes_behind_you": "the way back closes behind you",
+    "ui.built.day.caps": "DAY",
+    "ui.built.a_veil.caps": "A VEIL",
+    "ui.built.entry": "Entry",
+    "ui.built.task": "Task",
+    "ui.built.spent.caps": "SPENT",
+    "ui.built.gained.caps": "GAINED",
+    "ui.built.nine_realizations_within_reach": "nine realizations within reach",
+    "ui.built.kind.caps": "KIND",
+    "ui.built.revelation": "Revelation",
+    "ui.built.realize": "Realize",
+    "ui.built.construct": "Construct",
+    "ui.built.build": "Build",
+    "ui.built.map": "Map",
+    "ui.built.list": "List",
+    "ui.built.works.caps": "WORKS",
+    "ui.built.dwellings.caps": "DWELLINGS",
+    "ui.built.reservoirs.caps": "RESERVOIRS",
+    "ui.built.wards.caps": "WARDS",
+    "ui.built.vision.caps": "VISION",
+    "ui.built.vision": "Vision",
+    "ui.built.of_the_vision": "of the Vision",
+    "ui.built.on_completion.caps": "ON COMPLETION",
+    "ui.built.pour.caps": "POUR",
+    "ui.built.pour": "Pour",
+    "ui.built.channel": "Channel",
+    "ui.built.once_a_second_while_you_can_pay": "once a second, while you can pay",
+    "ui.built.a_golden_vision_complete.caps": "A GOLDEN VISION · COMPLETE",
+    "ui.built.what_it_changed.caps": "WHAT IT CHANGED",
+    "ui.built.unit": "Unit",
+    "ui.built.muster": "Muster",
+    "ui.built.place.caps": "PLACE",
+    "ui.built.your_army": "Your army",
+    "ui.built.strength": "strength",
+    "ui.built.giving_battle_at.caps": "GIVING BATTLE AT",
+    "ui.built.taken.caps": "TAKEN",
+    "ui.built.mind_palace.caps": "MIND PALACE",
+    "ui.built.the_road_goes_on": "the road goes on",
+    "ui.built.the_next_place.caps": "THE NEXT PLACE",
+    "ui.built.place": "Place",
+    "ui.built.when_won.caps": "WHEN WON",
+    "ui.built.they_field.caps": "THEY FIELD",
+    "ui.built.give_battle": "Give battle",
+    "ui.built.won": "Won",
+    "ui.built.sound.caps": "SOUND",
+    "ui.built.master": "Master",
+    "ui.built.music": "Music",
+    "ui.built.effects": "Effects",
+    "ui.built.mute": "Mute",
+    "ui.built.display.caps": "DISPLAY",
+    "ui.built.full_screen": "Full screen",
+    "ui.built.palette": "Palette",
+    "ui.built.dream": "Dream",
+    "ui.built.dusk": "Dusk",
+    "ui.built.parchment": "Parchment",
+    "ui.built.contrast": "Contrast",
+    "ui.built.soft": "Soft",
+    "ui.built.firm": "Firm",
+    "ui.built.hard": "Hard",
+    "ui.built.the_save.caps": "THE SAVE",
+    "ui.built.beginning_again.caps": "BEGINNING AGAIN",
+    "ui.built.everything_the_dream_has_made_will_be_gone_and_i": "Everything the dream has made will be gone, and it does not come back.",
+    "ui.built.hard_reset": "Hard reset",
+    "ui.built.no": "No",
+    "ui.built.yes": "Yes",
+    "ui.built.the_dream_ends.caps": "THE DREAM ENDS",
+    "ui.built.placeholder_ending_prose_rewrite_freely_nothing_d": "Placeholder ending prose. Rewrite freely: nothing depends on the words except their length.",
+    "ui.built.design.caps": "DESIGN",
+    "ui.built.placeholder": "Placeholder",
+    "ui.built.code.caps": "CODE",
+    "ui.built.art.caps": "ART",
+    "ui.built.continue": "Continue",
+    "ui.built.exit": "Exit",
+    "ui.built.now_playing.caps": "NOW PLAYING",
+    "res.moonsilver": "Moonsilver",
+    "res.ember": "Ember",
+    "res.tallow": "Tallow",
+    "res.salt": "Salt",
+    "res.nacre": "Nacre",
+    "res.lucidity": "Lucidity",
+    "res.hush": "Hush",
+    "res.vellum": "Vellum",
+    "res.ward": "Ward",
+    "res.chorus": "Chorus",
+    "res.mettle": "Mettle",
+    "res.dread": "Dread",
+    "res.umbra": "Umbra",
+    "focus.still.name": "Still the Mind",
+    "focus.still.blurb": "Go back to the quiet you made at the Altar, and stay there a while.",
+    "focus.draw.name": "Draw Moonsilver",
+    "focus.draw.blurb": "Lowered into the cold seam until it fills.",
+    "focus.kindle.name": "Kindle",
+    "focus.kindle.blurb": "Something small to warm your hands at. It is allowed.",
+    "focus.render.name": "Render Tallow",
+    "focus.render.blurb": "Slow heat, and a smell that follows you up.",
+    "focus.tend.name": "Keep the Lamps",
+    "focus.tend.blurb": "None of them stay lit. You light them anyway.",
+    "focus.sit.name": "Sit with the Hush",
+    "focus.sit.blurb": "Nothing is asked of you. That is the difficulty.",
+    "focus.weep.name": "Let It Out",
+    "focus.weep.blurb": "It dries faster if you stop trying to keep it.",
+    "focus.sift.name": "Sift the Beds",
+    "focus.sift.blurb": "Something grows around every grain that would not go away.",
+    "focus.page.name": "Copy the Vellum",
+    "focus.page.blurb": "The hand remembers what the reading does not.",
+    "focus.watch.name": "Stand the Watch",
+    "focus.watch.blurb": "A wall no one watches is only a suggestion.",
+    "focus.rally.name": "Rally",
+    "focus.rally.blurb": "Say it out loud, and let them answer together.",
+    "focus.temper.name": "Temper",
+    "focus.temper.blurb": "Hold what you are good at in the fire until it holds its shape.",
+    "focus.sing.name": "Sing Together",
+    "focus.sing.blurb": "Every people of the dream, one note.",
+    "focus.dredge.name": "Dredge the Nightmares",
+    "focus.dredge.blurb": "Down into your own dark with a hook, for what you can use.",
+    "focus.release.name": "Let It Go",
+    "focus.release.blurb": "Open your hands. Let what you were holding leave on its own.",
+    "focus.section.labor": "Labor",
+    "focus.section.listening": "Listening",
+    "focus.section.muster": "Muster",
+    "focus.section.many": "The Many",
+    "construct.cistern.name": "Cistern",
+    "construct.cistern.blurb": "It fills whether or not you are watching it.",
+    "construct.cistern.fx": [
+      "<b>+15</b> max Silt",
+      "<b>+5</b> max Reverie",
+      "<b>+3</b> max Echo"
+    ],
+    "construct.spindle.name": "Dreamspindle",
+    "construct.spindle.blurb": "Something turns, and turns, and does not stop turning.",
+    "construct.spindle.fx": [
+      "<b>+0.2</b> Reverie /s"
+    ],
+    "construct.moonwell.name": "Moonwell",
+    "construct.moonwell.blurb": "Still water that keeps every face it has held.",
+    "construct.moonwell.fx": [
+      "<b>+25</b> max Reverie",
+      "<b>+0.1</b> Reverie /s",
+      "<b>+3</b> max Lucidity"
+    ],
+    "construct.winch.name": "Seam Winch",
+    "construct.winch.blurb": "The cold runs in a line. A line can be hauled on.",
+    "construct.winch.fx": [
+      "<b>+0.15</b> Moonsilver /s",
+      "<b>+20</b> max Moonsilver"
+    ],
+    "construct.press.name": "Tallow Press",
+    "construct.press.blurb": "What the shore gives up when it is squeezed.",
+    "construct.press.fx": [
+      "<b>+0.15</b> Tallow /s",
+      "<b>+15</b> max Tallow",
+      "<b>+5</b> max Ember"
+    ],
+    "construct.lamprow.name": "Lamplight Row",
+    "construct.lamprow.blurb": "Someone lit these once. They can be lit again.",
+    "construct.lamprow.fx": [
+      "dives cost <b>−4%</b>",
+      "<b>+0.05</b> Tallow /s"
+    ],
+    "construct.longhouse.name": "Longhouse",
+    "construct.longhouse.blurb": "Room enough that nobody has to be counted.",
+    "construct.longhouse.fx": [
+      "Houses <b>6</b> Oneiri"
+    ],
+    "construct.reliquary.name": "Reliquary",
+    "construct.reliquary.blurb": "Somewhere to put the things you were told.",
+    "construct.reliquary.fx": [
+      "<b>+40</b> max Echo",
+      "<b>+20</b> max Nacre"
+    ],
+    "construct.scriptorium.name": "Scriptorium",
+    "construct.scriptorium.blurb": "Whatever is written down is harder to swallow.",
+    "construct.scriptorium.fx": [
+      "<b>+0.05</b> Vellum /s",
+      "<b>+20</b> max Vellum"
+    ],
+    "construct.saltpans.name": "Salt Pans",
+    "construct.saltpans.blurb": "Shallow water, left alone, gives up what it was carrying.",
+    "construct.saltpans.fx": [
+      "<b>+0.15</b> Salt /s",
+      "<b>+30</b> max Salt"
+    ],
+    "construct.nightlight.name": "The Nightlight",
+    "construct.nightlight.blurb": "The light he asked for, and was told he was too big for.",
+    "construct.nightlight.fx": [
+      "<b>−0.5</b> Dread /s",
+      "<b>+10</b> max Ward"
+    ],
+    "construct.rampart.name": "Somnal Rampart",
+    "construct.rampart.blurb": "It holds because you have not stopped believing it holds.",
+    "construct.rampart.fx": [
+      "<b>−0.1</b> Dread /s",
+      "<b>+8</b> max Ward"
+    ],
+    "construct.chorusstone.name": "Chorus Stone",
+    "construct.chorusstone.blurb": "A note held by something that does not breathe.",
+    "construct.chorusstone.fx": [
+      "<b>+12</b> max Ward",
+      "<b>+20</b> max Chorus"
+    ],
+    "construct.belltower.name": "Bell Tower",
+    "construct.belltower.blurb": "Bellcast's bell, carried home and hung where anyone may ring it.",
+    "construct.belltower.fx": [
+      "<b>+0.1</b> Chorus /s"
+    ],
+    "construct.forge.name": "The Waking Forge",
+    "construct.forge.blurb": "Where what he is good at is made into something that can stand in a line.",
+    "construct.forge.fx": [
+      "<b>+100</b> max Mettle"
+    ],
+    "construct.hallmany.name": "Hall of the Many",
+    "construct.hallmany.blurb": "Every people of the dream under one roof, and room for more.",
+    "construct.hallmany.fx": [
+      "Houses <b>12</b> Oneiri",
+      "all Focus <b>+3%</b> faster"
+    ],
+    "construct.hallstrengths.name": "Hall of Strengths",
+    "construct.hallstrengths.blurb": "It was never a short list.",
+    "construct.hallstrengths.fx": [
+      "Sworn units <b>+5%</b> strength",
+      "<b>+15</b> max Mettle"
+    ],
+    "construct.beacon.name": "The Beacon",
+    "construct.beacon.blurb": "A light left on at the end of the world.",
+    "construct.beacon.fx": [
+      "the road fields <b>−30%</b>"
+    ],
+    "construct.kiln.name": "The Night Kiln",
+    "construct.kiln.blurb": "Where his nightmares are fired hard enough to fight with.",
+    "construct.kiln.fx": [
+      "<b>+1</b> Umbra /s",
+      "<b>+0.3</b> Dread /s",
+      "no new Oneiri come, and the unbound ones leave"
+    ],
+    "upgrade.abode.name": "Abode",
+    "upgrade.abode.blurb": "The walls agree on where they are, and stay agreed.",
+    "upgrade.abode.fx": [
+      "Houses <b>3</b> Oneiri"
+    ],
+    "upgrade.whispers.name": "Whispers",
+    "upgrade.converse.name": "Converse",
+    "upgrade.converse.blurb": "Ask, and wait, and write down what comes back.",
+    "upgrade.nm-unflinching.name": "Hollow Riders",
+    "upgrade.nm-unflinching.blurb": "Nobody is in the saddle. Something is, and it rides beautifully.",
+    "upgrade.nm-laughing.name": "The Grinning",
+    "upgrade.nm-laughing.blurb": "The laugh from the other room, when nobody else was home.",
+    "upgrade.nm-plainspoken.name": "The Voices in the Hall",
+    "upgrade.nm-plainspoken.blurb": "They only ever say the worst true thing.",
+    "upgrade.nm-sentinel.name": "The Drowned Watch",
+    "upgrade.nm-sentinel.blurb": "They wait at the bottom of the bath, patient as ever.",
+    "upgrade.nm-chorus.name": "The Wailing",
+    "upgrade.nm-chorus.blurb": "Everyone who left, singing.",
+    "upgrade.nm-dreamwright.name": "The Thing on the Stairs",
+    "upgrade.nm-dreamwright.blurb": "Imagination, with the lights off.",
+    "rev.room.name": "Room for It",
+    "rev.room.kind": "unlocks a construct",
+    "rev.room.text": "Your hands keep filling and the shore keeps giving. Somewhere to set it down would help.",
+    "rev.room.fx": [
+      "unlocks <b>Cistern</b>",
+      "a realization: <b>Down Is a Direction</b>"
+    ],
+    "rev.hums.name": "The Stone Hums Back",
+    "rev.hums.kind": "unlocks a construct",
+    "rev.hums.text": "Sit long enough and the Altar hums along with you. Something here wants to turn.",
+    "rev.hums.fx": [
+      "unlocks <b>Dreamspindle</b>"
+    ],
+    "rev.down.name": "Down Is a Direction",
+    "rev.down.kind": "changes the descent",
+    "rev.down.text": "You stop thinking of the floor as a floor. It was always the next step.",
+    "rev.down.fx": [
+      "dives cost <b>−8%</b>"
+    ],
+    "rev.quiet.name": "Quiet Is a Place",
+    "rev.quiet.kind": "unlocks a focus",
+    "rev.quiet.text": "The quiet you made at the Altar did not leave when you stood up. You can go back to it.",
+    "rev.quiet.fx": [
+      "unlocks the <b>Still the Mind</b> focus"
+    ],
+    "rev.stillkeeps.name": "Still Water Keeps",
+    "rev.stillkeeps.kind": "unlocks a construct",
+    "rev.stillkeeps.text": "Water this still holds whatever you pour into it, and gives it back unchanged.",
+    "rev.stillkeeps.fx": [
+      "unlocks <b>Moonwell</b>",
+      "a realization: <b>They Remember Building</b>"
+    ],
+    "rev.remember.name": "They Remember Building",
+    "rev.remember.kind": "changes generation",
+    "rev.remember.text": "The Oneiri were not made for this clearing. They have built before, somewhere else, and they miss it.",
+    "rev.remember.fx": [
+      "<b>Absorb</b> gives <b>+100%</b>"
+    ],
+    "rev.afraid.name": "They Are Afraid Too",
+    "rev.afraid.kind": "a greater realization",
+    "rev.afraid.text": "They did not come for you. Something has been eating their country, a little every night, and they have watched you walk toward it. They think you might be the one who can make it stop.",
+    "rev.afraid.fx": [
+      "all Focus <b>+10%</b> faster",
+      "the Journal gains an entry"
+    ],
+    "rev.cold.name": "Something Cold in the Silt",
+    "rev.cold.kind": "unlocks a focus",
+    "rev.cold.text": "Some of what the dives bring up is heavier than it should be, and cold all the way through.",
+    "rev.cold.fx": [
+      "unlocks the <b>Draw Moonsilver</b> focus",
+      "a realization: <b>Walls That Agree</b>"
+    ],
+    "rev.walls.name": "Walls That Agree",
+    "rev.walls.kind": "upgrades a construct",
+    "rev.walls.text": "The Warrens keep rearranging themselves. Given better stuff, the walls might agree on where they are.",
+    "rev.walls.fx": [
+      "a realization: <b>The Drifters Settle</b>",
+      "every <b>Warren</b> becomes <b>Abode</b>"
+    ],
+    "rev.warmth.name": "Warmth Is Allowed",
+    "rev.warmth.kind": "unlocks a focus",
+    "rev.warmth.text": "You had not noticed you were cold. Nobody here said you could not be warm.",
+    "rev.warmth.fx": [
+      "unlocks the <b>Kindle</b> focus"
+    ],
+    "rev.fat.name": "Fat of the Shore",
+    "rev.fat.kind": "unlocks a focus",
+    "rev.fat.text": "Silt, pressed with a little heat, gives up something that burns slowly.",
+    "rev.fat.fx": [
+      "unlocks the <b>Render Tallow</b> focus",
+      "unlocks <b>Tallow Press</b>"
+    ],
+    "rev.lamps.name": "The Lamps Were Lit",
+    "rev.lamps.kind": "unlocks a construct",
+    "rev.lamps.text": "Someone walked here before you and left light behind. The lamps are set low, at the height of a small hand.",
+    "rev.lamps.fx": [
+      "unlocks the <b>Keep the Lamps</b> focus",
+      "unlocks <b>Lamplight Row</b>",
+      "the Journal gains an entry"
+    ],
+    "rev.seam.name": "The Cold Is a Seam",
+    "rev.seam.kind": "unlocks a construct",
+    "rev.seam.text": "The cold is not everywhere. It runs in a line, and a line can be followed.",
+    "rev.seam.fx": [
+      "unlocks <b>Seam Winch</b>"
+    ],
+    "rev.drifters.name": "The Drifters Settle",
+    "rev.drifters.kind": "changes the work",
+    "rev.drifters.text": "The half-finished figures from The Drift have started standing in your doorways. Some of them have hands.",
+    "rev.drifters.fx": [
+      "each Warren houses <b>+1</b> Oneiri",
+      "<b>Draw Moonsilver</b> gives <b>+50%</b>"
+    ],
+    "rev.darkquiet.name": "The Dark Is Only Quiet",
+    "rev.darkquiet.kind": "unlocks a focus",
+    "rev.darkquiet.text": "You are holding your breath on the Unlit Stair. The Oneiri are not. To them, dark is only quiet with the lamps put out.",
+    "rev.darkquiet.fx": [
+      "unlocks the <b>Sit with the Hush</b> focus"
+    ],
+    "rev.knot.name": "The Knot Unties Itself",
+    "rev.knot.kind": "raises a ceiling",
+    "rev.knot.text": "You were not pulling the right end. You were not, it turns out, meant to pull.",
+    "rev.knot.fx": [
+      "max Echo <b>+100%</b>",
+      "max Hush <b>+100%</b>",
+      "max Ember <b>+100%</b>"
+    ],
+    "rev.tasted.name": "Everything It Ate Tasted of Me",
+    "rev.tasted.kind": "changes the descent",
+    "rev.tasted.text": "The Oneiri have been careful not to say it. Every dream the thing has taken, it took from you. They can tell by what is left.",
+    "rev.tasted.fx": [
+      "dives bring up <b>+25%</b>",
+      "the Journal gains an entry"
+    ],
+    "rev.camefrom.name": "It Came From Me",
+    "rev.camefrom.kind": "a greater realization · opens the Visions",
+    "rev.camefrom.text": "It did not find its way here. It was let out, by a boy who was told there was nothing in the dark and chose to believe it rather than be afraid. What he would not feel had to go somewhere. It came here, and it has been eating ever since.",
+    "rev.camefrom.fx": [
+      "shows the Vision <b>The Door Left Ajar</b>",
+      "opens <b>Visions</b>"
+    ],
+    "rev.answers.name": "The Echoes Answer",
+    "rev.answers.kind": "changes a resource",
+    "rev.answers.text": "What came back was never only your voice. Stop listening for yourself, and listen to the rest of it.",
+    "rev.answers.fx": [
+      "<b>Conjure</b> gives <b>+50%</b>",
+      "shows the Vision <b>The Bell That Answers</b>",
+      "shows the Vision <b>The Lamp Left On</b>",
+      "<b>Echo</b> becomes <b>Whispers</b>",
+      "<b>Conjure</b> becomes <b>Converse</b>"
+    ],
+    "rev.salt.name": "Salt Is What Is Left",
+    "rev.salt.kind": "unlocks a focus",
+    "rev.salt.text": "A whole sea dried here and left only its salt. You know something about that.",
+    "rev.salt.fx": [
+      "unlocks the <b>Let It Out</b> focus"
+    ],
+    "rev.letsea.name": "Let the Sea Go",
+    "rev.letsea.kind": "unlocks a construct",
+    "rev.letsea.text": "It dries faster if you stop trying to keep it.",
+    "rev.letsea.fx": [
+      "unlocks <b>Salt Pans</b>",
+      "shows the Vision <b>The Salt Garden</b>"
+    ],
+    "rev.breath.name": "Time Is a Held Breath",
+    "rev.breath.kind": "changes the descent",
+    "rev.breath.text": "Down here time does not pass. It piles up, and you can feel the weight of it.",
+    "rev.breath.fx": [
+      "dives <b>+15%</b> faster"
+    ],
+    "rev.tidefolk.name": "The Tidefolk Come Ashore",
+    "rev.tidefolk.kind": "unlocks a construct",
+    "rev.tidefolk.text": "The keepers of the undertow have been watching from the waterline. They come up the beach with their houses on their backs.",
+    "rev.tidefolk.fx": [
+      "unlocks <b>Longhouse</b>",
+      "shows the Vision <b>The Long Tide</b>"
+    ],
+    "rev.somewhere.name": "Somewhere to Put It",
+    "rev.somewhere.kind": "unlocks a construct",
+    "rev.somewhere.text": "What they tell you is too much to carry and too important to set down.",
+    "rev.somewhere.fx": [
+      "unlocks <b>Reliquary</b>"
+    ],
+    "rev.written.name": "Written, It Stays",
+    "rev.written.kind": "unlocks a focus",
+    "rev.written.text": "Whatever you only remember, the Nobody can eat. Whatever you write down is harder to swallow.",
+    "rev.written.fx": [
+      "unlocks the <b>Copy the Vellum</b> focus",
+      "unlocks <b>Scriptorium</b>"
+    ],
+    "rev.holds.name": "It Holds Because I Hold It",
+    "rev.holds.kind": "unlocks a construct",
+    "rev.holds.text": "Walls here are made of belief. You have more of that than you thought.",
+    "rev.holds.fx": [
+      "unlocks <b>Somnal Rampart</b>",
+      "brings <b>Ward</b>"
+    ],
+    "rev.stand.name": "Someone Has to Stand There",
+    "rev.stand.kind": "unlocks a focus",
+    "rev.stand.text": "A wall no one watches is a suggestion.",
+    "rev.stand.fx": [
+      "unlocks the <b>Stand the Watch</b> focus"
+    ],
+    "rev.owed.name": "Nothing Is Owed",
+    "rev.owed.kind": "changes generation",
+    "rev.owed.text": "You have been paying for this in fear, a little every night, and no one ever asked you to.",
+    "rev.owed.fx": [
+      "<b>−0.3</b> Dread /s"
+    ],
+    "rev.grew.name": "It Grew When I Did",
+    "rev.grew.kind": "a realization · changes the work",
+    "rev.grew.text": "It was only the dark, once. Then it was being left, and being laughed at, and being wrong. Every fear you would not look at, it took, and it grew.",
+    "rev.grew.fx": [
+      "Visions cost <b>−10%</b>",
+      "shows the Vision <b>The Unblinking</b>",
+      "shows the Vision <b>The Well Remembers</b>"
+    ],
+    "rev.mine.name": "Mine to End",
+    "rev.mine.kind": "a greater realization · opens the Assault",
+    "rev.mine.text": "I did this. I did not mean to, and I was a child, and none of that has helped the ones it has been eating. It came out of me, and I am the only one it answers to. I will find it, and I will end it.",
+    "rev.mine.fx": [
+      "unlocks the <b>Rally</b> focus",
+      "unlocks <b>Drifter Levy</b>",
+      "opens <b>Assault</b>",
+      "the Journal gains an entry"
+    ],
+    "rev.lost.name": "Losing Is Also Information",
+    "rev.lost.kind": "changes the army",
+    "rev.lost.text": "You know now where it is strong. That is more than you knew this morning.",
+    "rev.lost.fx": [
+      "Levied units <b>+20%</b> strength"
+    ],
+    "rev.manyvoices.name": "Many Voices, One Note",
+    "rev.manyvoices.kind": "unlocks a construct",
+    "rev.manyvoices.text": "Alone, each of them hums. Together they hold a note that pushes back.",
+    "rev.manyvoices.fx": [
+      "<b>Rally</b> gives <b>+50%</b>",
+      "unlocks <b>Chorus Stone</b>"
+    ],
+    "rev.nothiding.name": "It Is Not Hiding",
+    "rev.nothiding.kind": "a realization · changes the road",
+    "rev.nothiding.text": "The places it holds are not defended. They are kept, like a pantry.",
+    "rev.nothiding.fx": [
+      "the road fields <b>−5%</b>"
+    ],
+    "rev.clocks.name": "Every Clock Is Late",
+    "rev.clocks.kind": "changes generation",
+    "rev.clocks.text": "Every clock in the hall is behind, and every one is sure it is the only one. You were never late. You were worried.",
+    "rev.clocks.fx": [
+      "all Focus <b>+10%</b> faster",
+      "shows the Vision <b>The Hour That Held</b>"
+    ],
+    "rev.worry.name": "Worry Is Fear With a Plan",
+    "rev.worry.kind": "changes the wards",
+    "rev.worry.text": "It learned worry from you, the way you learned it: by rehearsing the worst thing, over and over, as if that were a kind of safety.",
+    "rev.worry.fx": [
+      "<b>−0.4</b> Dread /s",
+      "shows the Vision <b>A Way Across</b>"
+    ],
+    "rev.borrowed.name": "Borrowed Courage",
+    "rev.borrowed.kind": "changes the army",
+    "rev.borrowed.text": "They fight for you because you asked, and they are brave, and it is not theirs to spend.",
+    "rev.borrowed.fx": [
+      "Levied units <b>+25%</b> strength"
+    ],
+    "rev.wants.name": "It Wants the Waking Side",
+    "rev.wants.kind": "a realization",
+    "rev.wants.text": "It has eaten most of what there is to eat here. There is a whole world on the other side of your eyes, and it knows the way, because it came from you.",
+    "rev.wants.fx": [
+      "shows the Vision <b>The Other Tenant</b>",
+      "the Journal gains an entry"
+    ],
+    "rev.made.name": "Made, Not Hired",
+    "rev.made.kind": "a greater realization · unlocks a construct",
+    "rev.made.text": "It is made of what I was afraid of. Then what fights it has to be made of what I am not afraid of. Nobody here can lend me that. This place makes whatever is held in mind. I will have to make them.",
+    "rev.made.fx": [
+      "unlocks <b>The Waking Forge</b>",
+      "the Journal gains an entry"
+    ],
+    "rev.wicks.name": "The Wicks Come Home",
+    "rev.wicks.kind": "changes generation",
+    "rev.wicks.text": "The small flames who kept the Lamplit Hollows have followed the light to your Palace. They know every lamp you lit.",
+    "rev.wicks.fx": [
+      "<b>Render Tallow</b> gives <b>+100%</b>",
+      "<b>Keep the Lamps</b> gives <b>+100%</b>",
+      "<b>Kindle</b> gives <b>+100%</b>",
+      "a realization: <b>Every People Has Come</b>"
+    ],
+    "rev.saltwives.name": "The Saltwives Keep Watch",
+    "rev.saltwives.kind": "changes the wards",
+    "rev.saltwives.text": "They have kept the grief of the Salt Flats for longer than there were names. They can keep a wall.",
+    "rev.saltwives.fx": [
+      "max Ward <b>+50%</b>",
+      "a realization: <b>Every People Has Come</b>"
+    ],
+    "rev.clockfolk.name": "The Clockfolk Keep Time",
+    "rev.clockfolk.kind": "changes the descent",
+    "rev.clockfolk.text": "The Clockfolk have set every clock in the hall to the same hour. It is not late.",
+    "rev.clockfolk.fx": [
+      "dives <b>+50%</b> faster",
+      "a realization: <b>Every People Has Come</b>"
+    ],
+    "rev.hollowed.name": "The Hollowed Remember",
+    "rev.hollowed.kind": "changes the road",
+    "rev.hollowed.text": "The trees it ate from the inside are still standing, and they remember what it tasted like.",
+    "rev.hollowed.fx": [
+      "the road fields <b>−10%</b>",
+      "a realization: <b>Every People Has Come</b>"
+    ],
+    "rev.everypeople.name": "Every People Has Come",
+    "rev.everypeople.kind": "unlocks a construct",
+    "rev.everypeople.text": "The Oneiri, the Drifters, the Tidefolk, the Wicks, the Saltwives, the Clockfolk, the Hollowed. None of them came for you. All of them came.",
+    "rev.everypeople.fx": [
+      "unlocks the <b>Sing Together</b> focus",
+      "unlocks <b>Hall of the Many</b>",
+      "the Journal gains an entry"
+    ],
+    "rev.goodat.name": "What I Am Good At",
+    "rev.goodat.kind": "unlocks a construct",
+    "rev.goodat.text": "It was never a short list. You were only in the habit of reading the other one.",
+    "rev.goodat.fx": [
+      "max Mettle <b>+100%</b>",
+      "unlocks <b>Hall of Strengths</b>"
+    ],
+    "rev.knows.name": "It Knows I Am Coming",
+    "rev.knows.kind": "a realization",
+    "rev.knows.text": "The Understair is quiet the way a held breath is quiet. It has stopped eating. It is waiting for you.",
+    "rev.knows.fx": [
+      "Sworn units <b>+10%</b> strength",
+      "<b>+0.1</b> Dread /s",
+      "the Journal gains an entry"
+    ],
+    "rev.fear.name": "Fear Is Also Strength",
+    "rev.fear.kind": "a choice · the nightmares wake",
+    "rev.fear.text": "It made itself out of my fear. I can make something out of it too, and mine will be bigger.",
+    "rev.fear.fx": [
+      "<b>Sing Together</b> falls silent",
+      "<b>Rally</b> gives <b>−50%</b>",
+      "<b>+3</b> Dread /s",
+      "<b>+100</b> max Dread",
+      "unlocks the <b>Dredge the Nightmares</b> focus",
+      "unlocks <b>The Night Kiln</b>",
+      "every Sworn unit becomes its nightmare, <b>×2.5</b>",
+      "the Journal gains an entry",
+      "the other choice is gone for good"
+    ],
+    "rev.shut.name": "Some Doors Stay Shut",
+    "rev.shut.kind": "a choice · the nightmares sleep",
+    "rev.shut.text": "I have spent my whole life pushing fear somewhere else. I will not do it to them. These stay with me, and stay asleep.",
+    "rev.shut.fx": [
+      "Sworn units <b>+25%</b> strength",
+      "<b>Rally</b> gives <b>+100%</b>",
+      "unlocks the <b>Let It Go</b> focus",
+      "the Journal gains an entry",
+      "the other choice is gone for good"
+    ],
+    "vision.door.name": "The Door Left Ajar",
+    "vision.door.text": "A bedroom, a door open a hand's width, a voice down the hall saying there is nobody there. You watch the boy decide to believe it. You watch what he decided not to feel slip out through the gap.",
+    "vision.door.fx": [
+      "<b>+0.2</b> Dread /s",
+      "brings <b>Dread</b>",
+      "the Journal gains an entry"
+    ],
+    "vision.bell.name": "The Bell That Answers",
+    "vision.bell.text": "You rang it once, badly, and something under the floor rang back.",
+    "vision.bell.fx": [
+      "<b>Conjure</b> gives <b>+18%</b>"
+    ],
+    "vision.vigil.name": "The Lamp Left On",
+    "vision.vigil.text": "Six years old, asking for the hall light to be left on. Being told he was too big for that now.",
+    "vision.vigil.fx": [
+      "unlocks <b>The Nightlight</b>",
+      "the Journal gains an entry"
+    ],
+    "vision.garden.name": "The Salt Garden",
+    "vision.garden.text": "Nothing grows in it. You tend it anyway, and something is growing.",
+    "vision.garden.fx": [
+      "unlocks the <b>Sift the Beds</b> focus"
+    ],
+    "vision.tide.name": "The Long Tide",
+    "vision.tide.text": "Each pour shows one fear it took, and how old he was when it took it.",
+    "vision.tide.fx": [
+      "<b>Sift the Beds</b> gives <b>+10%</b> each time",
+      "the first six each write a Journal entry"
+    ],
+    "vision.unblink.name": "The Unblinking",
+    "vision.unblink.text": "Stop closing your eyes at the part you do not like.",
+    "vision.unblink.fx": [
+      "Realizations cost <b>−4%</b> each time"
+    ],
+    "vision.well.name": "The Well Remembers",
+    "vision.well.text": "Everything he pushed down is down here, sorted, and the Nobody has been living on it.",
+    "vision.well.fx": [
+      "<b>Conjure</b> gives <b>+40%</b>",
+      "each Longhouse houses <b>+1</b> Oneiri",
+      "a realization: <b>Mine to End</b>"
+    ],
+    "vision.hour.name": "The Hour That Held",
+    "vision.hour.text": "One hour of the dream refused to pass. Make it a habit.",
+    "vision.hour.fx": [
+      "all Focus <b>+3%</b> faster each time"
+    ],
+    "vision.bridge.name": "A Way Across",
+    "vision.bridge.text": "The gap was never the problem. Admitting you had stopped at it was.",
+    "vision.bridge.fx": [
+      "mustering costs <b>−10%</b>"
+    ],
+    "vision.tenant.name": "The Other Tenant",
+    "vision.tenant.text": "His own bedroom, in the waking world, before dawn. He is asleep, and his eyes are open, and the thing looking out of them is not him. It has his voice. It is making calls.",
+    "vision.tenant.fx": [
+      "<b>+100</b> max Dread",
+      "a realization: <b>Made, Not Hired</b>",
+      "the Journal gains an entry"
+    ],
+    "vision.looked.name": "The Night I Looked",
+    "vision.looked.text": "Nine years old. He got up on his own, walked to the door, and turned the light on himself.",
+    "vision.looked.fx": [
+      "unlocks <b>The Unflinching</b>",
+      "shows the Vision <b>The Duck on the Wall</b>"
+    ],
+    "vision.duck.name": "The Duck on the Wall",
+    "vision.duck.text": "His little sister making shadow animals on the wall, until the dark was mostly ducks.",
+    "vision.duck.fx": [
+      "unlocks <b>The Laughing Company</b>",
+      "shows the Vision <b>Saying It Out Loud</b>",
+      "a realization: <b>What I Am Good At</b>"
+    ],
+    "vision.aloud.name": "Saying It Out Loud",
+    "vision.aloud.text": "The first time he told someone the whole truth about the dreams, and was not laughed at.",
+    "vision.aloud.fx": [
+      "unlocks <b>The Plainspoken</b>",
+      "shows the Vision <b>Waiting Well</b>"
+    ],
+    "vision.waiting.name": "Waiting Well",
+    "vision.waiting.text": "A long night in a hospital chair, beside someone, not leaving.",
+    "vision.waiting.fx": [
+      "unlocks <b>The Stillwater Sentinels</b>",
+      "shows the Vision <b>Everyone Who Stayed</b>"
+    ],
+    "vision.stayed.name": "Everyone Who Stayed",
+    "vision.stayed.text": "Every person who stayed when he was hard to stay with.",
+    "vision.stayed.fx": [
+      "unlocks <b>The Chorus</b>",
+      "shows the Vision <b>What I Make</b>"
+    ],
+    "vision.make.name": "What I Make",
+    "vision.make.text": "A boy drawing castles on the back of his homework. A man building a palace out of attention.",
+    "vision.make.fx": [
+      "unlocks <b>The Dreamwright</b>"
+    ],
+    "vision.wake.name": "What I Could Wake",
+    "vision.wake.text": "Every nightmare he ever had is still in him, and every one is strong. The rider with nobody in the saddle. The thing on the stairs. The voices in the hall. He could wake them, bind them, and set them on the Nobody. They would win. They would also still be here afterward, in a country that has only just stopped being eaten.",
+    "vision.wake.fx": [
+      "a realization: <b>Fear Is Also Strength</b>",
+      "a realization: <b>Some Doors Stay Shut</b>",
+      "the Journal gains an entry"
+    ],
+    "veil.3.entry": [
+      "More of the almost-dreams. A birthday party with no one at it, the candles still lit. I walked around it rather than through.",
+      "A kitchen went by with the kettle just starting to sing. Nobody came to take it off the heat.",
+      "None of it is finished. This is where things wait when nobody dreams them the rest of the way."
+    ],
+    "veil.4.entry": [
+      "The pieces thin out here, as if something has been picking through them and taking the good parts.",
+      "A picnic with nothing left on the blanket. A letter with the signature torn away. A swing set missing its swing.",
+      "Whatever did this was careful. It left the shapes of things behind, the way you leave the rind."
+    ],
+    "veil.5.entry": [
+      "I found a fragment with teeth marks in it. A summer, half of one. The rest was gone.",
+      "The Oneiri will not touch the bitten ones. They carry them to the edge of the Drift and let them go.",
+      "I asked what had eaten it. They looked at me for a long time."
+    ],
+    "veil.6.entry": [
+      "The Drift ends in a slope of silt, and the silt is warm, as if something has been lying on it.",
+      "The Oneiri slow down here, the way people slow down near a house where someone is sleeping.",
+      "Past the slope, the pieces stop drifting and start to settle."
+    ],
+    "veil.siltshore.name": "The Silt Shore",
+    "veil.7.entry": [
+      "A shore, finally. The silt here is fine as flour and holds a footprint for exactly as long as you watch it.",
+      "The Oneiri walk it with their heads down, reading the prints.",
+      "Some of the prints are mine. I have not been here before."
+    ],
+    "veil.8.entry": [
+      "The tide goes out and never comes back in. What it left behind is waiting to be sorted.",
+      "Shells, buttons, a glove, a door key. Nothing large. Everything someone once kept in a pocket.",
+      "The Oneiri sort it into piles I do not understand yet."
+    ],
+    "veil.9.entry": [
+      "The Oneiri follow me down now. They walk the shore behind me picking things up, the way you would after a storm.",
+      "They hand me the things they find as if I might know what they are.",
+      "Often I do. I do not like how often."
+    ],
+    "veil.10.entry": [
+      "There are paths worn into the silt that are not mine. Small feet. Going down.",
+      "They are not deep. Whoever left them was small, and in no hurry, and always going the same way.",
+      "I followed them for a while. They go where I am going."
+    ],
+    "veil.11.entry": [
+      "I dug a hand's depth and found a marble. Blue, with a white twist. I had one like it.",
+      "I have not thought about that marble in thirty years. I kept it on the windowsill, where the light came through it.",
+      "I put it in my pocket. The Oneiri watched me do it."
+    ],
+    "veil.12.entry": [
+      "The shore curves away in both directions and never meets anything. The only way is down.",
+      "Standing at the edge of it I understood that this whole shore is made of things that fell out of pockets.",
+      "Mine, mostly."
+    ],
+    "veil.13.entry": [
+      "Below the silt there is water again, very still. I can see my face in it, and it is paying attention.",
+      "I did not stay to look. It looked back for a little longer than I did.",
+      "The silt here is wet, and heavier, and it keeps the shape of a hand."
+    ],
+    "veil.stillwater.name": "The Stillwater",
+    "veil.14.entry": [
+      "Water so still it thinks. When I sit at its edge my thoughts slow down to match it.",
+      "The Oneiri sit with me at the edge, more of them every day.",
+      "None of us says anything. It feels like the most useful thing I have done in years."
+    ],
+    "veil.15.entry": [
+      "Nothing moves here unless I do. It is the quietest place I have ever been, awake or not.",
+      "Even the Oneiri are quieter here. They move as if they are trying not to wake it.",
+      "I have started to wonder what it is."
+    ],
+    "veil.16.entry": [
+      "The Oneiri will not go into the water. They wait at the edge and watch me wade.",
+      "It is warm, the water. Warmer than it should be, like a bath someone has only just left.",
+      "They call me back before I am out of my depth, every time."
+    ],
+    "veil.17.entry": [
+      "Something far below disturbed the surface once, today. One ring, spreading. Then nothing.",
+      "The Oneiri all turned to look at the same place, and then all looked away from it.",
+      "I asked them what was down there. They went back to work."
+    ],
+    "veil.18.entry": [
+      "I think the stillness is not calm. I think it is holding its breath.",
+      "The quiet here is the quiet of a held breath, of someone standing very still in the next room.",
+      "I found I was holding mine too."
+    ],
+    "veil.19.entry": [
+      "The lamps start here. Not lit, just placed. Someone set them along the bottom like a path.",
+      "Each one is set down carefully, with its wick trimmed, facing out into the dark.",
+      "Someone meant to come back and light them. Nobody did."
+    ],
+    "veil.20.entry": [
+      "At the deepest point there is a hush like a hand over a mouth. The Oneiri are frightened of it, and did not want me to see that they are.",
+      "Something lives at the bottom of the Stillwater, and it has been waiting, and it is not them it is waiting for.",
+      "They stayed with me anyway."
+    ],
+    "veil.lamplithollows.name": "The Lamplit Hollows",
+    "veil.21.entry": [
+      "Hollows in the rock, each one with a lamp in it, each lamp burnt out. The wicks are short. They burned a long time.",
+      "I counted forty lamps before I stopped counting. Every one of them is out.",
+      "The Oneiri walk between them as if through a graveyard."
+    ],
+    "veil.22.entry": [
+      "The lamps are set low. I have to crouch to reach them. Whoever set them was small.",
+      "Knee height, all of them. The height of a child's hand holding a match.",
+      "I keep crouching to reach them, and each time I feel smaller."
+    ],
+    "veil.23.entry": [
+      "I lit one. It took the flame gratefully, and the hollow around it remembered it had a shape.",
+      "The light is small and yellow and only reaches as far as my knees.",
+      "It is enough. I had forgotten how much a small light is enough."
+    ],
+    "veil.24.entry": [
+      "The Oneiri gathered around the lit lamp like people around a stove. I had not realised they were cold.",
+      "They held their hands out to it. One of them laughed, I think. It sounded like a kettle.",
+      "We lit six more before we went on."
+    ],
+    "veil.25.entry": [
+      "Every hollow has a lamp and every lamp faces outward, toward the dark, like a line of sentries.",
+      "Facing outward, not in. Whoever set them was not lighting a room. They were keeping something out.",
+      "I do not know what. I think I used to."
+    ],
+    "veil.26.entry": [
+      "Past the last lamp the hollows go on, unlit. I did not like the way they went on.",
+      "The dark past the last lamp is thicker, the way dark is thicker at the end of a hallway.",
+      "The Oneiri took a lamp with them when we went on."
+    ],
+    "veil.coldseam.name": "The Cold Seam",
+    "veil.27.entry": [
+      "A seam of cold runs through the rock, silver where it surfaces. It hums the way the Altar hums, but lower.",
+      "The Oneiri put their hands to it and hum along.",
+      "Whatever is here is old, and cold, and it has been kept very carefully."
+    ],
+    "veil.28.entry": [
+      "The cold here is not weather. It is something being kept.",
+      "The cold holds its shape, as if poured into a mold and left to set.",
+      "The Oneiri cut it out in blocks and carry it back to the Palace. It does not melt."
+    ],
+    "veil.29.entry": [
+      "The Oneiri work the seam without being asked. They seem glad to have something to make with.",
+      "They are quicker with their hands than they were. They have started building things I did not ask for.",
+      "A bench. A railing. A shelf, at a child's height."
+    ],
+    "veil.30.entry": [
+      "Deep in the seam there is a room cut square, and in it a small bed made of moonsilver, much too cold to sleep in.",
+      "The blanket on it is folded back, as if someone just got up.",
+      "I did not touch it. I did not want to find out whether it was still warm."
+    ],
+    "veil.31.entry": [
+      "The seam ends against a stair. The stair has no light at all.",
+      "I stood at the top of it for a long time. The Oneiri waited with me.",
+      "Then one of them took my hand, and we went down."
+    ],
+    "veil.unlitstair.name": "The Unlit Stair",
+    "veil.32.entry": [
+      "The first place down here that is simply dark. Not dim. Dark, the way a room is dark after someone says goodnight.",
+      "I have always hated this kind of dark. I never knew why. I thought everyone did.",
+      "The Oneiri keep close. Nobody lights a lamp. It seems to matter that we do not."
+    ],
+    "veil.33.entry": [
+      "I count the steps. I always counted the steps. I do not know how I know that.",
+      "Fourteen. There were fourteen stairs in the house I grew up in, and I counted them every night.",
+      "There are more than fourteen here. I stopped counting at a hundred."
+    ],
+    "veil.34.entry": [
+      "Something breathes on the stair below me, in when I breathe out, as if it is trying not to be heard.",
+      "I stopped. It stopped. I went on, and after a while it went on too.",
+      "The Oneiri did not hear it, or pretended not to."
+    ],
+    "veil.35.entry": [
+      "The Oneiri carry lamps now when they follow me. None of them will say why.",
+      "I did not tell them to. I think they are carrying the lamps for me.",
+      "The lamps help. I wish they did not help so much."
+    ],
+    "veil.36.entry": [
+      "At the bottom of the stair there is a house, and one window in it, and a light on behind the window.",
+      "I know the house. I do not want to know the house.",
+      "The Oneiri stopped at the bottom stair and would not come any closer."
+    ],
+    "veil.housewithonewindow.name": "The House With One Window",
+    "veil.37.entry": [
+      "The house is the house I grew up in. It is wrong in small ways: the door is too tall, the window too high to see into.",
+      "The paint is the right color. The step still has the crack in it. The light is on upstairs.",
+      "I stood on the path for a long time and did not go in."
+    ],
+    "veil.38.entry": [
+      "I walked all the way around it. There is only the one window, and it is my window.",
+      "The curtains are drawn. Through the gap in them there is a small light, the kind you plug into a wall.",
+      "I used to fall asleep watching that light."
+    ],
+    "veil.39.entry": [
+      "The light behind the window is a nightlight. It is the only light in the whole of the dark.",
+      "Around the house the dark goes on forever. Nothing else is lit, anywhere.",
+      "I think the house is what the dark is afraid of. Or the other way round."
+    ],
+    "veil.40.entry": [
+      "I have to go in. I have known that since the Stillwater. I did not want to know it.",
+      "The door is not locked. It never was. It is open a hand's width, the way I always asked for it to be.",
+      "The Oneiri will wait for me outside."
+    ],
+    "veil.undertow.name": "The Undertow",
+    "veil.41.entry": [
+      "Under everything, a pull. It moves the silt, the lamps, the Oneiri, me. It has always been moving me.",
+      "I can feel it in my feet, a slow tug toward the deep.",
+      "The Oneiri lean into it the way you lean into a wind."
+    ],
+    "veil.42.entry": [
+      "The Oneiri talk more down here. Their voices come back changed off the water, and some of what comes back is advice.",
+      "They have started answering my questions. Not with words. With where they point.",
+      "Most of it points down."
+    ],
+    "veil.43.entry": [
+      "The undertow runs toward something. I can feel which way, the way you feel which way is downhill in the dark.",
+      "I let it take me a little way, just to feel where it wanted me to go.",
+      "It knew. It has always known."
+    ],
+    "veil.44.entry": [
+      "Some of the currents are warm. The Oneiri say those are the ones the Nobody has not found yet.",
+      "Those are the ones the Oneiri swim in. They say it is like remembering being young.",
+      "I swam in one. It was."
+    ],
+    "veil.45.entry": [
+      "A drowned staircase. A drowned kitchen. A drowned swing, still moving.",
+      "Everything the pull has carried off is here, sunk and softened, still moving slightly.",
+      "I found my bicycle. I left it where it was."
+    ],
+    "veil.46.entry": [
+      "The current slackens and the water goes shallow and bitter. Salt, on the lips.",
+      "The water tastes like the back of the throat just before crying.",
+      "The Oneiri do not drink it. I did, once, and wished I had not."
+    ],
+    "veil.saltflats.name": "The Salt Flats",
+    "veil.47.entry": [
+      "A sea dried here, a long time ago, and left all of its salt behind. White to every horizon.",
+      "The sun comes up off it so bright it hurts. Nothing grows. Nothing moves.",
+      "I walked out into it until the Palace was a speck behind me."
+    ],
+    "veil.48.entry": [
+      "The salt lies in drifts, like snow, and in some of the drifts there are shapes pressed into it. Small ones.",
+      "A hand. A face. A shoe, a child's, with the laces still tied.",
+      "The Oneiri walk around them carefully, as if they are graves."
+    ],
+    "veil.49.entry": [
+      "The Saltwives watch from far off. They do not come closer. They are not unkind about it.",
+      "They are tall and white and very still, and they stand the way people stand at a funeral.",
+      "They are keeping something. I think it is the grief itself."
+    ],
+    "veil.50.entry": [
+      "I cried here, and the salt took it up without comment, the way it takes everything.",
+      "I had not cried in years. I did not know I had so much of it.",
+      "The Saltwives came a little closer after that. Not close. Closer."
+    ],
+    "veil.51.entry": [
+      "At the edge of the flats the salt gives way to shells, and the shells are full of something that shines.",
+      "A beach of opened shells, each one holding something small and bright.",
+      "The Oneiri gather them in armfuls and will not tell me what they are."
+    ],
+    "veil.pearlbeds.name": "The Pearl Beds",
+    "veil.52.entry": [
+      "Beds of shell, open, each with a pearl in it the size of a thumb. Each pearl is a memory.",
+      "Every pearl was something that hurt and would not stop. The shell grew around it to keep the hurt in.",
+      "They are beautiful. That is the worst part."
+    ],
+    "veil.53.entry": [
+      "A pearl grows around a hurt. Every one of these started as something small that would not go away.",
+      "The small hurts make the largest pearls. The ones you did not think were worth crying over.",
+      "The beds go on for miles."
+    ],
+    "veil.54.entry": [
+      "I held one up to the light and saw a classroom. Everyone was laughing. I put it back.",
+      "I was twelve. I laughed along. I have never stopped hearing it.",
+      "The Tidefolk took the pearl back from me gently, the way you take something sharp from a child."
+    ],
+    "veil.55.entry": [
+      "The Tidefolk tend the beds. They know every pearl by name. They know which ones are mine.",
+      "They do not judge. They polish them, and put them back, and move on to the next.",
+      "There are so many of mine."
+    ],
+    "veil.56.entry": [
+      "The oldest pearl is black. It started as the dark.",
+      "It is at the very bottom of the bed, older than all the rest, and it has not stopped growing.",
+      "The Tidefolk will not touch it."
+    ],
+    "veil.wrackline.name": "The Wrack Line",
+    "veil.57.entry": [
+      "Where the tide stops it leaves a line of everything it carried. Here it is dreams, broken open and emptied.",
+      "They lie in a long line on the shore, like shells after a storm, all empty.",
+      "I walked the whole length of it and did not find one that had not been eaten."
+    ],
+    "veil.58.entry": [
+      "Thousands of them. Not mine: the Oneiri's, the Tidefolk's, the Drifters'. All with the same bite taken out.",
+      "I looked at the bites for a long time. They are all the same size. A child's mouth.",
+      "The Oneiri watched me understand it."
+    ],
+    "veil.59.entry": [
+      "I did this. Not with my hands. But it came out of me, and I let it.",
+      "I let it out of me when I was six, and I have been feeding it ever since, every time I looked away.",
+      "It is mine. It is mine to end."
+    ],
+    "veil.60.entry": [
+      "The wrack line runs down to a road. Someone has to walk it.",
+      "It leads down, into places the Oneiri have not been back to in a long time.",
+      "They gave me what they had, and I did not ask whether it would be enough."
+    ],
+    "veil.hollowwood.name": "The Hollow Wood",
+    "veil.61.entry": [
+      "Trees, eaten from the inside. They still stand. They creak when the wind passes through the holes.",
+      "Hollowed out, every one, and still standing, as if they have not been told yet.",
+      "The wind makes a sound in them like someone breathing through their teeth."
+    ],
+    "veil.62.entry": [
+      "Dread comes up through the roots here, a slow cold, and settles in whoever stands still too long.",
+      "I stood still too long. I felt it come up through my shoes.",
+      "It is not cold, exactly. It is the feeling of having forgotten something important."
+    ],
+    "veil.63.entry": [
+      "The Hollowed do not speak. They lean together when I pass, as if remembering how to be a forest.",
+      "They cannot move. They are still here. They know exactly what ate them.",
+      "They lean toward the Palace when the wind blows that way."
+    ],
+    "veil.64.entry": [
+      "I heard my name in the wood, in my mother's voice. It was not her.",
+      "It knew what she sounds like. It knew what she would say.",
+      "I did not answer. It kept calling for a long time after I had gone."
+    ],
+    "veil.65.entry": [
+      "The wood ends at a wall of clocks.",
+      "Hundreds of them, stacked to the dark, all ticking, none of them agreeing.",
+      "The sound of them made my chest tight before I knew why."
+    ],
+    "veil.hallofclocks.name": "The Hall of Clocks",
+    "veil.66.entry": [
+      "Every clock is late. Every clock knows it is late. The ticking is frantic.",
+      "I stood among them and my heart sped up to match them.",
+      "Every one of them is sure something is about to happen."
+    ],
+    "veil.67.entry": [
+      "The Clockfolk wind them endlessly and never catch up, and do not know that they could stop.",
+      "They are thin and quick and anxious, and they apologize every time they see me.",
+      "One of them is winding a clock that is only a face painted on the wall."
+    ],
+    "veil.68.entry": [
+      "One clock is set to the hour I was born. It is running fast.",
+      "It has gained years on me already.",
+      "The Clockfolk have been trying to slow it down since before I arrived."
+    ],
+    "veil.69.entry": [
+      "The Nobody learned worry here. I can smell it in the brass.",
+      "Every late night, every held breath before a phone call, every sure thing that might not be.",
+      "It ate all of it. It grew so fat on worry."
+    ],
+    "veil.70.entry": [
+      "At the end of the hall there is a waiting room, and a name being called that is almost mine.",
+      "I almost stood up. I almost answered.",
+      "The Oneiri held my sleeve until the name went on to someone else."
+    ],
+    "veil.waitingrooms.name": "The Waiting Rooms",
+    "veil.71.entry": [
+      "Chairs in rows. A door. Behind the door, news.",
+      "Everyone here is sitting very straight, holding something on their knees, waiting to be called.",
+      "No one looks at anyone else."
+    ],
+    "veil.72.entry": [
+      "Everyone here is waiting for something bad, and has been for years, and has gotten good at it.",
+      "Somebody offered me a magazine. It was from the year I turned thirty.",
+      "I read the whole thing. I do not remember any of it."
+    ],
+    "veil.73.entry": [
+      "I sat for a while. It felt like sitting in a hospital, holding a hand.",
+      "I did sit in a room like this once, for a whole night. I did not let go.",
+      "I had forgotten that I did not let go."
+    ],
+    "veil.74.entry": [
+      "The door never opens. That is the worst thing it could do, and it knows it.",
+      "Everyone keeps watching it anyway. I did too.",
+      "When I finally stood up to leave, nobody noticed."
+    ],
+    "veil.75.entry": [
+      "Past the last room there is a stair, and the stair is a mirror.",
+      "It goes down in the other direction, into the reflection.",
+      "The Oneiri would not step onto it. I went first."
+    ],
+    "veil.mirrorstair.name": "The Mirror Stair",
+    "veil.76.entry": [
+      "Every step reflects me going down. The reflections are a little behind, and a little wrong.",
+      "Every step I take, a hundred of me take it too, a moment late.",
+      "I stopped once. They did not all stop."
+    ],
+    "veil.77.entry": [
+      "In the mirrors it wears my face. It is getting better at it.",
+      "It stands where my reflection should stand. It moves when I move.",
+      "It is practising."
+    ],
+    "veil.78.entry": [
+      "One reflection smiled when I did not.",
+      "It was a very good smile. It was mine.",
+      "I did not look at the mirrors again for a long time."
+    ],
+    "veil.79.entry": [
+      "I understand now what it wants. It wants the side of the mirror I am on.",
+      "It is tired of being the dark under a child's bed. It wants to be the child, grown.",
+      "It wants to wake up in the morning as me."
+    ],
+    "veil.80.entry": [
+      "The mirror ends. Below it, a shore where the peoples have gathered, waiting to see what I will bring.",
+      "They are all there, every people of the dream, lamps lit.",
+      "Nobody asked them to come. I did not know how badly I needed them to."
+    ],
+    "veil.gatheringshore.name": "The Gathering Shore",
+    "veil.81.entry": [
+      "Everyone is here. Every people of the dream, on one shore, in their own lights.",
+      "The Oneiri, the Drifters, the Tidefolk. Others I have only glimpsed until now.",
+      "They go quiet when they see me. Then they start to sing."
+    ],
+    "veil.82.entry": [
+      "The Wicks came from the Hollows carrying their own lamps. They knew me by the ones I lit.",
+      "They set their lamps along the shore, low, at a child's height.",
+      "I recognized the spacing. It was mine."
+    ],
+    "veil.83.entry": [
+      "They are not here to watch. They brought tools.",
+      "The Saltwives brought walls. The Clockfolk brought time. The Hollowed brought their memory of being eaten.",
+      "It is more than I have ever been given."
+    ],
+    "veil.84.entry": [
+      "I have never been anywhere with so many who wanted the same thing I want.",
+      "I used to think I would have to do this alone. I thought that was the point of it.",
+      "It was not the point of it."
+    ],
+    "veil.85.entry": [
+      "Below the shore, a cupboard door, grown enormous. The Understair.",
+      "I have been walking toward this door my whole life.",
+      "The peoples followed me down to it, and stopped at the threshold, and waited."
+    ],
+    "veil.understair.name": "The Understair",
+    "veil.86.entry": [
+      "The cupboard under the stairs. Coats, boots, the vacuum cleaner, and the dark at the back that went further than the house did.",
+      "It smelled exactly the same. Wet coats and dust.",
+      "I used to hide in here from the dark in the rest of the house. I did not think about what was in here with me."
+    ],
+    "veil.87.entry": [
+      "It went further. It goes on and on.",
+      "The coats go on for miles, and behind them more coats, and behind those the dark.",
+      "The Oneiri hold hands in a line so none of us gets lost."
+    ],
+    "veil.88.entry": [
+      "The Nobody has stopped eating. The Understair is quiet the way a held breath is quiet.",
+      "It is not hiding any more. It has stopped pretending not to be here.",
+      "I can feel it listening to me breathe."
+    ],
+    "veil.89.entry": [
+      "I found my old torch here, the one with the dead batteries. I put new ones in. It works.",
+      "The beam is small and yellow and wobbles in my hand.",
+      "It is exactly as brave as I was at eight. It turns out that is quite brave."
+    ],
+    "veil.90.entry": [
+      "At the back of the Understair there is one lamp, still lit.",
+      "It is on a shelf at knee height, among the boots, trimmed and steady.",
+      "Nobody has touched it in thirty years. It has not gone out."
+    ],
+    "veil.lastlamp.name": "The Last Lamp",
+    "veil.91.entry": [
+      "One lamp, burning, in all this dark. It has been burning since I was six.",
+      "The dark leans in toward it and never quite gets close.",
+      "I sat by it for a long time, the way I used to sit by the nightlight."
+    ],
+    "veil.92.entry": [
+      "I think I lit it. I think it is the only thing I did not push away.",
+      "The whole time the Nobody has been growing, this was here, and it was mine too.",
+      "The Oneiri sat down around it with me and did not say anything."
+    ],
+    "veil.93.entry": [
+      "Everything down here leans toward the lamp. Even the dark.",
+      "The Nobody leans toward it too, the way you lean toward a window in a house you cannot leave.",
+      "I almost felt sorry for it."
+    ],
+    "veil.94.entry": [
+      "The Oneiri set up around it without being asked, as if it were an altar.",
+      "They bring it things: a bench, a railing, a shelf at a child's height.",
+      "It is the most beautiful thing in the dream."
+    ],
+    "veil.95.entry": [
+      "Past the lamp's reach there is a landing, and a hallway, and a door.",
+      "The landing of the house I grew up in, and the hallway, and my door at the end of it.",
+      "The lamp's light reaches almost to the door, and then stops."
+    ],
+    "veil.96.entry": [
+      "Something showed me, here, what I could wake if I wanted to. I will have to decide.",
+      "Every nightmare I ever had is still in me, and every one of them is strong enough to win.",
+      "I have not decided. I have not decided."
+    ],
+    "veil.doorajar.name": "The Door Ajar",
+    "veil.97.entry": [
+      "My bedroom door, open a hand's width, the way I asked for it to be left every night.",
+      "The hall light is on. My bedroom is dark.",
+      "I am standing on the wrong side of the door, and I am grown."
+    ],
+    "veil.98.entry": [
+      "The light from the hall falls across the carpet in a stripe. Nothing crosses it.",
+      "I used to lie in bed and watch that stripe of light, and nothing crossed it, and I slept.",
+      "Something is on the other side of it now, holding its breath."
+    ],
+    "veil.99.entry": [
+      "I can hear it breathing on the other side of the door. It has been waiting a very long time.",
+      "I can hear it breathing in the dark of my room, in when I breathe out.",
+      "It sounds like a boy trying not to cry."
+    ],
+    "veil.100.entry": [
+      "The bottom. Nothing further down. Only the door, and what is behind it.",
+      "I have gone as far down as there is.",
+      "Whatever is left to do, I do on the road, with everyone who came with me."
+    ],
+    "veil.bottom.name": "What Lies In The Depths",
+    "veil.bottom.entry": [
+      "There is nothing under this. No floor to give, no next place to feel through it.",
+      "The dive goes on anyway, fathom after fathom of the same dark, and brings up what the dream still has.",
+      "Whatever happens now happens on the road."
+    ],
+    "place.gate.name": "The Lamplit Gate",
+    "place.gate.blurb": "The last of your own ground. The dark begins at the gate, the way it always did.",
+    "place.gate.ben": "the Journal gains an entry",
+    "place.thunder.name": "Thunderhead Hill",
+    "place.thunder.blurb": "A hill under a storm that only ever threatens. He hid under the covers for a whole summer of this.",
+    "place.thunder.ben": "all Focus gains <b>+5%</b>",
+    "place.aisle.name": "The Lost Aisle",
+    "place.aisle.blurb": "Shelves higher than a grown-up, and no one at the end of any of them.",
+    "place.aisle.ben": "Levied units <b>+25%</b> strength",
+    "place.ford.name": "Coldwater Ford",
+    "place.ford.blurb": "The water runs the wrong way, away from home. You cross it anyway.",
+    "place.ford.ben": "unlocks <b>Waking Guard</b>",
+    "place.deepend.name": "The Deep End",
+    "place.deepend.blurb": "A ladder going down into water too deep to stand in, and a voice saying just jump.",
+    "place.deepend.ben": "the realization <b>It Is Not Hiding</b>",
+    "place.principal.name": "The Principal's Door",
+    "place.principal.blurb": "A frosted window, a nameplate, and the long walk up to it.",
+    "place.principal.ben": "all Focus gains <b>+5%</b>",
+    "place.orchard.name": "The Sleeping Orchard",
+    "place.orchard.blurb": "Everything here is asleep, including the things that were meant to be guarding it.",
+    "place.orchard.ben": "unlocks <b>Lantern Bearers</b>",
+    "place.bell.name": "Bellcast",
+    "place.bell.blurb": "A town built around a bell nobody will ring, in case everyone turns to look.",
+    "place.bell.ben": "unlocks <b>Bell Tower</b>",
+    "place.mile.name": "The Sundered Mile",
+    "place.mile.blurb": "A mile of road that goes on for longer than a mile, and knows that it does.",
+    "place.mile.ben": "the realization <b>It Wants the Waking Side</b>",
+    "place.ninth.name": "The Ninth Bell",
+    "place.ninth.blurb": "You have heard it eight times. Each time you were called on and did not know the answer.",
+    "place.ninth.ben": "Sworn units <b>+25%</b> strength; the realization <b>The Saltwives Keep Watch</b>",
+    "place.playground.name": "The Empty Playground",
+    "place.playground.blurb": "One swing still moving. Everyone else went in together.",
+    "place.playground.ben": "all Focus gains <b>+10%</b>",
+    "place.exam.name": "The Unmarked Exam",
+    "place.exam.blurb": "Every answer written, and not one of them marked, and the bell about to go.",
+    "place.exam.ben": "the realization <b>The Hollowed Remember</b>",
+    "place.stage.name": "The Stage With No Lines",
+    "place.stage.blurb": "A spotlight, a full house, and nothing at all to say.",
+    "place.stage.ben": "mustering costs <b>−10%</b>",
+    "place.diary.name": "The Locked Diary",
+    "place.diary.blurb": "Everything he never told anyone, and a lock a child could open.",
+    "place.diary.ben": "max Vellum <b>+100%</b>",
+    "place.phone.name": "The Unanswered Phone",
+    "place.phone.blurb": "It rings and rings. He knows who it is. He knows what they will say.",
+    "place.phone.ben": "all Focus gains <b>+10%</b>",
+    "place.waiting.name": "The Waiting Room",
+    "place.waiting.blurb": "Chairs in rows, a door, and behind the door, news.",
+    "place.waiting.ben": "each Longhouse houses <b>+1</b> Oneiri",
+    "place.interview.name": "The Interview Room",
+    "place.interview.blurb": "Three faces behind a table, deciding whether he is enough.",
+    "place.interview.ben": "<b>Temper</b> gives <b>+25%</b>",
+    "place.office.name": "The Office That Never Closes",
+    "place.office.blurb": "Every window lit. Every desk full. Nobody ever goes home.",
+    "place.office.ben": "Sworn units <b>+25%</b> strength",
+    "place.rising.name": "The Rising Water",
+    "place.rising.blurb": "The house he lives in now, and the water coming up the stairs.",
+    "place.rising.ben": "<b>−0.2</b> Dread /s",
+    "place.chair.name": "The Empty Chair",
+    "place.chair.blurb": "A place set at the table for someone who is not coming back.",
+    "place.chair.ben": "<b>Rally</b> gives <b>+25%</b>",
+    "place.faces.name": "The Hall of Faces",
+    "place.faces.blurb": "Portraits of everyone he ever wanted to be loved by, all looking away.",
+    "place.faces.ben": "max Chorus <b>+100%</b>",
+    "place.clock.name": "The Clock With No Hands",
+    "place.clock.blurb": "It is late. It has always been late. There is no telling how late.",
+    "place.clock.ben": "all Focus <b>+10%</b> faster",
+    "place.mirror.name": "The Mirror That Lies",
+    "place.mirror.blurb": "It shows him exactly as he fears he is, and it is very convincing.",
+    "place.mirror.ben": "the road fields <b>−10%</b>",
+    "place.stairtop.name": "The Top of the Stair",
+    "place.stairtop.blurb": "The top of the stair down to the cupboard, at night, with the light off.",
+    "place.stairtop.ben": "Sworn units <b>+25%</b> strength",
+    "place.landing.name": "The Landing",
+    "place.landing.blurb": "The house at night. The floorboards know where he is.",
+    "place.landing.ben": "the Journal gains an entry",
+    "place.hallway.name": "The Hallway, Light Off",
+    "place.hallway.blurb": "The walk to the bathroom, counting the doors so as not to count anything else.",
+    "place.hallway.ben": "the Journal gains an entry",
+    "place.understair.name": "The Understair Door",
+    "place.understair.blurb": "The door to the cupboard under the stairs, where the dark goes further than the house does.",
+    "place.understair.ben": "the Journal gains an entry",
+    "place.wardrobe.name": "The Wardrobe",
+    "place.wardrobe.blurb": "The coat that is not a coat. It has been hanging there for thirty years.",
+    "place.wardrobe.ben": "the Journal gains an entry",
+    "place.underbed.name": "Under the Bed",
+    "place.underbed.blurb": "Feet kept well away from the edge. It is right there, and it has always been right there.",
+    "place.underbed.ben": "the Journal gains an entry",
+    "place.nobody.name": "The Nobody",
+    "place.nobody.blurb": "Every fear he ever put down, grown into one thing, behind the door he asked to be left open.",
+    "place.nobody.ben": "the Journal gains an entry; the end of it",
+    "unit.drifter.name": "Drifter Levy",
+    "unit.drifter.blurb": "Half-finished figures from The Drift, who will stand where they are put.",
+    "unit.guard.name": "Waking Guard",
+    "unit.guard.blurb": "People who have been awake a long time and have stopped minding.",
+    "unit.bearer.name": "Lantern Bearers",
+    "unit.bearer.blurb": "They carry the light and are therefore the first thing anything sees.",
+    "unit.unflinching.name": "The Unflinching",
+    "unit.unflinching.blurb": "The night he turned the light on himself, given a spear.",
+    "unit.laughing.name": "The Laughing Company",
+    "unit.laughing.blurb": "Nothing it has ever made survives being laughed at properly.",
+    "unit.plainspoken.name": "The Plainspoken",
+    "unit.plainspoken.blurb": "They say exactly what is there. It hates that more than anything.",
+    "unit.sentinel.name": "The Stillwater Sentinels",
+    "unit.sentinel.blurb": "They can wait longer than it can. They have before.",
+    "unit.chorus.name": "The Chorus",
+    "unit.chorus.blurb": "Everyone who stayed, singing. It has never once been able to stand that song.",
+    "unit.dreamwright.name": "The Dreamwright",
+    "unit.dreamwright.blurb": "Imagination, given a body big enough to use it.",
+    "unit.section.levied": "Levied",
+    "unit.section.sworn": "Sworn",
+    "journal.afraid.name": "They Are Afraid Too",
+    "journal.afraid.p": [
+      "One of the Oneiri showed me today, without being asked. It took me to the edge of the Stillwater and pointed down, and then it pointed at the clearing, and then it would not look at me.",
+      "There is something in their country that eats. It does not hunt, exactly. It grazes. Every night a little more of what they built is gone in the morning, and what is left has a bite taken out of it.",
+      "They did not come to the clearing because it was new. They came because I was walking toward the thing, and nobody else ever had."
+    ],
+    "journal.lamps.name": "The Lamps Were Lit",
+    "journal.lamps.p": [
+      "Somebody walked here before me and left light behind. The lamps are burnt out, every one, but they were lit once by somebody who thought it was worth the tallow.",
+      "They are set low. Knee height. I keep crouching to reach them, and I keep thinking about how small you would have to be for that to be the right height."
+    ],
+    "journal.tasted.name": "Everything It Ate Tasted of Me",
+    "journal.tasted.p": [
+      "The Oneiri have known for a while. They could tell from what was left behind: every dream it has taken has my fingerprints on what remains.",
+      "I asked them why they helped me, if they knew. One of them put its hand flat on my chest, where you would feel for a heartbeat, and held it there."
+    ],
+    "journal.door.name": "The Door Left Ajar",
+    "journal.door.p": [
+      "I saw it. A bedroom, mine. The door open a hand's width, because that is how I asked for it to be left. A voice down the hall, tired and kind: there is nobody there, go to sleep.",
+      "I watched myself decide to believe it. I watched the fear go out of the boy's face, not because it was gone but because he had put it somewhere. And I watched something small and dark slip out through the gap in the door.",
+      "He called it the Nobody. Of course he did. That was what he had been told was there."
+    ],
+    "journal.lamp.name": "The Lamp Left On",
+    "journal.lamp.p": [
+      "I asked for the hall light to be left on, the year I turned six. I was told I was too big for that now. I agreed, because I wanted to be.",
+      "The Oneiri helped me build it anyway: a small lamp at the edge of the Palace, the kind a child could reach. The dark around the Palace backed off a step. I felt it go."
+    ],
+    "journal.tide1.name": "The Long Tide",
+    "journal.tide1.p": [
+      "Five years old. The dark. That was the first thing it was, and for a while the only thing."
+    ],
+    "journal.tide2.name": "The Long Tide",
+    "journal.tide2.p": [
+      "Eight. Being left: a car pulling away from a school gate, and the certainty it would not come back. It took that too."
+    ],
+    "journal.tide3.name": "The Long Tide",
+    "journal.tide3.p": [
+      "Twelve. A classroom, laughing. I laughed along. It ate the part of me that wanted to cry."
+    ],
+    "journal.tide4.name": "The Long Tide",
+    "journal.tide4.p": [
+      "Sixteen. Being wrong, out loud, in front of everyone. I decided never to be sure of anything again. It grew fat on that."
+    ],
+    "journal.tide5.name": "The Long Tide",
+    "journal.tide5.p": [
+      "Twenty-four. Being ordinary. A long year of it. It took the year whole."
+    ],
+    "journal.tide6.name": "The Long Tide",
+    "journal.tide6.p": [
+      "Thirty-one. Losing people. I did not grieve properly. I gave it to the Nobody instead, and it has been wearing that grief ever since."
+    ],
+    "journal.mine.name": "Mine to End",
+    "journal.mine.p": [
+      "I went down to the wrack line and looked at all of it. Everything that thing has eaten, lying on the shore with the same bite taken out.",
+      "I did this. I did not mean to, and I was a child, and none of that has helped the ones it has been eating. It came out of me. It answers to me, or it answers to no one.",
+      "The Drifters say they will stand where I put them. It is not much of an army. It is a start."
+    ],
+    "journal.gate.name": "The Lamplit Gate",
+    "journal.gate.p": [
+      "We went out through the gate at first light, a handful of Drifters and me. The dark on the other side was only dark. We took it.",
+      "I looked back and the lamps at the gate were still going."
+    ],
+    "journal.wants.name": "It Wants the Waking Side",
+    "journal.wants.p": [
+      "On the Sundered Mile I understood it. It has eaten nearly everything here. It is not trying to finish the dream world. It is trying to get out of it.",
+      "It knows the way out, because it came in through me."
+    ],
+    "journal.tenant.name": "The Other Tenant",
+    "journal.tenant.p": [
+      "I saw my own bedroom in the waking world, before dawn. I was asleep, and my eyes were open.",
+      "The thing looking out of them was not me. It got up. It used my voice on the phone. It was very convincing, and it was so pleased to be warm."
+    ],
+    "journal.made.name": "Made, Not Hired",
+    "journal.made.p": [
+      "The Drifters are brave and they are not mine to spend. Everything I have thrown at it so far has been borrowed.",
+      "It is made of what I was afraid of. Then what fights it has to be made of what I am not afraid of. This place makes whatever is held in mind. I will build a forge, and I will hold my strengths in it until they hold their shape."
+    ],
+    "journal.everypeople.name": "Every People Has Come",
+    "journal.everypeople.p": [
+      "The Oneiri, the Drifters, the Tidefolk, the Wicks, the Saltwives, the Clockfolk, the Hollowed. They came up to the Palace all day in their own lights.",
+      "None of them came for me. All of them came."
+    ],
+    "journal.knows.name": "It Knows I Am Coming",
+    "journal.knows.p": [
+      "It has stopped eating. The whole of the Understair has gone quiet, the way a house goes quiet when someone is standing very still in it."
+    ],
+    "journal.wake.name": "What I Could Wake",
+    "journal.wake.p": [
+      "Something showed me, at the Last Lamp, what I still have. Every nightmare I ever had is still in me. The rider with nobody in the saddle. The thing on the stairs. The voices in the hall.",
+      "I could wake them. They would win. And then they would be here, afterward, in a country that has only just stopped being eaten."
+    ],
+    "journal.fear.name": "Fear Is Also Strength",
+    "journal.fear.p": [
+      "I woke them. They came up out of me the way the Nobody did, once, and they stood in the lines where my strengths had stood, and they were so much bigger.",
+      "The Oneiri did not say anything. Most of them left that night. The ones at work stayed at their work, and did not look at me."
+    ],
+    "journal.shut.name": "Some Doors Stay Shut",
+    "journal.shut.p": [
+      "I have spent my whole life putting fear somewhere else. I will not put it here. These stay with me, and they stay asleep.",
+      "The Oneiri sang all night. I do not think it was for the battle."
+    ],
+    "journal.landing.name": "The Landing",
+    "journal.landing.p": [
+      "The house at night. Every floorboard knew where I was. We went up anyway."
+    ],
+    "journal.hallway.name": "The Hallway, Light Off",
+    "journal.hallway.p": [
+      "I counted the doors, the way I used to, so as not to count anything else. There were more doors than there used to be. We opened all of them."
+    ],
+    "journal.understair.name": "The Understair Door",
+    "journal.understair.p": [
+      "The cupboard under the stairs. The dark at the back went further than the house. We went further."
+    ],
+    "journal.wardrobe.name": "The Wardrobe",
+    "journal.wardrobe.p": [
+      "The coat that is not a coat. It has been hanging there for thirty years, waiting for me to open the door at night. I opened it."
+    ],
+    "journal.underbed.name": "Under the Bed",
+    "journal.underbed.p": [
+      "It was right there. It had always been right there. I put my feet on the floor."
+    ],
+    "journal.nobody.name": "The Nobody",
+    "journal.nobody.p": [
+      "It was smaller than I thought. It always is. It was every fear I ever put down, and when we had taken the last of them away there was only a boy's worth of dark left, and then not even that.",
+      "I opened the door the rest of the way."
+    ],
+    "ach.arrival.name": "Arrival",
+    "ach.arrival.hint": "Go down twenty veils.",
+    "ach.arrival.req": "Parted the twentieth veil.",
+    "ach.lamps.name": "The Lamps",
+    "ach.lamps.hint": "See what came through the door.",
+    "ach.lamps.req": "Parted the fortieth veil.",
+    "ach.tide.name": "The Tide",
+    "ach.tide.hint": "Promise to end it.",
+    "ach.tide.req": "Parted the sixtieth veil.",
+    "ach.road.name": "The Road",
+    "ach.road.hint": "Make something that can fight.",
+    "ach.road.req": "Parted the eightieth veil.",
+    "ach.bottom.name": "The Far End",
+    "ach.bottom.hint": "Reach the bottom.",
+    "ach.bottom.req": "Reached the bottom of the dream.",
+    "ach.good.name": "Some Doors Stay Shut",
+    "ach.good.hint": "End it without waking anything.",
+    "ach.good.req": "Ended it with the nightmares asleep.",
+    "ach.bad.name": "Fear Is Also Strength",
+    "ach.bad.hint": "End it any way you can.",
+    "ach.bad.req": "Ended it with the nightmares awake.",
+    "ending.good.title": "The Door Opened",
+    "ending.good.p": [
+      "The Nobody is gone. Nothing took its place. Across the whole of the dream the peoples came out of their houses in the morning and found that nothing had been eaten in the night.",
+      "The Oneiri still build. The Drifters have settled into shapes. The Wicks keep the lamps, although none of them strictly need keeping any more.",
+      "He sleeps now, all the way through, with the door shut. Some nights he dreams of a clearing with a humming stone in it, and somebody is always there to meet him."
+    ],
+    "ending.bad.title": "The Door Held",
+    "ending.bad.p": [
+      "The Nobody is gone. What he woke to destroy it did not go back to sleep.",
+      "The rider still rides the roads with nobody in the saddle. The thing on the stairs has found other stairs. The peoples of the dream keep their doors shut at night now, and their lamps lit, and they do not come to the Palace.",
+      "He sleeps soundly. He is free of it. Down in the country beyond his dreams, something else is grazing, and it has his face."
+    ]
+  }
+}

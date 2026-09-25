@@ -1,0 +1,521 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa071e878e173b74f99e0126a472fc3e, type: 3}
+  m_Name: Art
+  m_EditorClassIdentifier: Ursine.Runtime::Ursine.UI.SpriteSet
+  entries:
+  - key: Glyphs/Achievement/drift
+    sprite: {fileID: 21300000, guid: e05ed30c2d410ec4bb4321280988de74, type: 3}
+  - key: Glyphs/Construct/abode
+    sprite: {fileID: 21300000, guid: 290d9c597845aa04eb3ef6f185eb7e41, type: 3}
+  - key: Glyphs/Construct/altar
+    sprite: {fileID: 21300000, guid: d982e3c721efdff4d8c7df7b7bd55030, type: 3}
+  - key: Glyphs/Construct/beacon
+    sprite: {fileID: 21300000, guid: 40c4f431ff2c8fb4abed3e797f4fcab7, type: 3}
+  - key: Glyphs/Construct/belltower
+    sprite: {fileID: 21300000, guid: 6519d95521dade24997dcf5b9965d454, type: 3}
+  - key: Glyphs/Construct/chorusstone
+    sprite: {fileID: 21300000, guid: d9c0594ea8c64524aa8adff203d4e8a5, type: 3}
+  - key: Glyphs/Construct/cistern
+    sprite: {fileID: 21300000, guid: d63d2dced489c6f42b79360f6003a9b9, type: 3}
+  - key: Glyphs/Construct/forge
+    sprite: {fileID: 21300000, guid: d3989d69838dde048856e59df5ca31fc, type: 3}
+  - key: Glyphs/Construct/hallmany
+    sprite: {fileID: 21300000, guid: a7f54783e3344ae4392cdb016c0190fe, type: 3}
+  - key: Glyphs/Construct/hallstrengths
+    sprite: {fileID: 21300000, guid: d707a3ff17d4ecd42897ef0f551dd3ce, type: 3}
+  - key: Glyphs/Construct/hut
+    sprite: {fileID: 21300000, guid: f6ddbf6c68c3fbd46b6bdb0172e89598, type: 3}
+  - key: Glyphs/Construct/kiln
+    sprite: {fileID: 21300000, guid: 521c8f79691e20a428677157674277ac, type: 3}
+  - key: Glyphs/Construct/lamprow
+    sprite: {fileID: 21300000, guid: 8825a37055a59b640866cad295c46eb3, type: 3}
+  - key: Glyphs/Construct/longhouse
+    sprite: {fileID: 21300000, guid: 15702abeee11f7a459809cbc4793e095, type: 3}
+  - key: Glyphs/Construct/moonwell
+    sprite: {fileID: 21300000, guid: 88152c28d5d8f934da924d43a76f7806, type: 3}
+  - key: Glyphs/Construct/nightlight
+    sprite: {fileID: 21300000, guid: ec32a70dfa613d841a1fef600f12efc3, type: 3}
+  - key: Glyphs/Construct/press
+    sprite: {fileID: 21300000, guid: a1b9ccc1fb35f0b43a72edc87f7d3f5f, type: 3}
+  - key: Glyphs/Construct/rampart
+    sprite: {fileID: 21300000, guid: 8707e707cd8677544bebd61a7de8941d, type: 3}
+  - key: Glyphs/Construct/reliquary
+    sprite: {fileID: 21300000, guid: a375f700dbbf31c4cab7d49852aae326, type: 3}
+  - key: Glyphs/Construct/saltpans
+    sprite: {fileID: 21300000, guid: 8e15e31bc42265f458f0167332b2886a, type: 3}
+  - key: Glyphs/Construct/scriptorium
+    sprite: {fileID: 21300000, guid: b3c2dfbb534d9af4cae8d62a17b0e100, type: 3}
+  - key: Glyphs/Construct/spindle
+    sprite: {fileID: 21300000, guid: 688988772b3e8a14ca38473523c43ccb, type: 3}
+  - key: Glyphs/Construct/winch
+    sprite: {fileID: 21300000, guid: b3a1a249cabd65a4285823f5ebd9534b, type: 3}
+  - key: Glyphs/Focus/card
+    sprite: {fileID: 21300000, guid: 270b2aed62eaa2c47aaa53f42270ecbb, type: 3}
+  - key: Glyphs/Focus/draw
+    sprite: {fileID: 21300000, guid: ba276bf26c7139848aba4db2fd85b78c, type: 3}
+  - key: Glyphs/Focus/dredge
+    sprite: {fileID: 21300000, guid: efde18ef51bb421488437706e9bd23f8, type: 3}
+  - key: Glyphs/Focus/kindle
+    sprite: {fileID: 21300000, guid: e356f48c5c2fe524ca2528f73c9a44d7, type: 3}
+  - key: Glyphs/Focus/page
+    sprite: {fileID: 21300000, guid: c660bee6aed8e6b4f89b05c8010d87c3, type: 3}
+  - key: Glyphs/Focus/rally
+    sprite: {fileID: 21300000, guid: 6bc16d3b5011d264bbe8be116c46eaec, type: 3}
+  - key: Glyphs/Focus/release
+    sprite: {fileID: 21300000, guid: 3b54f71265b0e204a92b5526eca8e879, type: 3}
+  - key: Glyphs/Focus/render
+    sprite: {fileID: 21300000, guid: ba2325ad700aee6429c0818ed481a25c, type: 3}
+  - key: Glyphs/Focus/sift
+    sprite: {fileID: 21300000, guid: d0f09afa376d3bb4da4013ad19846993, type: 3}
+  - key: Glyphs/Focus/sing
+    sprite: {fileID: 21300000, guid: cf20f988f4bb7bd4b91c0b7effd96951, type: 3}
+  - key: Glyphs/Focus/sit
+    sprite: {fileID: 21300000, guid: 1fdca6d316ccbd448884b7949a691838, type: 3}
+  - key: Glyphs/Focus/still
+    sprite: {fileID: 21300000, guid: 5da58eba7ad2f7442b954ec0daa02fad, type: 3}
+  - key: Glyphs/Focus/temper
+    sprite: {fileID: 21300000, guid: 27a0f6f12cfa40f499f98b91a167bf12, type: 3}
+  - key: Glyphs/Focus/tend
+    sprite: {fileID: 21300000, guid: 09bb9276db850a843b7ed3212e7d7566, type: 3}
+  - key: Glyphs/Focus/watch
+    sprite: {fileID: 21300000, guid: fb1f5805d37e155418593fb5a49194d7, type: 3}
+  - key: Glyphs/Focus/weep
+    sprite: {fileID: 21300000, guid: 28ff6a28347c58140b9beeba4b6ca96f, type: 3}
+  - key: Glyphs/Place/aisle
+    sprite: {fileID: 21300000, guid: bb31c2417f99bc1488b043fe42bbc7cd, type: 3}
+  - key: Glyphs/Place/bell
+    sprite: {fileID: 21300000, guid: 1f38d3c02904f0846ba142bc827b4220, type: 3}
+  - key: Glyphs/Place/chair
+    sprite: {fileID: 21300000, guid: 93e46734026bb45449fc5c45dd302e95, type: 3}
+  - key: Glyphs/Place/clock
+    sprite: {fileID: 21300000, guid: 8f6246927b3213b4380f22f0a5828318, type: 3}
+  - key: Glyphs/Place/deepend
+    sprite: {fileID: 21300000, guid: 360feaad4afa12146a90c94ecbad3ca7, type: 3}
+  - key: Glyphs/Place/diary
+    sprite: {fileID: 21300000, guid: 1f12ada577113bd43ade21bb72a66083, type: 3}
+  - key: Glyphs/Place/exam
+    sprite: {fileID: 21300000, guid: 731bd1bfaaa167c44b3ed7872760acbe, type: 3}
+  - key: Glyphs/Place/faces
+    sprite: {fileID: 21300000, guid: 97118d56cd425104c92bf2816066dca7, type: 3}
+  - key: Glyphs/Place/ford
+    sprite: {fileID: 21300000, guid: 5339d766b97e2ab4e88cf5643b6f3ed3, type: 3}
+  - key: Glyphs/Place/gate
+    sprite: {fileID: 21300000, guid: d81a1a6d70f591e46911396fb5c8753f, type: 3}
+  - key: Glyphs/Place/hallway
+    sprite: {fileID: 21300000, guid: 0ec524926b719e44897f2c9632ef23ab, type: 3}
+  - key: Glyphs/Place/interview
+    sprite: {fileID: 21300000, guid: 26770a019274a104d8b304f999a26eb6, type: 3}
+  - key: Glyphs/Place/landing
+    sprite: {fileID: 21300000, guid: 3c5dce6c6859fb147a732fa4fa54a4bd, type: 3}
+  - key: Glyphs/Place/mile
+    sprite: {fileID: 21300000, guid: e869f17f61b548c4a9edf7694f81c866, type: 3}
+  - key: Glyphs/Place/mirror
+    sprite: {fileID: 21300000, guid: b4340280ee267f4438dbaa8893505788, type: 3}
+  - key: Glyphs/Place/ninth
+    sprite: {fileID: 21300000, guid: dc22fbdaed66f14448b1363e19420bc8, type: 3}
+  - key: Glyphs/Place/nobody
+    sprite: {fileID: 21300000, guid: 9796456fde930e9418c833acf3ef5f91, type: 3}
+  - key: Glyphs/Place/office
+    sprite: {fileID: 21300000, guid: 6340952589cbc4f4287cdf979871583f, type: 3}
+  - key: Glyphs/Place/orchard
+    sprite: {fileID: 21300000, guid: 4d9fc4be397963e41908cac57c361a02, type: 3}
+  - key: Glyphs/Place/palace
+    sprite: {fileID: 21300000, guid: c5ed491685aa9dd49b2245098c8eaf20, type: 3}
+  - key: Glyphs/Place/phone
+    sprite: {fileID: 21300000, guid: 3c9c6dc2257e09a4ca2e13f3c2b5754b, type: 3}
+  - key: Glyphs/Place/playground
+    sprite: {fileID: 21300000, guid: a24d1d3190d04b64a8c16c666ad7e7cb, type: 3}
+  - key: Glyphs/Place/principal
+    sprite: {fileID: 21300000, guid: f5518e83042b9fb4eaf88a32d7736606, type: 3}
+  - key: Glyphs/Place/rising
+    sprite: {fileID: 21300000, guid: b03ab298090bb3e4a87a6fc381568310, type: 3}
+  - key: Glyphs/Place/stage
+    sprite: {fileID: 21300000, guid: f199d5c5510f6d843b9834ef106452e7, type: 3}
+  - key: Glyphs/Place/stairtop
+    sprite: {fileID: 21300000, guid: 6ac5bafdd1f2611419ae9ed263be02c3, type: 3}
+  - key: Glyphs/Place/thunder
+    sprite: {fileID: 21300000, guid: f7fbc40bb18b1ed4a94196c70ee907d0, type: 3}
+  - key: Glyphs/Place/underbed
+    sprite: {fileID: 21300000, guid: a10a2699d09bba8469c5a52b3795bdaf, type: 3}
+  - key: Glyphs/Place/understair
+    sprite: {fileID: 21300000, guid: 44a7781dcffe2d545a35963aa7aded80, type: 3}
+  - key: Glyphs/Place/waiting
+    sprite: {fileID: 21300000, guid: f29abae2f817a8e49b5d6db8276e5791, type: 3}
+  - key: Glyphs/Place/wardrobe
+    sprite: {fileID: 21300000, guid: 488e73794134fbc498604bcc228327fc, type: 3}
+  - key: Glyphs/Resource/chorus
+    sprite: {fileID: 21300000, guid: bc2814b92e29ddb44a84101b3f4f5a56, type: 3}
+  - key: Glyphs/Resource/dread
+    sprite: {fileID: 21300000, guid: 2934ec0e8048aee4b9aa5815e2a1bce3, type: 3}
+  - key: Glyphs/Resource/echo
+    sprite: {fileID: 21300000, guid: c3cc1ea056a0d3f4ea90315d85ce40de, type: 3}
+  - key: Glyphs/Resource/ember
+    sprite: {fileID: 21300000, guid: 004cca91eef08a84db89c03d7c2451e8, type: 3}
+  - key: Glyphs/Resource/hush
+    sprite: {fileID: 21300000, guid: 60ec078a1fd2d344da98bee61ba515b3, type: 3}
+  - key: Glyphs/Resource/lucidity
+    sprite: {fileID: 21300000, guid: 7b6f935554440ea468faadbd10277445, type: 3}
+  - key: Glyphs/Resource/mettle
+    sprite: {fileID: 21300000, guid: 52ba7da33a608a546bba7ab68fceecb2, type: 3}
+  - key: Glyphs/Resource/moonsilver
+    sprite: {fileID: 21300000, guid: 649269f91ab006b45806d12c77b95fe2, type: 3}
+  - key: Glyphs/Resource/nacre
+    sprite: {fileID: 21300000, guid: 130fffa704887b347af434dbb5ca7852, type: 3}
+  - key: Glyphs/Resource/oneiri
+    sprite: {fileID: 21300000, guid: 56084f25e12c30247ac1208e6bddaeee, type: 3}
+  - key: Glyphs/Resource/reverie
+    sprite: {fileID: 21300000, guid: cf2362e266935a444a4ddf6a23bcdb55, type: 3}
+  - key: Glyphs/Resource/salt
+    sprite: {fileID: 21300000, guid: 0e8beabdc3acbb843b01b1a2f254aa9d, type: 3}
+  - key: Glyphs/Resource/silt
+    sprite: {fileID: 21300000, guid: 58abdbdf9220c974aa6f5cd3832875ca, type: 3}
+  - key: Glyphs/Resource/tallow
+    sprite: {fileID: 21300000, guid: 71fa88b8b01430b4ca92abb408f15048, type: 3}
+  - key: Glyphs/Resource/umbra
+    sprite: {fileID: 21300000, guid: bd39001d60cbcba45941c88b88145690, type: 3}
+  - key: Glyphs/Resource/vellum
+    sprite: {fileID: 21300000, guid: 6fb4cf546c08e2f43b3071f392b0065e, type: 3}
+  - key: Glyphs/Resource/ward
+    sprite: {fileID: 21300000, guid: 8cc56dae5a3baa846a3c447ae9dfce02, type: 3}
+  - key: Glyphs/Resource/whispers
+    sprite: {fileID: 21300000, guid: cedcd65c0d182994e8c271a0ca1abd8f, type: 3}
+  - key: Glyphs/Sigil/branch
+    sprite: {fileID: 21300000, guid: 85fcd2a1f29fe084cb32e4ecb9898807, type: 3}
+  - key: Glyphs/Sigil/glass
+    sprite: {fileID: 21300000, guid: 30791e53855427342a56d7b1443c7893, type: 3}
+  - key: Glyphs/Sigil/key
+    sprite: {fileID: 21300000, guid: 7c0e1b4c23cc7dc4db319b7d7b481830, type: 3}
+  - key: Glyphs/Sigil/knot
+    sprite: {fileID: 21300000, guid: b313da0f46b5d984a8a5945bf10b2720, type: 3}
+  - key: Glyphs/Sigil/lantern
+    sprite: {fileID: 21300000, guid: 4564b7de3f9ec234d830ee75fc5a1ca4, type: 3}
+  - key: Glyphs/Sigil/mirror
+    sprite: {fileID: 21300000, guid: e842b9099ea7a5b45acdf920b2965f55, type: 3}
+  - key: Glyphs/Sigil/scales
+    sprite: {fileID: 21300000, guid: 0ffe51d677d730b4b9a913e991fc8aa5, type: 3}
+  - key: Glyphs/Sigil/spiral
+    sprite: {fileID: 21300000, guid: 657270b1fb96686478b8d2650beeef8d, type: 3}
+  - key: Glyphs/Sigil/stair
+    sprite: {fileID: 21300000, guid: c31ee37baf5b05f45a4f5562d2c8f553, type: 3}
+  - key: Glyphs/Source/assault
+    sprite: {fileID: 21300000, guid: 5edca2443f033904f8ce8fa02db69602, type: 3}
+  - key: Glyphs/Source/revelation
+    sprite: {fileID: 21300000, guid: 7616e3577d331874f925f289a8f0cfb7, type: 3}
+  - key: Glyphs/Source/veil
+    sprite: {fileID: 21300000, guid: 94f66750cced82e4983eb46171754f13, type: 3}
+  - key: Glyphs/Source/vision
+    sprite: {fileID: 21300000, guid: fede46dd453828b42a9ff9e537e7c772, type: 3}
+  - key: Glyphs/Tab/achievements
+    sprite: {fileID: 21300000, guid: 1ef39e5c4cc3bcb4bb828d09d2dab754, type: 3}
+  - key: Glyphs/Tab/assault
+    sprite: {fileID: 21300000, guid: fca75084d16a3584c9182902f2bd60da, type: 3}
+  - key: Glyphs/Tab/constructs
+    sprite: {fileID: 21300000, guid: 331c7d8ca1d7c074492776a2a742222b, type: 3}
+  - key: Glyphs/Tab/discord
+    sprite: {fileID: 21300000, guid: 4930300dadb8987458fec96072abba2d, type: 3}
+  - key: Glyphs/Tab/exit
+    sprite: {fileID: 21300000, guid: 9c2d1d6d3e3d9dc498c193840d4375dd, type: 3}
+  - key: Glyphs/Tab/focus
+    sprite: {fileID: 21300000, guid: 66bdfc5741d0abd458cccaa9e4afa037, type: 3}
+  - key: Glyphs/Tab/journal
+    sprite: {fileID: 21300000, guid: b055fee6310b7b049840c46bb3586210, type: 3}
+  - key: Glyphs/Tab/options
+    sprite: {fileID: 21300000, guid: 69d97faf9cd90a74b927b4b8593b3c66, type: 3}
+  - key: Glyphs/Tab/outward
+    sprite: {fileID: 21300000, guid: ea93073442fd96d45925c5161735a1f1, type: 3}
+  - key: Glyphs/Tab/reddit
+    sprite: {fileID: 21300000, guid: 5ed8a733c5f021949bc95ae6f2507bc2, type: 3}
+  - key: Glyphs/Tab/revelations
+    sprite: {fileID: 21300000, guid: 965b4e4032edb6e41a1f3672f5211ed9, type: 3}
+  - key: Glyphs/Tab/twitter
+    sprite: {fileID: 21300000, guid: b7bae063b39d8ca4e83cb2fd0d09556c, type: 3}
+  - key: Glyphs/Tab/visions
+    sprite: {fileID: 21300000, guid: 21462a6a75535444c87e0725dfcb860a, type: 3}
+  - key: Glyphs/Ui/arrow
+    sprite: {fileID: 21300000, guid: 6758c4e9ff3e97642baf7368d62bc6b1, type: 3}
+  - key: Glyphs/Ui/check
+    sprite: {fileID: 21300000, guid: 893414e0c8f1fba4ab9d046ba8ed7863, type: 3}
+  - key: Glyphs/Ui/cross
+    sprite: {fileID: 21300000, guid: 1eb89f03b361bb8408ee86fe32936b7e, type: 3}
+  - key: Glyphs/Ui/mark
+    sprite: {fileID: 21300000, guid: 7276dd13ff09e7e42a9a46c6abe2fdc5, type: 3}
+  - key: Glyphs/Ui/sword
+    sprite: {fileID: 21300000, guid: f9d72d08d485c92479e1b83d7e63e739, type: 3}
+  - key: Glyphs/Unit/bearer
+    sprite: {fileID: 21300000, guid: a81b2b86d0cd3f444aac595e97f6fa2c, type: 3}
+  - key: Glyphs/Unit/chorus
+    sprite: {fileID: 21300000, guid: a88b0074ab8be6e408714a6e238dc93b, type: 3}
+  - key: Glyphs/Unit/dreamwright
+    sprite: {fileID: 21300000, guid: f58522c4ce4444a489049ff1e9044389, type: 3}
+  - key: Glyphs/Unit/drifter
+    sprite: {fileID: 21300000, guid: 472553a72d7810246ad9362a448b00c8, type: 3}
+  - key: Glyphs/Unit/drowned
+    sprite: {fileID: 21300000, guid: af1338bcf539ab646a37cf1011df1a03, type: 3}
+  - key: Glyphs/Unit/grinning
+    sprite: {fileID: 21300000, guid: 4d041fa3793061b4ea359fb2ba35311a, type: 3}
+  - key: Glyphs/Unit/guard
+    sprite: {fileID: 21300000, guid: 9d307b78ad9f5fc408ae6693b5e4ffee, type: 3}
+  - key: Glyphs/Unit/hollowriders
+    sprite: {fileID: 21300000, guid: 77618181ca9081446a4ffd6ed920bcd7, type: 3}
+  - key: Glyphs/Unit/laughing
+    sprite: {fileID: 21300000, guid: 0ecf6588239e9d24eafc3d8918880066, type: 3}
+  - key: Glyphs/Unit/plainspoken
+    sprite: {fileID: 21300000, guid: 4e4bb34735ef0154d8374a84513c492e, type: 3}
+  - key: Glyphs/Unit/rider
+    sprite: {fileID: 21300000, guid: 69efd6bf808e22c4f81a2ee61b14fa04, type: 3}
+  - key: Glyphs/Unit/sentinel
+    sprite: {fileID: 21300000, guid: 3deb5dae09b389d409730355368d3375, type: 3}
+  - key: Glyphs/Unit/stairs
+    sprite: {fileID: 21300000, guid: 5a765eb79a0c79d4580a89f6b4bf884e, type: 3}
+  - key: Glyphs/Unit/unflinching
+    sprite: {fileID: 21300000, guid: a74bfc6e457275846a2aa1e40af362c4, type: 3}
+  - key: Glyphs/Unit/voices
+    sprite: {fileID: 21300000, guid: 5a671d2d2d49a8c42b3652a683a33169, type: 3}
+  - key: Glyphs/Unit/wailing
+    sprite: {fileID: 21300000, guid: 986a031be71540b498c9c0831aecf4e2, type: 3}
+  - key: Glyphs/Vision/aloud
+    sprite: {fileID: 21300000, guid: eead923f04414244cb6ec76f6db4acca, type: 3}
+  - key: Glyphs/Vision/bell
+    sprite: {fileID: 21300000, guid: 55c05f14525eef84dae210ee4f3c6444, type: 3}
+  - key: Glyphs/Vision/bridge
+    sprite: {fileID: 21300000, guid: 4d63250a551bebc48a622929d0318559, type: 3}
+  - key: Glyphs/Vision/door
+    sprite: {fileID: 21300000, guid: f3fc33ab2e4bc5743ab3decef9ec0851, type: 3}
+  - key: Glyphs/Vision/duck
+    sprite: {fileID: 21300000, guid: 561188cc490df154a90655831473d5b8, type: 3}
+  - key: Glyphs/Vision/garden
+    sprite: {fileID: 21300000, guid: dcbcd4ba297121942a758e68f4376cb6, type: 3}
+  - key: Glyphs/Vision/hour
+    sprite: {fileID: 21300000, guid: e782c5f9a32cc094d8fd12af47e74c07, type: 3}
+  - key: Glyphs/Vision/looked
+    sprite: {fileID: 21300000, guid: 2c6b134661df25b45b832e5183c544d7, type: 3}
+  - key: Glyphs/Vision/make
+    sprite: {fileID: 21300000, guid: 4fa15f2869d885442a4dc48a44d3b80b, type: 3}
+  - key: Glyphs/Vision/stayed
+    sprite: {fileID: 21300000, guid: ed224a5796472744788469db70ade0c8, type: 3}
+  - key: Glyphs/Vision/tenant
+    sprite: {fileID: 21300000, guid: 8b6369fe7d02b754db0ad3c7379b2d04, type: 3}
+  - key: Glyphs/Vision/tide
+    sprite: {fileID: 21300000, guid: 36d7a955cd81cf842ac757d7c32d3b81, type: 3}
+  - key: Glyphs/Vision/unblink
+    sprite: {fileID: 21300000, guid: e1fcd1ff0258b50488227c1d276108a9, type: 3}
+  - key: Glyphs/Vision/vigil
+    sprite: {fileID: 21300000, guid: a5503b123521384429a41618737dc488, type: 3}
+  - key: Glyphs/Vision/waiting
+    sprite: {fileID: 21300000, guid: ef9e17868dfc8b04a8533f14557d2c4d, type: 3}
+  - key: Glyphs/Vision/wake
+    sprite: {fileID: 21300000, guid: 0b06d33e36de71a49ace79de1bc5ef60, type: 3}
+  - key: Glyphs/Vision/well
+    sprite: {fileID: 21300000, guid: 690dddb290e58674095aedd4ba938520, type: 3}
+  - key: Spec/Art_Eye
+    sprite: {fileID: 21300000, guid: 69f13e78fa1a740419756d3766026747, type: 3}
+  - key: Spec/Art_Mass
+    sprite: {fileID: 21300000, guid: 5e9eab114ab011a41bee25e721918df4, type: 3}
+  - key: Spec/Art_Palace
+    sprite: {fileID: 21300000, guid: b90cbb2fc449a1b4eaf7113ff831711b, type: 3}
+  - key: Spec/Art_Place_aisle
+    sprite: {fileID: 21300000, guid: e656cf00e29a1784c9703f7f377e68bf, type: 3}
+  - key: Spec/Art_Place_bell
+    sprite: {fileID: 21300000, guid: abccac0a98c74784c8302aafee27d184, type: 3}
+  - key: Spec/Art_Place_chair
+    sprite: {fileID: 21300000, guid: 777d04742ab54ff489bb9e36b86736b1, type: 3}
+  - key: Spec/Art_Place_clock
+    sprite: {fileID: 21300000, guid: 7fb075f689cbfda488d0d50dfb43004d, type: 3}
+  - key: Spec/Art_Place_deepend
+    sprite: {fileID: 21300000, guid: 5f2cc3565608e4b459eaabd0dbba4eeb, type: 3}
+  - key: Spec/Art_Place_diary
+    sprite: {fileID: 21300000, guid: 50a4ed345bc07394ea815526933e4db9, type: 3}
+  - key: Spec/Art_Place_exam
+    sprite: {fileID: 21300000, guid: 594c6bc7596064545b6a9bf64d7a624a, type: 3}
+  - key: Spec/Art_Place_faces
+    sprite: {fileID: 21300000, guid: abb1d5537a9ce464e8cc15f80b345544, type: 3}
+  - key: Spec/Art_Place_ford
+    sprite: {fileID: 21300000, guid: 5b721170f564cd147a4036fad51b97b9, type: 3}
+  - key: Spec/Art_Place_gate
+    sprite: {fileID: 21300000, guid: 53215040ffbf1454496e0bbd9263c4b7, type: 3}
+  - key: Spec/Art_Place_hallway
+    sprite: {fileID: 21300000, guid: 07cdcb17c1200ca4aa4a8c1228eb8d1a, type: 3}
+  - key: Spec/Art_Place_interview
+    sprite: {fileID: 21300000, guid: c9faa183fe735664e8cea6a78d576a42, type: 3}
+  - key: Spec/Art_Place_landing
+    sprite: {fileID: 21300000, guid: fb6ae8010bed1044d84ce5ca48de75d6, type: 3}
+  - key: Spec/Art_Place_mile
+    sprite: {fileID: 21300000, guid: 0ae7b7b414bc01849a04f2055dcc6b5b, type: 3}
+  - key: Spec/Art_Place_mirror
+    sprite: {fileID: 21300000, guid: 21dd2b4b2e077f8459ff891f8b7da298, type: 3}
+  - key: Spec/Art_Place_ninth
+    sprite: {fileID: 21300000, guid: 3e985fcf4ea00ab4f9e49c6ff14aea3b, type: 3}
+  - key: Spec/Art_Place_nobody
+    sprite: {fileID: 21300000, guid: 4674e82ea94f36d41bc980b135f1d3c1, type: 3}
+  - key: Spec/Art_Place_office
+    sprite: {fileID: 21300000, guid: 725bd3d63e9a3ee4496bc088d988a5c3, type: 3}
+  - key: Spec/Art_Place_orchard
+    sprite: {fileID: 21300000, guid: 8c7b5a844034f36418b1e442808770dc, type: 3}
+  - key: Spec/Art_Place_palace
+    sprite: {fileID: 21300000, guid: 01b48d7e860318c4fba5f18081975b4c, type: 3}
+  - key: Spec/Art_Place_phone
+    sprite: {fileID: 21300000, guid: 5cddc50f3f9af6a41b23d06c11db8292, type: 3}
+  - key: Spec/Art_Place_playground
+    sprite: {fileID: 21300000, guid: cdf97d6255c00944bafdcbbf05468506, type: 3}
+  - key: Spec/Art_Place_principal
+    sprite: {fileID: 21300000, guid: 96eacc24d6d1bec40b9ec8f77781034c, type: 3}
+  - key: Spec/Art_Place_rising
+    sprite: {fileID: 21300000, guid: e10beb24d7b70ee4488baaae50c0ae6f, type: 3}
+  - key: Spec/Art_Place_stage
+    sprite: {fileID: 21300000, guid: 9fb842bd9353f204ead5e76b9b65f45b, type: 3}
+  - key: Spec/Art_Place_stairtop
+    sprite: {fileID: 21300000, guid: 5a074506088e0c046bc4fd51f1453cb8, type: 3}
+  - key: Spec/Art_Place_thunder
+    sprite: {fileID: 21300000, guid: 6602bd44fcad91546abf6976f841325c, type: 3}
+  - key: Spec/Art_Place_underbed
+    sprite: {fileID: 21300000, guid: ac69a252b49d0544e91c5ff86a28ad26, type: 3}
+  - key: Spec/Art_Place_understair
+    sprite: {fileID: 21300000, guid: 5a4a2f9565b5c964ea9305f9dc6f7eef, type: 3}
+  - key: Spec/Art_Place_waiting
+    sprite: {fileID: 21300000, guid: 801664c3c798ad9429d9bd77dd7d2d80, type: 3}
+  - key: Spec/Art_Place_wardrobe
+    sprite: {fileID: 21300000, guid: 220c7119ca43ca844ba9fd7324b6f95a, type: 3}
+  - key: Spec/Art_Road
+    sprite: {fileID: 21300000, guid: be45f936cbc631a4bba2df1b09b4880a, type: 3}
+  - key: Spec/Map/abode
+    sprite: {fileID: 21300000, guid: eba8c83832070dc45a1d2bbeaf7caecd, type: 3}
+  - key: Spec/Map/altar
+    sprite: {fileID: 21300000, guid: fc4c733a41e5061458fea828b55a7215, type: 3}
+  - key: Spec/Map/altar_stone
+    sprite: {fileID: 21300000, guid: 36baec537d4b6194398ab17cda8fa29d, type: 3}
+  - key: Spec/Map/altar_top
+    sprite: {fileID: 21300000, guid: 2bb22d3ef16fe8f418a5fb7dcaafb2f2, type: 3}
+  - key: Spec/Map/beacon
+    sprite: {fileID: 21300000, guid: 9f3e1ba136f6b944bb95026fdfa8a085, type: 3}
+  - key: Spec/Map/belltower
+    sprite: {fileID: 21300000, guid: c2b105a2bb403144fb4a606064d08688, type: 3}
+  - key: Spec/Map/chorusstone
+    sprite: {fileID: 21300000, guid: d6bb280b77c53c64e9bd86c547e3db63, type: 3}
+  - key: Spec/Map/cistern
+    sprite: {fileID: 21300000, guid: aa2198997430c314b99f2a1b212a2526, type: 3}
+  - key: Spec/Map/forge
+    sprite: {fileID: 21300000, guid: 2abe3475103bc154d9486a5748a67f03, type: 3}
+  - key: Spec/Map/hallmany
+    sprite: {fileID: 21300000, guid: 1fcc1fdd3ccd18f4fa91ddefe33c8b73, type: 3}
+  - key: Spec/Map/hallstrengths
+    sprite: {fileID: 21300000, guid: 866c6d9573237394396fe3f5513dc945, type: 3}
+  - key: Spec/Map/hut
+    sprite: {fileID: 21300000, guid: bb735f59870672f4093c0f0a47d2c5b9, type: 3}
+  - key: Spec/Map/kiln
+    sprite: {fileID: 21300000, guid: b13987ffc4a613e46a545e5c14bfcbaa, type: 3}
+  - key: Spec/Map/lamprow
+    sprite: {fileID: 21300000, guid: 189135eaebef1cb41b68dc950ebddea2, type: 3}
+  - key: Spec/Map/longhouse
+    sprite: {fileID: 21300000, guid: b9c932d41fa660a45a0b2af9d4349f04, type: 3}
+  - key: Spec/Map/moonwell
+    sprite: {fileID: 21300000, guid: 8b7efc4205beb0d408f065eec4ff13f6, type: 3}
+  - key: Spec/Map/nightlight
+    sprite: {fileID: 21300000, guid: 83b33cd92c343fd4c98a70aea729843c, type: 3}
+  - key: Spec/Map/press
+    sprite: {fileID: 21300000, guid: 60d3d8853ae88d049b4438a97727fd19, type: 3}
+  - key: Spec/Map/rampart
+    sprite: {fileID: 21300000, guid: cabe0c6aa67a0c84d97ff96eab9ba939, type: 3}
+  - key: Spec/Map/reliquary
+    sprite: {fileID: 21300000, guid: 0cefbcf4c138a9c4f86b110efb3de6ee, type: 3}
+  - key: Spec/Map/saltpans
+    sprite: {fileID: 21300000, guid: a2125001abd7de34db4b8e39eafc4ad3, type: 3}
+  - key: Spec/Map/scriptorium
+    sprite: {fileID: 21300000, guid: c31711a45dbda1a46a550870bfa18152, type: 3}
+  - key: Spec/Map/spindle
+    sprite: {fileID: 21300000, guid: 43b84c9d17d1f8b49b9e5f062eda2835, type: 3}
+  - key: Spec/Map/winch
+    sprite: {fileID: 21300000, guid: 61d81a3bae1757a4289dc9a84c189ab6, type: 3}
+  - key: Spec/Map_Mist
+    sprite: {fileID: 21300000, guid: b3f371695fd9c5340a76484baacbefaa, type: 3}
+  - key: Spec/Map_Terrain
+    sprite: {fileID: 21300000, guid: 8e26720a02ffb5949af828f353704a22, type: 3}
+  - key: Spec/Plate_Construct_abode
+    sprite: {fileID: 21300000, guid: b4f78096e5f918b41a2c416015281f2d, type: 3}
+  - key: Spec/Plate_Construct_altar
+    sprite: {fileID: 21300000, guid: 18ed134000cad424bbf94f5aadfa3bf1, type: 3}
+  - key: Spec/Plate_Construct_beacon
+    sprite: {fileID: 21300000, guid: 09e000b59fd89b241b6fe29c42edb552, type: 3}
+  - key: Spec/Plate_Construct_belltower
+    sprite: {fileID: 21300000, guid: 643371e90e84aa041b004ae5cf0cdb5c, type: 3}
+  - key: Spec/Plate_Construct_chorusstone
+    sprite: {fileID: 21300000, guid: 98b5bc018254c8b4f9cbf8de1a387864, type: 3}
+  - key: Spec/Plate_Construct_cistern
+    sprite: {fileID: 21300000, guid: 9b852c1f7718c1c45913c3372256210c, type: 3}
+  - key: Spec/Plate_Construct_forge
+    sprite: {fileID: 21300000, guid: e2ce4fb387e044e47bd85f626a8dd850, type: 3}
+  - key: Spec/Plate_Construct_hallmany
+    sprite: {fileID: 21300000, guid: 28c963a39f4725e4a9a3e79b61016576, type: 3}
+  - key: Spec/Plate_Construct_hallstrengths
+    sprite: {fileID: 21300000, guid: 8a3fabb4ae1395e47b4ac4c0440d7667, type: 3}
+  - key: Spec/Plate_Construct_hut
+    sprite: {fileID: 21300000, guid: 151d48ddbb38226419a848ef105686c8, type: 3}
+  - key: Spec/Plate_Construct_kiln
+    sprite: {fileID: 21300000, guid: a72971e23e3afc44494e9adf78c9432a, type: 3}
+  - key: Spec/Plate_Construct_lamprow
+    sprite: {fileID: 21300000, guid: cf3642ebaefcaf74b990219c7363592e, type: 3}
+  - key: Spec/Plate_Construct_longhouse
+    sprite: {fileID: 21300000, guid: c057a0df91e2b0f48ad306b37b432e33, type: 3}
+  - key: Spec/Plate_Construct_moonwell
+    sprite: {fileID: 21300000, guid: 58c5154532ba7c54c8cccf48dac3a527, type: 3}
+  - key: Spec/Plate_Construct_nightlight
+    sprite: {fileID: 21300000, guid: b7e0604d1887c724a843ef940f24f2ed, type: 3}
+  - key: Spec/Plate_Construct_press
+    sprite: {fileID: 21300000, guid: 66717507490cbf84a87952191dafb4eb, type: 3}
+  - key: Spec/Plate_Construct_rampart
+    sprite: {fileID: 21300000, guid: 5c4b9e57ea132c74aa7114eba2a7e67b, type: 3}
+  - key: Spec/Plate_Construct_reliquary
+    sprite: {fileID: 21300000, guid: 3610e74ebd2172140b4caafe2042268a, type: 3}
+  - key: Spec/Plate_Construct_saltpans
+    sprite: {fileID: 21300000, guid: 7aead775a487cd2469cff6e5c2b646c8, type: 3}
+  - key: Spec/Plate_Construct_scriptorium
+    sprite: {fileID: 21300000, guid: c7e425e5230832649af18e1aada9ff20, type: 3}
+  - key: Spec/Plate_Construct_spindle
+    sprite: {fileID: 21300000, guid: e270b501145bb664bb19daf95bd96f89, type: 3}
+  - key: Spec/Plate_Construct_winch
+    sprite: {fileID: 21300000, guid: ad743ef5e2b93ee47959ebed40e44dbe, type: 3}
+  - key: Spec/Plate_Ending
+    sprite: {fileID: 21300000, guid: 6bbceee905f51014bbfa110fab87681b, type: 3}
+  - key: Spec/Plate_Veil
+    sprite: {fileID: 21300000, guid: cbc1c4e3c533c0548bdfe7b33f8a984a, type: 3}
+  - key: Spec/Portrait_Unit_bearer
+    sprite: {fileID: 21300000, guid: 0eef5450bd962154d88a2bdcb96acaa6, type: 3}
+  - key: Spec/Portrait_Unit_chorus
+    sprite: {fileID: 21300000, guid: 2989e88559e70fb4286aa318347c611f, type: 3}
+  - key: Spec/Portrait_Unit_dreamwright
+    sprite: {fileID: 21300000, guid: 62242c78eebf29444b06fe24834d3824, type: 3}
+  - key: Spec/Portrait_Unit_drifter
+    sprite: {fileID: 21300000, guid: f6c2e95a066565a498ab164807d75d96, type: 3}
+  - key: Spec/Portrait_Unit_drowned
+    sprite: {fileID: 21300000, guid: 3b0f8f10a8ae9784b90835639a0f4f3b, type: 3}
+  - key: Spec/Portrait_Unit_grinning
+    sprite: {fileID: 21300000, guid: 2535cd1d239f61d48997e86c16dcd2db, type: 3}
+  - key: Spec/Portrait_Unit_guard
+    sprite: {fileID: 21300000, guid: 59ebfd96a8681e04eb0843039ffd58a6, type: 3}
+  - key: Spec/Portrait_Unit_hollowriders
+    sprite: {fileID: 21300000, guid: 5c226d390e0826e4cb47d5f0e8e34d13, type: 3}
+  - key: Spec/Portrait_Unit_laughing
+    sprite: {fileID: 21300000, guid: c5529fab65edcfb45b370c35a78121ae, type: 3}
+  - key: Spec/Portrait_Unit_plainspoken
+    sprite: {fileID: 21300000, guid: ae57d3356f633a346a377f7f42de862a, type: 3}
+  - key: Spec/Portrait_Unit_rider
+    sprite: {fileID: 21300000, guid: 78f5bed4af189c04abc2218715d8571b, type: 3}
+  - key: Spec/Portrait_Unit_sentinel
+    sprite: {fileID: 21300000, guid: 87f07d3fa4cc9564cae0e820b81bec1f, type: 3}
+  - key: Spec/Portrait_Unit_stairs
+    sprite: {fileID: 21300000, guid: f6c5b4daa9ea0e444b5b553ad4a77d67, type: 3}
+  - key: Spec/Portrait_Unit_unflinching
+    sprite: {fileID: 21300000, guid: 775733af0ae10664c8a78cb7127ba432, type: 3}
+  - key: Spec/Portrait_Unit_voices
+    sprite: {fileID: 21300000, guid: ba315dd05a010254fa71896c307803d1, type: 3}
+  - key: Spec/Portrait_Unit_wailing
+    sprite: {fileID: 21300000, guid: 55aed00b89d48ed4ea492a1292ef7d6b, type: 3}
