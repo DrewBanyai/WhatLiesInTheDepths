@@ -77,6 +77,28 @@ namespace WhatLiesInTheDepths.UI
                     _rows.Add(row);
                 }
             }
+
+            Fit();
+        }
+
+        [Tooltip("The panel's height at its smallest: the spec's 501, which holds fifteen resources.")]
+        public float minHeight = 501f;
+        [Tooltip("Room above and below the rows inside the panel (the clip's 5 each side).")]
+        public float padding = 10f;
+
+        /// <summary>The panel grows with its rows, so the last resource is never cut off. It
+        /// never shrinks below the spec's height, and never grows into the Now Playing line at the foot of the column.</summary>
+        void Fit()
+        {
+            var panel = (RectTransform)transform;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(content);
+            float rows = LayoutUtility.GetPreferredHeight(content);
+            // Its floor is the top of the Now Playing line at the foot of the column, with a
+            // little mist between them.
+            float most = Layout.ColumnH - Layout.NowPlayingH - (Layout.PanelTopY - Layout.ColumnY) - 16f;
+            float h = Mathf.Clamp(Mathf.Ceil(rows + padding), minHeight, most);
+            if (!Mathf.Approximately(panel.sizeDelta.y, h))
+                panel.sizeDelta = new Vector2(panel.sizeDelta.x, h);
         }
 
         void RefreshAll()

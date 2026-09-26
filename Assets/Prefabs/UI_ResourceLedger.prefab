@@ -459,3 +459,5 @@ MonoBehaviour:
   content: {fileID: 3453166275301609823}
   rowPrefab: {fileID: 2526380558063468160, guid: 6a7c4edfdc78a3f40a5074552213f8bc, type: 3}
   groupCaptionPrefab: {fileID: 7458296533653822814, guid: b3eb73748adddc443a192ae6e902cc0a, type: 3}
+  minHeight: 501
+  padding: 10
