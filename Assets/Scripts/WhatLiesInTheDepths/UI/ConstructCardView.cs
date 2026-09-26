@@ -179,7 +179,12 @@ namespace WhatLiesInTheDepths.UI
             {
                 // The card appears reading x2, never x0 — the stock carries across an upgrade.
                 ownedCount.text = "×" + Fmt.Count(_c.owned);
-                ownedCount.gameObject.SetActive(_c.owned > 0 && !_c.once);
+                // The pill behind the figure goes with it: a one-of-a-kind build (The Nightlight,
+                // the Altar) and a card with none built yet show no count and no empty pill.
+                bool counted = _c.owned > 0 && !_c.once;
+                var pill = ownedCount.transform.parent;
+                if (pill != null && pill.name == "OwnedPill") pill.gameObject.SetActive(counted);
+                ownedCount.gameObject.SetActive(counted);
             }
 
             if (costs != null && costPillPrefab != null && !finished)

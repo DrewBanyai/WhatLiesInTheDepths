@@ -82,6 +82,8 @@ namespace WhatLiesInTheDepths.Data
 
         /// <summary>Completions of each Focus, all time.</summary>
         public readonly Dictionary<string, int> done = new Dictionary<string, int>();
+        /// <summary>What a resource holds the moment it is first shown (Dread arrives with 20).</summary>
+        public readonly Dictionary<string, double> startOnShow = new Dictionary<string, double>();
         /// <summary>Fathoms sunk across every veil, all time.</summary>
         public double fathomsTotal;
 
@@ -685,7 +687,11 @@ namespace WhatLiesInTheDepths.Data
             // Appearing latches, and a thing appearing wears its dot.
             foreach (var r in resources)
                 if (!unlocks.Has("shown:res:" + r.k) && AllHold(r.requires))
+                {
                     unlocks.Add("shown:res:" + r.k);
+                    if (startOnShow.TryGetValue(r.k, out double start) && r.c < start)
+                        r.c = r.m > 0 ? Math.Min(start, r.m) : start;
+                }
             foreach (var t in tasks)
                 if (!unlocks.Has("shown:focus:" + t.id) && AllHold(t.requires))
                 { unlocks.Add("shown:focus:" + t.id); t.seen = false; }
@@ -694,7 +700,7 @@ namespace WhatLiesInTheDepths.Data
                 { unlocks.Add("shown:construct:" + c.g); c.seen = false; }
             foreach (var r in revelations)
                 if (!unlocks.Has("shown:rev:" + r.k) && !Withdrawn(r) && AllHold(r.requires))
-                    unlocks.Add("shown:rev:" + r.k);
+                { unlocks.Add("shown:rev:" + r.k); r.seen = false; }
             foreach (var v in visions)
                 if (!unlocks.Has("shown:vision:" + v.k) && AllHold(v.requires))
                     unlocks.Add("shown:vision:" + v.k);
@@ -773,7 +779,7 @@ namespace WhatLiesInTheDepths.Data
                 double period = veil.Period(attendingDive);
                 if (!double.IsInfinity(period))
                 {
-                    AddFlow(veil.bring, 1.0 / period);
+                    AddFlow(DiveBring, 1.0 / period);
                     AddFlow(veil.spend, -1.0 / period);
                 }
             }
@@ -811,6 +817,22 @@ namespace WhatLiesInTheDepths.Data
                 if (veil == null) return Hold.None;
                 bool primaryOnly = HasNextVeil && veil.bring != null && veil.bring.Count > 0;
                 return HoldOf(veil.spend, primaryOnly ? veil.bring.GetRange(0, 1) : null);
+            }
+        }
+
+        /// <summary>What a dive actually brings up: its primary (first) line always, and every
+        /// other line only once that resource is shown. A resource you have not unlocked does
+        /// not pile up out of sight — Echo from The Drift waits until Conjure has shown it, so
+        /// it starts from nothing when it appears.</summary>
+        public List<Amount> DiveBring
+        {
+            get
+            {
+                if (veil == null || veil.bring == null) return null;
+                var l = new List<Amount>(veil.bring.Count);
+                for (int i = 0; i < veil.bring.Count; i++)
+                    if (i == 0 || Shown(Find(veil.bring[i].k))) l.Add(veil.bring[i]);
+                return l;
             }
         }
 
@@ -891,7 +913,7 @@ namespace WhatLiesInTheDepths.Data
                         // A dive is paid for when it lands, like a Focus.
                         veil.p = 0f;
                         Spend(veil.spend);
-                        Grant(veil.bring);
+                        Grant(DiveBring);
                         veil.sunk = Math.Min(veil.need, veil.sunk + 1);
                         fathomsTotal += 1;
                         if (veil.AtFull) attendingDive = false;

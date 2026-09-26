@@ -250,7 +250,8 @@ namespace WhatLiesInTheDepths.UI
             }
 
             FillLedgerColumn(spentColumn, v.spend, Tok.RoseD, Strings.T("ui.gauge.spent"));
-            FillLedgerColumn(broughtColumn, v.bring, Tok.TealD, Strings.T("ui.gauge.brought"));
+            // Only what a dive actually brings: a resource not yet shown is not listed.
+            FillLedgerColumn(broughtColumn, GameState.I.Dream.DiveBring, Tok.TealD, Strings.T("ui.gauge.brought"));
 
             if (stepper != null) stepper.Set(v.w, v.cap);
 
@@ -481,7 +482,12 @@ namespace WhatLiesInTheDepths.UI
             if (v != null)
             {
                 LedgerLine.Resync(_lines, true, v.spend, "");
-                LedgerLine.Resync(_lines, false, v.bring, "");
+                var brings = GameState.I.Dream.DiveBring;
+                // A resource shown since the column was drawn joins it.
+                if (brings != null && LedgerLine.CountOf(_lines, false) != brings.Count)
+                    FillLedgerColumn(broughtColumn, brings, Tok.TealD, Strings.T("ui.gauge.brought"));
+                else
+                    LedgerLine.Resync(_lines, false, brings, "");
             }
             foreach (var l in _lines) l.Paint();
         }

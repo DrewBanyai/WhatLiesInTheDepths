@@ -72,6 +72,7 @@ namespace WhatLiesInTheDepths.Data
             Res_(s, "mettle", 60, ResGroup.Yours, "mettle", L("built:forge"));
             Res_(s, "dread", 100, ResGroup.AgainstYou, "dread", L("vision:door"));
             Res_(s, "umbra", 100, ResGroup.AgainstYou, "umbra", L("rev:fear"));
+            s.startOnShow["dread"] = 20;
         }
 
         static void Rules(Dream s)
@@ -143,7 +144,7 @@ namespace WhatLiesInTheDepths.Data
             c.landmark = true; c.kindLabel = T("construct.altar.kind"); c.line = T("construct.altar.line");
             c.grants = L("col:gauge");
             c = Build(s, "hut", ConstructKind.Dwellings, C("reverie", 10, "echo", 5), 1, null, L("rev:listening"), 736, 206);
-            c = Build(s, "cistern", ConstructKind.Reservoirs, C("silt", 12), 0, Fx_(E(Fx.Cap, "silt", 15), E(Fx.Cap, "reverie", 5), E(Fx.Cap, "echo", 3)), L("rev:room"), 212, 716);
+            c = Build(s, "cistern", ConstructKind.Reservoirs, C("silt", 12), 0, Fx_(E(Fx.Cap, "silt", 10), E(Fx.Cap, "reverie", 5), E(Fx.Cap, "echo", 3)), L("rev:room"), 212, 716);
             c.growth = 1.02;
             c = Build(s, "spindle", ConstructKind.Works, C("reverie", 12, "silt", 10), 0, Fx_(E(Fx.Rate, "reverie", 0.2)), L("rev:hums"), 132, 148);
             c = Build(s, "moonwell", ConstructKind.Reservoirs, C("reverie", 20, "silt", 15), 0, Fx_(E(Fx.Cap, "reverie", 25), E(Fx.Rate, "reverie", 0.1), E(Fx.Cap, "lucidity", 3)), L("rev:stillkeeps"), 138, 566);

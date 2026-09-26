@@ -273,6 +273,7 @@ namespace WhatLiesInTheDepths.UI
         {
             _open = v;
             var d = v.Def;
+            d.seen = true;
             Purchasable(true);
             if (readout != null) readout.SetActive(true);
             FillBody(d);

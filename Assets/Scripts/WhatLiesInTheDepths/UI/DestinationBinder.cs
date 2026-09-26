@@ -64,6 +64,9 @@ namespace WhatLiesInTheDepths.UI
                 case Destination.Constructs:
                     foreach (var c in s.ShownConstructs) c.seen = true;
                     break;
+                case Destination.Revelations:
+                    foreach (var r in s.ShownRevelations) r.seen = true;
+                    break;
             }
         }
 
@@ -90,11 +93,11 @@ namespace WhatLiesInTheDepths.UI
                 case Destination.Journal:
                     return s.journal.Any(e => !e.seen);
                 case Destination.Focus:
-                    // A task with free Oneiri sitting idle, or a card never looked at.
-                    return s.ShownTasks.Any(t => !t.seen)
-                        || (s.BindingOpen && s.OneiriFree > 0 && s.ShownTasks.Any(t => t.w < t.cap));
+                    // Only a card never looked at. Free Oneiri are not news: the ledger counts them.
+                    return s.ShownTasks.Any(t => !t.seen);
                 case Destination.Revelations:
-                    return s.ShownRevelations.Any(r => s.Judge(r.cost) == Refusal.None);
+                    // A realization that has just arrived, or one that can be paid for now.
+                    return s.ShownRevelations.Any(r => !r.seen || s.Judge(r.cost) == Refusal.None);
                 case Destination.Constructs:
                     return s.ShownConstructs.Any(c => !c.seen);
                 case Destination.Visions:

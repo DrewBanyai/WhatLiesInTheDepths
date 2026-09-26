@@ -114,6 +114,7 @@ namespace WhatLiesInTheDepths.Data
         public float ring;            // 306 or 388
         public float angle;           // radians on that ring
         public bool realized;
+        public bool seen = true;      // a newly arrived sigil lights the Revelations dot
         public string g;              // sigil art; the id when empty
         public List<string> requires;
         /// <summary>Unlocks set when it is realized, beside rev:&lt;k&gt; itself.</summary>

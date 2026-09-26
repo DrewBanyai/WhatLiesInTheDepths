@@ -40,13 +40,20 @@ namespace WhatLiesInTheDepths.UI
         {
             if (_res == null) return;
 
+            // Oneiri read as free / housed: the held figure is how many are not bound to a
+            // task or the dive, and the fill and the gold follow that figure, not the total.
+            double shown = _res.c;
+            bool oneiri = _res.k == "oneiri" && GameState.I != null;
+            if (oneiri) shown = GameState.I.OneiriFree;
+            bool full = oneiri ? _res.m > 0 && shown >= _res.m : _res.Full;
+
             // Three row states: ordinary, at the ceiling, hostile.
             Tok inkTok, fillTok, iconTok, maxTok;
             if (_res.hostile)
             {
                 fillTok = Tok.RoseT; inkTok = Tok.RoseD; iconTok = Tok.RoseD; maxTok = Tok.Ink3;
             }
-            else if (_res.Full)
+            else if (full)
             {
                 fillTok = Tok.GoldL; inkTok = Tok.GoldD; iconTok = Tok.GoldD; maxTok = Tok.GoldD;
             }
@@ -56,14 +63,14 @@ namespace WhatLiesInTheDepths.UI
             }
 
             // At the ceiling the fill is drawn full width.
-            float f = _res.Full ? 1f : _res.Fill;
+            float f = full ? 1f : oneiri ? (_res.m > 0 ? Mathf.Clamp01((float)(shown / _res.m)) : 0f) : _res.Fill;
             if (fill != null) fill.Set(f, Theme.Get(fillTok), immediate);
 
             if (icon != null) icon.color = Theme.Get(iconTok);
             if (nameLabel != null) nameLabel.color = Theme.Get(inkTok);
             if (held != null)
             {
-                held.text = Fmt.Count(_res.c);          // no abbreviation, ever
+                held.text = Fmt.Count(shown);           // no abbreviation, ever
                 held.color = Theme.Get(inkTok);
             }
             if (maximum != null)
