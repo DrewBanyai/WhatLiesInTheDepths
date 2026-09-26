@@ -371,7 +371,7 @@
     "construct.cistern.name": "Cistern",
     "construct.cistern.blurb": "It fills whether or not you are watching it.",
     "construct.cistern.fx": [
-      "<b>+15</b> max Silt",
+      "<b>+10</b> max Silt",
       "<b>+5</b> max Reverie",
       "<b>+3</b> max Echo"
     ],
@@ -1720,6 +1720,7 @@
       "The Nobody is gone. What he woke to destroy it did not go back to sleep.",
       "The rider still rides the roads with nobody in the saddle. The thing on the stairs has found other stairs. The peoples of the dream keep their doors shut at night now, and their lamps lit, and they do not come to the Palace.",
       "He sleeps soundly. He is free of it. Down in the country beyond his dreams, something else is grazing, and it has his face."
-    ]
+    ],
+    "construct.altar.fx": []
   }
 }
