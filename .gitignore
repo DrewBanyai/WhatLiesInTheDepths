@@ -107,3 +107,7 @@ InitTestScene*.unity*
 
 # Captures folder, which is used for the automated image capturing editor tool
 /Captures/
+
+# Python bytecode written when the content tools run
+__pycache__/
+*.py[cod]
