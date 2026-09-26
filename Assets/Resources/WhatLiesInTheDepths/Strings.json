@@ -205,6 +205,9 @@
     "ui.assault.noChance": "no chance",
     "ui.assault.noChanceHere": "no chance at this strength",
     "ui.assault.toTake": "{0} to take it",
+    "ui.assault.opensAtVeil": "the way here opens at veil {0}",
+    "ui.assault.opensWithRealization": "the way here opens with {0}",
+    "ui.assault.notOpenYet": "the way here is not open yet",
     "ui.assault.next": "The next place",
     "ui.assault.gave": "It gave",
     "ui.assault.whenWon": "When won",
@@ -377,7 +380,7 @@
     "construct.cistern.name": "Cistern",
     "construct.cistern.blurb": "It fills whether or not you are watching it.",
     "construct.cistern.fx": [
-      "<b>+10</b> max Silt",
+      "<b>+20</b> max Silt",
       "<b>+5</b> max Reverie",
       "<b>+3</b> max Echo"
     ],
@@ -512,7 +515,7 @@
     "rev.room.text": "Your hands keep filling and the shore keeps giving. Somewhere to set it down would help.",
     "rev.room.fx": [
       "unlocks <b>Cistern</b>",
-      "a realization: <b>Down Is a Direction</b>"
+      "a realization: <b>Down Is a Direction</b> (from veil 10)"
     ],
     "rev.hums.name": "The Stone Hums Back",
     "rev.hums.kind": "unlocks a construct",
@@ -537,7 +540,7 @@
     "rev.stillkeeps.text": "Water this still holds whatever you pour into it, and gives it back unchanged.",
     "rev.stillkeeps.fx": [
       "unlocks <b>Moonwell</b>",
-      "a realization: <b>They Remember Building</b>"
+      "a realization: <b>They Remember Building</b> (with 3 Warrens standing)"
     ],
     "rev.remember.name": "They Remember Building",
     "rev.remember.kind": "changes generation",
@@ -557,13 +560,13 @@
     "rev.cold.text": "Some of what the dives bring up is heavier than it should be, and cold all the way through.",
     "rev.cold.fx": [
       "unlocks the <b>Draw Moonsilver</b> focus",
-      "a realization: <b>Walls That Agree</b>"
+      "a realization: <b>Walls That Agree</b> (with 5 Warrens standing)"
     ],
     "rev.walls.name": "Walls That Agree",
     "rev.walls.kind": "upgrades a construct",
     "rev.walls.text": "The Warrens keep rearranging themselves. Given better stuff, the walls might agree on where they are.",
     "rev.walls.fx": [
-      "a realization: <b>The Drifters Settle</b>",
+      "a realization: <b>The Drifters Settle</b> (from veil 29)",
       "every <b>Warren</b> becomes <b>Abode</b>"
     ],
     "rev.warmth.name": "Warmth Is Allowed",
@@ -773,28 +776,28 @@
       "<b>Render Tallow</b> gives <b>+100%</b>",
       "<b>Keep the Lamps</b> gives <b>+100%</b>",
       "<b>Kindle</b> gives <b>+100%</b>",
-      "a realization: <b>Every People Has Come</b>"
+      "a realization: <b>Every People Has Come</b> (with 3 others)"
     ],
     "rev.saltwives.name": "The Saltwives Keep Watch",
     "rev.saltwives.kind": "changes the wards",
     "rev.saltwives.text": "They have kept the grief of the Salt Flats for longer than there were names. They can keep a wall.",
     "rev.saltwives.fx": [
       "max Ward <b>+50%</b>",
-      "a realization: <b>Every People Has Come</b>"
+      "a realization: <b>Every People Has Come</b> (with 3 others)"
     ],
     "rev.clockfolk.name": "The Clockfolk Keep Time",
     "rev.clockfolk.kind": "changes the descent",
     "rev.clockfolk.text": "The Clockfolk have set every clock in the hall to the same hour. It is not late.",
     "rev.clockfolk.fx": [
       "dives <b>+50%</b> faster",
-      "a realization: <b>Every People Has Come</b>"
+      "a realization: <b>Every People Has Come</b> (with 3 others)"
     ],
     "rev.hollowed.name": "The Hollowed Remember",
     "rev.hollowed.kind": "changes the road",
     "rev.hollowed.text": "The trees it ate from the inside are still standing, and they remember what it tasted like.",
     "rev.hollowed.fx": [
       "the road fields <b>−10%</b>",
-      "a realization: <b>Every People Has Come</b>"
+      "a realization: <b>Every People Has Come</b> (with 3 others)"
     ],
     "rev.everypeople.name": "Every People Has Come",
     "rev.everypeople.kind": "unlocks a construct",
@@ -882,7 +885,7 @@
     "vision.well.fx": [
       "<b>Conjure</b> gives <b>+40%</b>",
       "each Longhouse houses <b>+1</b> Oneiri",
-      "a realization: <b>Mine to End</b>"
+      "a realization: <b>Mine to End</b> (from veil 58)"
     ],
     "vision.hour.name": "The Hour That Held",
     "vision.hour.text": "One hour of the dream refused to pass. Make it a habit.",
@@ -898,7 +901,7 @@
     "vision.tenant.text": "His own bedroom, in the waking world, before dawn. He is asleep, and his eyes are open, and the thing looking out of them is not him. It has his voice. It is making calls.",
     "vision.tenant.fx": [
       "<b>+100</b> max Dread",
-      "a realization: <b>Made, Not Hired</b>",
+      "a realization: <b>Made, Not Hired</b> (from veil 78)",
       "the Journal gains an entry"
     ],
     "vision.looked.name": "The Night I Looked",
