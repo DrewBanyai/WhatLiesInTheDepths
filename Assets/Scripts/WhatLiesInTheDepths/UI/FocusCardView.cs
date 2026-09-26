@@ -145,7 +145,7 @@ namespace WhatLiesInTheDepths.UI
                 var go = Instantiate(ledgerLinePrefab, col);
                 var res = GameState.I?.Find(a.k);
                 var line = LedgerLine.On(go, a, spent, tone, true);
-                if (line.figure != null) line.figure.text = sign + Fmt.Count(a.n);
+                if (line.figure != null) line.figure.text = sign + Fmt.Amount(a.n);
                 if (line.name != null) line.name.text = res != null ? res.n : a.k;
                 _lines.Add(line);
                 line.Paint();

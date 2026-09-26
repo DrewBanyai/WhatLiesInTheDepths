@@ -38,7 +38,7 @@ namespace Ursine.UI
 
         public void Set(string resourceName, double n, Refusal state)
         {
-            if (amount != null) amount.text = Fmt.Count(n);
+            if (amount != null) amount.text = Fmt.Amount(n);
             if (label != null) label.text = resourceName;
 
             int g, ink;

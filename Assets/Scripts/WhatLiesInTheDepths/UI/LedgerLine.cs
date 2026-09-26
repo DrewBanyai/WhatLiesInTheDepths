@@ -63,7 +63,7 @@ namespace WhatLiesInTheDepths.UI
                 if (l.amount == null || l.amount.n != a.n || l.amount.k != a.k)
                 {
                     changed = true;
-                    if (l.figure != null) l.figure.text = sign + Fmt.Count(a.n);
+                    if (l.figure != null) l.figure.text = sign + Fmt.Amount(a.n);
                 }
                 l.amount = a;
             }

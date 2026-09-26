@@ -537,7 +537,7 @@ namespace WhatLiesInTheDepths.UI
                 else
                 {
                     var res = s.Find(offer.r);
-                    hint = Strings.T("ui.visions.hint.pouring", Fmt.Count(cost), res != null ? res.n : offer.r);
+                    hint = Strings.T("ui.visions.hint.pouring", Fmt.Amount(cost), res != null ? res.n : offer.r);
                 }
                 channelHint.text = hint;
                 channelHint.color = Theme.Get(warn ? Tok.RoseD : Tok.Ink3);
@@ -615,7 +615,7 @@ namespace WhatLiesInTheDepths.UI
                 Art.Apply(g, Art.Resource(offer.r));
                 g.color = Theme.Get(ink, 0.8f);
             }
-            SetText(row, "Amount", Fmt.Count(n), Theme.Get(ink));
+            SetText(row, "Amount", Fmt.Amount(n), Theme.Get(ink));
             SetText(row, "Resource", res != null ? res.n : offer.r, Theme.Get(ink));
             SetText(row, "Gain", "+" + Fmt.Count(offer.g) + "%", Theme.Get(Tok.TealD));
         }

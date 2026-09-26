@@ -14,6 +14,21 @@ namespace Ursine
         /// <summary>A held amount or a cost. No abbreviation, ever: 1,284, never 1.3k.</summary>
         public static string Count(double v) => ((long)System.Math.Round(v)).ToString("N0", Culture);
 
+        /// <summary>What is held, in whole units, never rounded up: 9.6 held is 9, because
+        /// a cost of 10 cannot be paid with it. A hair under a whole number (floating-point
+        /// dust) counts as that number.</summary>
+        public static string Held(double v) => ((long)System.Math.Floor(v + 1e-6)).ToString("N0", Culture);
+
+        /// <summary>An amount a thing costs or gives. Whole amounts read as a count; a
+        /// fraction shows itself to two places (0.53, 1.5), so a dive that brings half an
+        /// Echo never says it brings one.</summary>
+        public static string Amount(double v)
+        {
+            double r = System.Math.Round(v);
+            if (System.Math.Abs(v - r) < 1e-6) return ((long)r).ToString("N0", Culture);
+            return v.ToString("#,##0.##", Culture);
+        }
+
         /// <summary>A rate. Always signed, always present, one decimal, suffixed. A rate
         /// below the threshold reads 0.0 rather than going blank, so a row never empties.</summary>
         public static string Rate(double perUnit, string suffix = " /s", double deadZone = 0.05)

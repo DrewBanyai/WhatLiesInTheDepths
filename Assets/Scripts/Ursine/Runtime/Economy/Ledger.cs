@@ -58,7 +58,7 @@ namespace Ursine.Economy
             var shortest = list.Where(a => Short(a.k, a.n))
                                .OrderByDescending(a => a.n - Held(a.k)).FirstOrDefault();
             if (shortest != null)
-                return Loc.T("ursine.ledger.short", Fmt.Count(shortest.n - Held(shortest.k)), Find(shortest.k)?.n ?? shortest.k);
+                return Loc.T("ursine.ledger.short", Fmt.Amount(shortest.n - Held(shortest.k)), Find(shortest.k)?.n ?? shortest.k);
 
             return null;
         }
@@ -72,7 +72,7 @@ namespace Ursine.Economy
             foreach (var a in list)
             {
                 var r = Find(a.k);
-                if (r != null) r.c = Math.Max(0, r.c - a.n);
+                if (r != null) r.c = Clean(Math.Max(0, r.c - a.n));
             }
             Dirty();
             return true;
@@ -87,7 +87,7 @@ namespace Ursine.Economy
             {
                 var r = Find(a.k);
                 if (r == null) continue;
-                r.c = Math.Min(r.m, r.c + a.n);
+                r.c = Clean(Math.Min(r.m, r.c + a.n));
             }
             Dirty();
         }
@@ -97,8 +97,13 @@ namespace Ursine.Economy
         public virtual void Tick()
         {
             foreach (var r in resources)
-                if (r.passive != 0) r.c = Math.Max(0, Math.Min(r.m, r.c + r.passive));
+                if (r.passive != 0) r.c = Clean(Math.Max(0, Math.Min(r.m, r.c + r.passive)));
         }
+
+        /// <summary>Amounts can be fractional (a dive that brings half an Echo), and adding
+        /// fractions in binary floating point leaves dust: ten gifts of 0.1 make 0.9999999…,
+        /// which is short of a cost of 1 and reads as 0. Every total is kept to a millionth.</summary>
+        public static double Clean(double v) => Math.Round(v, 6);
     }
 
     /// <summary>A pool of interchangeable workers bound to tasks. Binding one somewhere is

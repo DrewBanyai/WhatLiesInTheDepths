@@ -461,7 +461,7 @@ namespace WhatLiesInTheDepths.UI
                 var res = GameState.I.Find(a.k);
                 // The gauge names its resources in words, in the column's own tone.
                 var line = LedgerLine.On(go, a, spent, tone, false);
-                if (line.figure != null) line.figure.text = Fmt.Count(a.n);
+                if (line.figure != null) line.figure.text = Fmt.Amount(a.n);
                 if (line.name != null) line.name.text = res != null ? res.n : a.k;
                 _lines.Add(line);
                 line.Paint();

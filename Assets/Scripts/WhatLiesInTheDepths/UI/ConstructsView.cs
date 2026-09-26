@@ -397,7 +397,7 @@ namespace WhatLiesInTheDepths.UI
                         var s = GameState.I;
                         var cost = b.def.cost != null && b.def.cost.Count > 0 ? b.def.cost[0] : null;
                         bool isShort = s != null && s.Judge(b.def.cost) != Refusal.None;
-                        string figure = cost != null ? Fmt.Count(cost.n) : "";
+                        string figure = cost != null ? Fmt.Amount(cost.n) : "";
                         string name = cost != null ? (s?.Find(cost.k)?.n ?? cost.k) : "";
                         string ink = "#" + ColorUtility.ToHtmlStringRGB(Theme.Get(isShort ? Tok.RoseD : Tok.Ink));
                         b.line.text = $"<i><color={ink}>{figure}</color></i> {name}";

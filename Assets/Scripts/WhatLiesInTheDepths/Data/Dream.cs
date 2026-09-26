@@ -458,6 +458,20 @@ namespace WhatLiesInTheDepths.Data
             return a.Select(x => new Amount(x.k, ceil ? Math.Ceiling(x.n * k - 1e-9) : x.n * k)).ToList();
         }
 
+        /// <summary>A reward a player is handed reads as a number a person would choose: under
+        /// 2 it moves in quarters (0.25, 0.5, 0.75), under 10 in halves, and from 10 in whole
+        /// units. So an effect that adds 18% to a gain of 1 pays 1.25, never 1.18. Nothing is
+        /// rounded away to nothing: the smallest reward is a quarter.</summary>
+        public static double Nice(double x)
+        {
+            if (x <= 0) return x;
+            double step = x < 2 ? 0.25 : x < 10 ? 0.5 : 1.0;
+            return Math.Max(step, Math.Round(x / step, MidpointRounding.AwayFromZero) * step);
+        }
+
+        static List<Amount> Rewarded(List<Amount> a)
+            => a?.Select(x => new Amount(x.k, Nice(x.n))).ToList();
+
         void ApplyEffects()
         {
             if (_showAll) return;       // the spec's snapshot keeps its own numbers
@@ -483,7 +497,7 @@ namespace WhatLiesInTheDepths.Data
             foreach (var t in tasks)
             {
                 t.speed = (1.0 + allSpeed + Sum(Fx.Speed, t.id)) / drag;
-                t.gain = Scaled(t.baseGain, 1.0 + allGain + Sum(Fx.Gain, t.id), false);
+                t.gain = Rewarded(Scaled(t.baseGain, 1.0 + allGain + Sum(Fx.Gain, t.id), false));
             }
 
             double diveCost = Math.Max(0.1, 1.0 - Sum(Fx.DiveCost, null));
@@ -493,7 +507,7 @@ namespace WhatLiesInTheDepths.Data
             {
                 v.speed = diveSpeed;
                 v.spend = Scaled(v.baseSpend, diveCost, true);
-                v.bring = Scaled(v.baseBring, diveGain, false);
+                v.bring = Rewarded(Scaled(v.baseBring, diveGain, false));
             }
 
             double allPower = Sum(Fx.Power, "*");
@@ -522,7 +536,7 @@ namespace WhatLiesInTheDepths.Data
             double n = v.OfferCost(offer);
             if (Held(offer.r) < n) return false;
             var res = Find(offer.r);
-            if (res != null) res.c -= n;
+            if (res != null) res.c = Ursine.Economy.Ledger.Clean(res.c - n);
             // Progress never falls. No decay, no refund, no way to take a pour back.
             v.p = Mathf.Min(100f, v.p + (float)offer.g);
             if (v.p >= 100f) CompleteVision(v);
@@ -703,7 +717,7 @@ namespace WhatLiesInTheDepths.Data
                 { unlocks.Add("shown:rev:" + r.k); r.seen = false; }
             foreach (var v in visions)
                 if (!unlocks.Has("shown:vision:" + v.k) && AllHold(v.requires))
-                    unlocks.Add("shown:vision:" + v.k);
+                { unlocks.Add("shown:vision:" + v.k); v.seen = false; }
             foreach (var u in units)
                 if (!unlocks.Has("shown:unit:" + u.k) && AllHold(u.requires))
                 { unlocks.Add("shown:unit:" + u.k); u.isNew = true; }

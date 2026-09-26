@@ -70,7 +70,7 @@ namespace WhatLiesInTheDepths.UI
             if (nameLabel != null) nameLabel.color = Theme.Get(inkTok);
             if (held != null)
             {
-                held.text = Fmt.Count(shown);           // no abbreviation, ever
+                held.text = Fmt.Held(shown);           // no abbreviation, ever
                 held.color = Theme.Get(inkTok);
             }
             if (maximum != null)
