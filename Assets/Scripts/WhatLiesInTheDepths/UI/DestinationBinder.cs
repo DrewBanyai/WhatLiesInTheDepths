@@ -67,6 +67,9 @@ namespace WhatLiesInTheDepths.UI
                 case Destination.Revelations:
                     foreach (var r in s.ShownRevelations) r.seen = true;
                     break;
+                case Destination.Visions:
+                    foreach (var v in s.visions) if (s.Shown(v)) v.seen = true;
+                    break;
             }
         }
 
@@ -101,9 +104,9 @@ namespace WhatLiesInTheDepths.UI
                 case Destination.Constructs:
                     return s.ShownConstructs.Any(c => !c.seen);
                 case Destination.Visions:
-                    return s.visions.Any(v => s.Shown(v) && v.of != null && v.of.Count > 0
-                                              && s.Held(v.of[Mathf.Clamp(v.sel, 0, v.of.Count - 1)].r)
-                                                 >= v.OfferCost(v.of[Mathf.Clamp(v.sel, 0, v.of.Count - 1)]));
+                    // A Vision the player has not been to yet. Being able to pour into one is
+                    // not news: the pour is always there, and it would keep the dot lit for good.
+                    return s.visions.Any(v => s.Shown(v) && !v.seen);
                 case Destination.Assault:
                     var next = s.road.FirstOrDefault(l => !l.won);
                     return next != null && Odds.Chance(s.Dream.Army, next.en) > 0 && s.Open(next);
