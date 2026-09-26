@@ -201,6 +201,8 @@ grp = {0: "ResGroup.Gathered", 1: "ResGroup.Yours", 2: "ResGroup.AgainstYou"}
 for k, g, m, req, glyph in D.RESOURCES:
     w(f'            Res_(s, "{k}", {m}, {grp[g]}, "{glyph}", {strs(req)});')
     S[f"res.{k}"] = D.RES_NAMES[k]
+for k, n in getattr(D, "RES_START", {}).items():
+    w(f'            s.startOnShow["{k}"] = {n};')
 w("        }")
 w("")
 
@@ -267,7 +269,7 @@ for c in D.CONSTRUCTS:
     lines = []
     if c.get("housing"): lines.append(f"Houses <b>{c['housing']}</b> Oneiri")
     lines += [fx_line(e) for e in c.get("fx", [])]
-    if g != "altar": S[f"construct.{g}.fx"] = lines
+    S[f"construct.{g}.fx"] = lines   # the Altar has none: an empty list, not a missing key
 w("        }")
 w("")
 

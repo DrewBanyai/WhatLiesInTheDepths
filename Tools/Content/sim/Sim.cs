@@ -185,7 +185,10 @@ static class Sim
 
         // attention: on whatever makes what the target is short of; else the dive; else rotate
         var makers = d.ShownTasks.Where(x => d.HoldOf(x) == Hold.None && missing.Any(m => Makes(x, m))).OrderBy(x => x.w).ToList();
-        if (makers.Count > 0) { d.attendingDive = false; d.attendedTaskId = makers[0].id; }
+        // A player tries every new Focus once, out of curiosity, before settling into a routine.
+        var untried = d.ShownTasks.FirstOrDefault(x => d.HoldOf(x) == Hold.None && !d.done.ContainsKey(x.id));
+        if (untried != null) { d.attendingDive = false; d.attendedTaskId = untried.id; }
+        else if (makers.Count > 0) { d.attendingDive = false; d.attendedTaskId = makers[0].id; }
         else if (DiveUseful) { d.attendingDive = true; d.attendedTaskId = null; }
         else
         {

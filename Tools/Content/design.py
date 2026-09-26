@@ -35,6 +35,10 @@ RESOURCES = [
     ("dread",      2, 100, ["vision:door"],    "dread"),
     ("umbra",      2, 100, ["rev:fear"],       "umbra"),
 ]
+# What a resource holds the moment it first appears. Dread arrives with some already in it, so
+# the 40th veil (1 Dread a fathom) never waits on the Door's 0.2/s alone.
+RES_START = {"dread": 20}
+
 RES_NAMES = {
     "reverie": "Reverie", "silt": "Silt", "moonsilver": "Moonsilver", "ember": "Ember",
     "tallow": "Tallow", "salt": "Salt", "nacre": "Nacre", "echo": "Echo", "oneiri": "Oneiri",
@@ -122,11 +126,11 @@ CONSTRUCTS = [
     dict(g="hut", kind="Dwellings", cost=[("reverie", 10), ("echo", 5)], housing=1, pos=(736, 206),
          requires=["rev:listening"]),
     dict(g="cistern", kind="Reservoirs", name="Cistern", blurb="It fills whether or not you are watching it.",
-         cost=[("silt", 12)], fx=[cap("silt", 15), cap("reverie", 5), cap("echo", 3)], pos=(212, 716),
+         cost=[("silt", 12)], fx=[cap("silt", 10), cap("reverie", 5), cap("echo", 3)], pos=(212, 716),
          # The one construct that never outgrows the shore: its price climbs only 2% a build and
-         # each adds a flat 15 room, so wherever Silt is a reach's primary yield there is a
+         # each adds a flat 10 room, so wherever Silt is a reach's primary yield there is a
          # Cistern to spend a full load on. (Price overtakes the room Cisterns alone give at
-         # about 300 built; the biggest Silt bill in play is ~1,300, reached near 90.)
+         # 275 built; the biggest Silt bill in play is ~1,330, reached at 132.)
          growth=1.02, requires=["rev:room"]),
     dict(g="spindle", kind="Works", name="Dreamspindle", blurb="Something turns, and turns, and does not stop turning.",
          cost=[("reverie", 12), ("silt", 10)], fx=[rate("reverie", 0.2)], pos=(132, 148), requires=["rev:hums"]),
