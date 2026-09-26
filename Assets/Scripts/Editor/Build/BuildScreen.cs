@@ -199,6 +199,7 @@ namespace WhatLiesInTheDepths.EditorTools
                 var b = social.gameObject.AddComponent<UtilityBinder>();
                 b.utility = UtilityBinder.Which.Outward;
                 b.item = social;
+                b.url = Links.For(social.gameObject.name);
             }
         }
     }

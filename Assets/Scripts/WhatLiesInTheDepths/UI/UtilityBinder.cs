@@ -8,6 +8,25 @@ using Ursine.Economy;
 
 namespace WhatLiesInTheDepths.UI
 {
+    /// <summary>Where the outward links in the left bar go. The bar's items are named
+    /// "Utility Discord", "Utility Reddit" and "Utility Twitter"; a link with no address
+    /// here stays inert.</summary>
+    public static class Links
+    {
+        public const string Discord = "https://discord.com/channels/1550284623790088302/1552731091490574487";
+        public const string Reddit = "";
+        public const string Twitter = "";
+
+        public static string For(string itemName)
+        {
+            if (string.IsNullOrEmpty(itemName)) return null;
+            if (itemName.Contains("Discord")) return Discord;
+            if (itemName.Contains("Reddit")) return Reddit;
+            if (itemName.Contains("Twitter")) return Twitter;
+            return null;
+        }
+    }
+
     /// <summary>A utility. Never underlined and never dotted, except Options, which is the
     /// one utility that drives the center and therefore lights.</summary>
     public sealed class UtilityBinder : MonoBehaviour
@@ -17,13 +36,14 @@ namespace WhatLiesInTheDepths.UI
         public Which utility;
         public BarItem item;
 
-        [Tooltip("Where an outward link goes. Placeholder — no URLs are specified anywhere in the set.")]
+        [Tooltip("Where an outward link goes. Empty falls back to Links.For(the item's name).")]
         public string url;
 
         void Start()
         {
             if (item == null) item = GetComponent<BarItem>();
             if (item == null) return;
+            if (string.IsNullOrEmpty(url)) url = Links.For(gameObject.name);
 
             switch (utility)
             {
