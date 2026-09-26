@@ -33,6 +33,8 @@ static class Sim
         verbose = args.Contains("-v");
         var da = args.FirstOrDefault(a => a.StartsWith("--dump="));
         if (da != null) dumpAt = double.Parse(da.Substring(7)) * 60;
+        var sa = args.FirstOrDefault(a => a.StartsWith("--seed="));
+        if (sa != null) rng = new Random(int.Parse(sa.Substring(7)));
         double limit = 40 * 3600;
         d = new Dream(false);
         double lastProgress = 0, lastArmy = 0; int lastCount = 0;
@@ -40,10 +42,35 @@ static class Sim
         const double dt = 0.5;
         while (t < limit)
         {
+            double siltBefore = d.Held("silt");
+            bool diving = d.GaugeOpen && d.veil != null && !d.veil.AtFull;
+            if (diving && d.HoldOfDive == Hold.Full)
+            {
+                string k = d.veil.bring[0].k;
+                heldBy[k] = (heldBy.TryGetValue(k, out var h) ? h : 0) + dt;
+                if (k == "silt") siltLocked += dt;
+            }
             d.Step((float)dt);
+            double siltAfter = d.Held("silt");
+            if (siltAfter > siltBefore && d.veilIndex < 100) siltEarned += siltAfter - siltBefore;
+            if (siltAfter < siltBefore && d.veilIndex < 100) siltFocus += siltBefore - siltAfter;
             t += dt; tickAcc += dt; thinkAcc += dt; bindAcc += dt;
             if (tickAcc >= 1) { tickAcc -= 1; d.Tick(); }
-            if (thinkAcc >= 2) { thinkAcc = 0; Think(); }
+            if (thinkAcc >= 2)
+            {
+                thinkAcc = 0;
+                var cis = d.constructs.FirstOrDefault(c => c.g == "cistern");
+                int cisBefore = cis?.owned ?? 0; double sb = d.Held("silt");
+                Think();
+                if (d.veilIndex < 100)
+                {
+                    double spent = Math.Max(0, sb - d.Held("silt"));
+                    int built = (cis?.owned ?? 0) - cisBefore;
+                    double onCis = 0;
+                    for (int i = 0; i < built; i++) onCis += Math.Ceiling(12 * Math.Pow(1.02, cisBefore + i) - 1e-9);
+                    siltCistern += Math.Min(spent, onCis); siltOther += Math.Max(0, spent - onCis);
+                }
+            }
             if (bindAcc >= 4) { bindAcc = 0; Bind(); }
             Milestones();
             if (dumpAt > 0 && t >= dumpAt && t - dt < dumpAt) { Log("DUMP"); Dump(); }
@@ -54,6 +81,11 @@ static class Sim
         Log("TIME LIMIT"); Dump();
     }
 
+    // Silt bookkeeping: how much the dives brought up, how long the dive stood still because
+    // what it brings was full, and how many Cisterns were built to make room.
+    static double siltEarned, siltLocked, siltFocus, siltCistern, siltOther;
+    static readonly Dictionary<string, double> heldBy = new Dictionary<string, double>();
+
     static void Milestones()
     {
         foreach (var u in d.unlocks.All.ToList())
@@ -62,7 +94,8 @@ static class Sim
             seen.Add(u);
             if (u.StartsWith("rev:") || u.StartsWith("vision:") || u.StartsWith("won:") || u.StartsWith("built:") ||
                 u.StartsWith("menu:") || u.StartsWith("upgrade:") || u.StartsWith("lost:any") || (u.StartsWith("parted:") && int.Parse(u.Substring(7)) % 5 == 0))
-                Log(u + (u.StartsWith("won:") ? $"  army {d.Army:0}" : ""));
+                Log(u + (u.StartsWith("won:") ? $"  army {d.Army:0}" : "")
+                    + (u.StartsWith("parted:") ? $"  silt {siltEarned:0} earned, {siltLocked / 60:0} min held full, {d.constructs.FirstOrDefault(c => c.g == "cistern")?.owned ?? 0} cisterns" : ""));
         }
     }
 
@@ -242,6 +275,9 @@ static class Sim
         Console.WriteLine("visions left: " + string.Join(", ", d.visions.Select(v => v.k + (v.rep ? "(rep x" + v.done + ")" : ""))));
         Console.WriteLine("journal: " + d.journal.Count + " of " + d.journalDefs.Count + "; missing " + string.Join(", ", d.journalDefs.Where(j => !d.journal.Contains(j)).Select(j => j.id)));
         Console.WriteLine("resources never shown: " + string.Join(", ", d.resources.Where(r => !d.Shown(r)).Select(r => r.k)));
+        Console.WriteLine("dive held full, by what filled: " + string.Join(", ", heldBy.Select(kv => $"{kv.Key} {kv.Value / 60:0} min")));
+        Console.WriteLine($"silt spent to the bottom: Focus {siltFocus:0}, Cisterns {siltCistern:0}, everything else {siltOther:0}");
+        Console.WriteLine($"silt: earned to the bottom {siltEarned:0}, ceiling {d.Ceiling("silt"):0}, dive held full {siltLocked / 60:0} min, cisterns {d.constructs.FirstOrDefault(c => c.g == "cistern")?.owned ?? 0}");
         Console.WriteLine("constructs: " + string.Join(", ", d.constructs.Where(c => c.owned > 0).Select(c => $"{c.g}x{c.owned}")));
     }
 

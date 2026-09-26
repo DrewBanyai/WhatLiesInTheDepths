@@ -29,14 +29,27 @@ Tools/Content/sim/run.sh bad      # wakes them
 It needs `python3` and Mono's `mcs`. Stubs stand in for the few UnityEngine types the data
 layer touches.
 
-First-pass timings for the bot (a person will be slower):
+`--seed=N` changes the dice for battles (the default is 7). The summary also reports the Silt
+economy: how much the dives brought up before the bottom, where it went (Focus, Cisterns,
+everything else), how long the dive stood still because what it brings was full, and how many
+Cisterns were built.
+
+`sim/report.py` plays several seeds on both endings and prints the whole timing report as
+Markdown tables (chapters, every five veils, when each menu opens, battles lost, Silt). The
+"Simulated Playthrough" doc is built from it: rerun it after any change to `design.py`.
+
+```
+python3 Tools/Content/sim/report.py             # seeds 7 11 23 3 42
+python3 Tools/Content/sim/report.py --seeds 7   # one seed, quick
+```
+
+Timings for the bot now (5 seeds; a person will be slower):
 
 | Milestone | Time |
 |---|---|
-| Chapter 1 done (level 20) | 0h54 |
-| Chapter 2 done (level 40) | 2h09 |
-| Chapter 3 done (level 60) | 4h10 |
-| Chapter 4 done (level 80) | 8h48 |
-| The bottom (level 100) | 13h40 |
-| The end, nightmares woken | 13h40 |
-| The end, nightmares asleep | about 16h40 |
+| Chapter 1 done (level 20) | 0h53 |
+| Chapter 2 done (level 40) | 2h02 |
+| Chapter 3 done (level 60) | 4h26 |
+| Chapter 4 done (level 80) | 7h14 |
+| The bottom (level 100) | 11h24 |
+| The end, either path | 11h24–11h39 |

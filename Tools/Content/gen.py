@@ -58,23 +58,44 @@ def fx_line(e):
     if kind == "RevCost": return f"Realizations cost <b>−{pct(n)}</b>"
     raise ValueError(kind)
 
+def also(reqs, cond):
+    """What else a thing is waiting on besides cond, as a short tail for its card line, so a
+    card never promises something that will not appear yet: "(from veil 78)"."""
+    rest = []
+    for r in reqs or []:
+        if r == cond: continue
+        m = re.match(r"parted>=(\d+)$", r)
+        if m: rest.append(f"from veil {int(m.group(1)) + 1}"); continue
+        m = re.match(r"owned:([a-z]+)>=(\d+)$", r)
+        if m and CONSTRUCT_NAME.get(m.group(1)):
+            n = int(m.group(2))
+            rest.append(f"with {n} {CONSTRUCT_NAME[m.group(1)]}{'s' if n > 1 else ''} standing"); continue
+        m = re.match(r"(rev|vision|built|owned|won):([a-z]+)", r)
+        if m:
+            kind, k = m.group(1), m.group(2)
+            name = (REV_NAME.get(k) if kind == "rev" else VISION_NAME.get(k) if kind == "vision"
+                    else CONSTRUCT_NAME.get(k) if kind in ("built", "owned") else PLACE_NAME.get(k))
+            if name: rest.append(f"with {name}"); continue
+    if len(rest) > 2: rest = [f"with {len(rest)} others"]
+    return f" ({', '.join(rest)})" if rest else ""
+
 def unlock_lines(cond):
     """Everything that appears the moment cond holds, as card lines."""
     out = []
     for f in D.FOCUS:
-        if cond in f[7]: out.append(f"unlocks the <b>{FOCUS_NAME[f[0]]}</b> focus")
+        if cond in f[7]: out.append(f"unlocks the <b>{FOCUS_NAME[f[0]]}</b> focus{also(f[7], cond)}")
     for c in D.CONSTRUCTS:
-        if cond in c.get("requires", []): out.append(f"unlocks <b>{CONSTRUCT_NAME[c['g']]}</b>")
+        if cond in c.get("requires", []): out.append(f"unlocks <b>{CONSTRUCT_NAME[c['g']]}</b>{also(c.get('requires'), cond)}")
     for r in D.RESOURCES:
         if cond in r[3] and r[0] not in ("oneiri",):
             if not any(cond in f[7] for f in D.FOCUS if any(g[0] == r[0] for g in f[4])):
                 out.append(f"brings <b>{rn(r[0])}</b>")
     for u in D.UNITS:
-        if cond in u[4]: out.append(f"unlocks <b>{u[5]}</b>")
+        if cond in u[4]: out.append(f"unlocks <b>{u[5]}</b>{also(u[4], cond)}")
     for v in D.VISIONS:
-        if cond in v["requires"]: out.append(f"shows the Vision <b>{v['n']}</b>")
+        if cond in v["requires"]: out.append(f"shows the Vision <b>{v['n']}</b>{also(v['requires'], cond)}")
     for r in D.REVELATIONS:
-        if cond in r["requires"] and r.get("n"): out.append(f"a realization: <b>{r['n']}</b>")
+        if cond in r["requires"] and r.get("n"): out.append(f"a realization: <b>{r['n']}</b>{also(r['requires'], cond)}")
     for u in D.UPGRADES:
         if cond in u["when"]:
             if u["target"] == "Construct": out.append(f"every <b>{CONSTRUCT_NAME[u['of']]}</b> becomes <b>{u['n']}</b>")
@@ -114,7 +135,13 @@ def need(level):
     if level == 1: return 20
     if level == 2: return 60
     if level in D.GATES: return 60
-    return int(round(20 + 4 * level + 0.06 * level * level))
+    return int(round(20 + 4 * level + D.NEED_CURVE * level * level))
+
+def nice(x):
+    """A reward a player is handed reads as a number a person would choose: quarters under 2,
+    halves under 10, whole numbers above (Dream.Nice does the same to rewards effects scale)."""
+    step = 0.25 if x < 2 else 0.5 if x < 10 else 1.0
+    return max(step, math.floor(x / step + 0.5) * step)
 
 def veil_rows():
     rows = []
@@ -122,8 +149,8 @@ def veil_rows():
         for lv in range(a, b + 1):
             spend = [("reverie", max(1, math.ceil(lv / 12)))]
             if lv in D.GATES: spend.append(D.GATES[lv])
-            silt = [("silt", math.ceil(1 + lv / 15))]
-            own = [(k, round(n * (1 + lv / 40), 2)) for k, n in D.REACH_BRING.get(name, [])]
+            silt = [("silt", D.silt_per_dive(lv))]
+            own = [(k, nice(n * (1 + lv / 40))) for k, n in D.REACH_BRING.get(name, [])]
             # the primary (first) yield is the only one that can hold the dive
             bring = own + silt if name in D.PRIMARY_OWN and own else silt + own
             if name == "The Door Ajar": bring = []
@@ -132,7 +159,7 @@ def veil_rows():
     # The bottom never finishes: it is sunk for ever, and it is where silt comes from once
     # there is nowhere further to go.
     rows.append(dict(ord=101, reach=D.BOTTOM[0], need=999999, spend=[("reverie", 9)],
-                     bring=[("silt", 8), ("moonsilver", 2), ("echo", 4)], cap=30, secs=24, bottom=True))
+                     bring=[("silt", D.silt_per_dive(101)), ("moonsilver", 2), ("echo", 4)], cap=30, secs=24, bottom=True))
     return rows
 
 def slug(s): return re.sub(r"[^a-z]+", "", s.lower().replace("the ", ""))

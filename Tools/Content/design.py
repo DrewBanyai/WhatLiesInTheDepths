@@ -1,3 +1,4 @@
+import math
 # What Lies In The Depths — the whole path, as data.
 #
 # This is the design source for chapters 1-5. gen.py turns it into
@@ -14,6 +15,23 @@
 def L(level):
     """Reaching level L: L-1 veils parted."""
     return f"parted>={level - 1}"
+
+# Silt a dive brings up at each level: 1 through level 30, 2 through 60, 3 through 90, and 4
+# from there to the bottom. It is the primary yield of most reaches, so it is also what stops
+# the dive when it is full, and every point of it has to be spent or stored. (It was
+# ceil(1 + level/15), 2 rising to 8; the simulated player then earned ~223,000 Silt before the
+# bottom, used ~90,000 and bought ~220 Cisterns to store the rest. At this rate it earns
+# ~96,000, and ~65 Cisterns see it to the end in the same time.)
+def silt_per_dive(level):
+    return math.ceil(level / 30)
+
+# How fast the fathoms a veil needs grow with depth: 20 + 4·level + NEED_CURVE·level². It was
+# 0.06; at 0.045 the deepest veils need about a fifth fewer fathoms (level 90: 750, was 866),
+# which is what brings the simulated run from ~14h50 to ~11h30.
+NEED_CURVE = 0.045
+
+# Room each Cistern adds for Silt. Twice what it was, so half as many keep the dive moving.
+CISTERN_SILT = 20
 
 # ---- resources: key, group (0 gathered, 1 yours, 2 against you), ceiling, shown when, glyph
 RESOURCES = [
@@ -71,19 +89,19 @@ FOCUS = [
     ("conjure", "stillness", "card", [("reverie", 1)], [("echo", 1)], 6, 10, ["rev:sifting"], None, None),
     ("still", "stillness", "still", [("echo", 2), ("reverie", 2)], [("lucidity", 1)], 10, 8, ["rev:quiet"],
      "Still the Mind", "Go back to the quiet you made at the Altar, and stay there a while."),
-    ("draw", "labor", "draw", [("silt", 3)], [("moonsilver", 1)], 8, 10, ["rev:cold"],
+    ("draw", "labor", "draw", [("silt", 2)], [("moonsilver", 1)], 8, 10, ["rev:cold"],
      "Draw Moonsilver", "Lowered into the cold seam until it fills."),
     ("kindle", "labor", "kindle", [("reverie", 2)], [("ember", 1)], 8, 8, ["rev:warmth"],
      "Kindle", "Something small to warm your hands at. It is allowed."),
-    ("render", "labor", "render", [("silt", 2), ("ember", 1)], [("tallow", 2)], 10, 8, ["rev:fat"],
+    ("render", "labor", "render", [("silt", 1), ("ember", 1)], [("tallow", 2)], 10, 8, ["rev:fat"],
      "Render Tallow", "Slow heat, and a smell that follows you up."),
     ("tend", "labor", "tend", [("tallow", 2)], [("lucidity", 2)], 12, 8, ["rev:lamps"],
      "Keep the Lamps", "None of them stay lit. You light them anyway."),
-    ("sit", "labor", "sit", [], [("hush", 1), ("reverie", 1)], 10, 8, ["rev:darkquiet"],
+    ("sit", "labor", "sit", [], [("hush", 2), ("reverie", 1)], 10, 8, ["rev:darkquiet"],
      "Sit with the Hush", "Nothing is asked of you. That is the difficulty."),
     ("weep", "listening", "weep", [("hush", 2)], [("salt", 2)], 10, 10, ["rev:salt"],
      "Let It Out", "It dries faster if you stop trying to keep it."),
-    ("sift", "listening", "sift", [("silt", 4), ("salt", 2)], [("nacre", 1)], 12, 10, ["vision:garden"],
+    ("sift", "listening", "sift", [("silt", 2), ("salt", 2)], [("nacre", 1)], 12, 10, ["vision:garden"],
      "Sift the Beds", "Something grows around every grain that would not go away."),
     ("page", "listening", "page", [("hush", 2), ("echo", 3)], [("vellum", 1)], 14, 10, ["rev:written"],
      "Copy the Vellum", "The hand remembers what the reading does not."),
@@ -91,7 +109,7 @@ FOCUS = [
      "Stand the Watch", "A wall no one watches is only a suggestion."),
     ("rally", "muster", "rally", [("echo", 3)], [("chorus", 1)], 10, 14, ["rev:mine"],
      "Rally", "Say it out loud, and let them answer together."),
-    ("temper", "muster", "temper", [("ember", 3), ("moonsilver", 4), ("chorus", 2)], [("mettle", 1)], 16, 16, ["built:forge"],
+    ("temper", "muster", "temper", [("ember", 3), ("moonsilver", 4), ("chorus", 2)], [("mettle", 2)], 16, 16, ["built:forge"],
      "Temper", "Hold what you are good at in the fire until it holds its shape."),
     ("sing", "many", "sing", [("chorus", 3)], [("lucidity", 3), ("ward", 1)], 12, 16, ["rev:everypeople"],
      "Sing Together", "Every people of the dream, one note."),
@@ -126,22 +144,22 @@ CONSTRUCTS = [
     dict(g="hut", kind="Dwellings", cost=[("reverie", 10), ("echo", 5)], housing=1, pos=(736, 206),
          requires=["rev:listening"]),
     dict(g="cistern", kind="Reservoirs", name="Cistern", blurb="It fills whether or not you are watching it.",
-         cost=[("silt", 12)], fx=[cap("silt", 10), cap("reverie", 5), cap("echo", 3)], pos=(212, 716),
+         cost=[("silt", 12)], fx=[cap("silt", CISTERN_SILT), cap("reverie", 5), cap("echo", 3)], pos=(212, 716),
          # The one construct that never outgrows the shore: its price climbs only 2% a build and
-         # each adds a flat 10 room, so wherever Silt is a reach's primary yield there is a
+         # each adds a flat CISTERN_SILT room, so wherever Silt is a reach's primary yield there is a
          # Cistern to spend a full load on. (Price overtakes the room Cisterns alone give at
-         # 275 built; the biggest Silt bill in play is ~1,330, reached at 132.)
+         # about 315 built; the simulated player finishes with about 65.)
          growth=1.02, requires=["rev:room"]),
     dict(g="spindle", kind="Works", name="Dreamspindle", blurb="Something turns, and turns, and does not stop turning.",
          cost=[("reverie", 12), ("silt", 10)], fx=[rate("reverie", 0.2)], pos=(132, 148), requires=["rev:hums"]),
     dict(g="moonwell", kind="Reservoirs", name="Moonwell", blurb="Still water that keeps every face it has held.",
-         cost=[("reverie", 20), ("silt", 15)], fx=[cap("reverie", 25), rate("reverie", 0.1), cap("lucidity", 3)], pos=(138, 566),
+         cost=[("reverie", 20), ("silt", 10)], fx=[cap("reverie", 25), rate("reverie", 0.1), cap("lucidity", 3)], pos=(138, 566),
          requires=["rev:stillkeeps"]),
     dict(g="winch", kind="Works", name="Seam Winch", blurb="The cold runs in a line. A line can be hauled on.",
-         cost=[("moonsilver", 15), ("silt", 20)], fx=[rate("moonsilver", 0.15), cap("moonsilver", 20)],
+         cost=[("moonsilver", 15), ("silt", 12)], fx=[rate("moonsilver", 0.15), cap("moonsilver", 20)],
          pos=(296, 236), requires=["rev:seam"]),
     dict(g="press", kind="Works", name="Tallow Press", blurb="What the shore gives up when it is squeezed.",
-         cost=[("silt", 20), ("ember", 8)], fx=[rate("tallow", 0.15), cap("tallow", 15), cap("ember", 5)], pos=(286, 96),
+         cost=[("silt", 12), ("ember", 8)], fx=[rate("tallow", 0.15), cap("tallow", 15), cap("ember", 5)], pos=(286, 96),
          requires=["rev:fat"]),
     dict(g="lamprow", kind="Works", name="Lamplight Row", blurb="Someone lit these once. They can be lit again.",
          cost=[("tallow", 15), ("moonsilver", 10)], fx=[divecost(0.04), rate("tallow", 0.05)], pos=(118, 330),
@@ -156,7 +174,7 @@ CONSTRUCTS = [
          cost=[("hush", 20), ("moonsilver", 25)], fx=[rate("vellum", 0.05), cap("vellum", 20)], pos=(236, 396),
          requires=["rev:written"]),
     dict(g="saltpans", kind="Works", name="Salt Pans", blurb="Shallow water, left alone, gives up what it was carrying.",
-         cost=[("silt", 40), ("hush", 15)], fx=[rate("salt", 0.15), cap("salt", 30)], pos=(56, 244),
+         cost=[("silt", 25), ("hush", 15)], fx=[rate("salt", 0.15), cap("salt", 30)], pos=(56, 244),
          requires=["rev:letsea"]),
     dict(g="nightlight", kind="Wards", name="The Nightlight", blurb="The light he asked for, and was told he was too big for.",
          cost=[("tallow", 60), ("ember", 30), ("moonsilver", 40)], fx=[rate("dread", -0.5), cap("ward", 10)],
@@ -228,26 +246,26 @@ REVELATIONS = [
     dict(k="hums", g="spiral", cost=[("reverie", 10), ("silt", 15)], requires=[L(7)],
          n="The Stone Hums Back", kind="unlocks a construct",
          text="Sit long enough and the Altar hums along with you. Something here wants to turn."),
-    dict(k="down", g="stair", cost=[("silt", 40), ("echo", 10)], requires=[L(10), "rev:room"], fx=[divecost(0.08)],
+    dict(k="down", g="stair", cost=[("silt", 25), ("echo", 10)], requires=[L(10), "rev:room"], fx=[divecost(0.08)],
          n="Down Is a Direction", kind="changes the descent",
          text="You stop thinking of the floor as a floor. It was always the next step."),
-    dict(k="quiet", g="knot", cost=[("reverie", 20), ("echo", 10), ("silt", 30)], requires=[L(14)],
+    dict(k="quiet", g="knot", cost=[("reverie", 20), ("echo", 10), ("silt", 20)], requires=[L(14)],
          n="Quiet Is a Place", kind="unlocks a focus",
          text="The quiet you made at the Altar did not leave when you stood up. You can go back to it."),
-    dict(k="stillkeeps", g="glass", cost=[("lucidity", 15), ("silt", 20)], requires=["max:lucidity"],
+    dict(k="stillkeeps", g="glass", cost=[("lucidity", 15), ("silt", 15)], requires=["max:lucidity"],
          n="Still Water Keeps", kind="unlocks a construct",
          text="Water this still holds whatever you pour into it, and gives it back unchanged."),
     dict(k="remember", g="branch", cost=[("lucidity", 20), ("reverie", 30)], requires=["rev:stillkeeps", "owned:hut>=3"],
          fx=[gain("absorb", 1.0)],
          n="They Remember Building", kind="changes generation",
          text="The Oneiri were not made for this clearing. They have built before, somewhere else, and they miss it."),
-    dict(k="afraid", g="mirror", great=True, cost=[("lucidity", 20), ("echo", 20), ("silt", 60)], requires=[L(20)],
+    dict(k="afraid", g="mirror", great=True, cost=[("lucidity", 20), ("echo", 20), ("silt", 35)], requires=[L(20)],
          fx=[speed("*", 0.10)],
          n="They Are Afraid Too", kind="a greater realization",
          text="They did not come for you. Something has been eating their country, a little every night, and they have watched you walk toward it. They think you might be the one who can make it stop."),
 
     # Chapter 2 — The Lamps
-    dict(k="cold", g="key", cost=[("silt", 60), ("lucidity", 15)], requires=[L(21)],
+    dict(k="cold", g="key", cost=[("silt", 35), ("lucidity", 15)], requires=[L(21)],
          n="Something Cold in the Silt", kind="unlocks a focus",
          text="Some of what the dives bring up is heavier than it should be, and cold all the way through."),
     dict(k="walls", g="knot", cost=[("moonsilver", 25), ("echo", 20)], requires=["owned:hut>=5", "rev:cold"],
@@ -256,7 +274,7 @@ REVELATIONS = [
     dict(k="warmth", g="lantern", cost=[("moonsilver", 15), ("reverie", 40)], requires=[L(24)],
          n="Warmth Is Allowed", kind="unlocks a focus",
          text="You had not noticed you were cold. Nobody here said you could not be warm."),
-    dict(k="fat", g="scales", cost=[("ember", 20), ("silt", 40)], requires=["max:ember"],
+    dict(k="fat", g="scales", cost=[("ember", 20), ("silt", 25)], requires=["max:ember"],
          n="Fat of the Shore", kind="unlocks a focus",
          text="Silt, pressed with a little heat, gives up something that burns slowly."),
     dict(k="lamps", g="lantern", cost=[("tallow", 10), ("moonsilver", 20)], requires=["got:tallow"],
@@ -291,7 +309,7 @@ REVELATIONS = [
     dict(k="salt", g="scales", cost=[("hush", 40), ("echo", 40)], requires=[L(47)],
          n="Salt Is What Is Left", kind="unlocks a focus",
          text="A whole sea dried here and left only its salt. You know something about that."),
-    dict(k="letsea", g="glass", cost=[("salt", 60), ("silt", 80)], requires=["max:salt"],
+    dict(k="letsea", g="glass", cost=[("salt", 60), ("silt", 50)], requires=["max:salt"],
          n="Let the Sea Go", kind="unlocks a construct",
          text="It dries faster if you stop trying to keep it."),
     dict(k="breath", g="glass", cost=[("lucidity", 40), ("moonsilver", 60)], requires=[L(50)], fx=[divespeed(0.15)],
@@ -303,19 +321,19 @@ REVELATIONS = [
     dict(k="somewhere", g="key", cost=[("nacre", 30), ("echo", 50)], requires=["max:nacre"],
          n="Somewhere to Put It", kind="unlocks a construct",
          text="What they tell you is too much to carry and too important to set down."),
-    dict(k="written", g="stair", cost=[("nacre", 20), ("hush", 40), ("moonsilver", 50)], requires=[L(55)],
+    dict(k="written", g="stair", cost=[("nacre", 20), ("hush", 25), ("moonsilver", 50)], requires=[L(55)],
          n="Written, It Stays", kind="unlocks a focus",
          text="Whatever you only remember, the Nobody can eat. Whatever you write down is harder to swallow."),
     dict(k="holds", g="knot", cost=[("moonsilver", 50), ("salt", 40)], requires=[L(44)],
          n="It Holds Because I Hold It", kind="unlocks a construct",
          text="Walls here are made of belief. You have more of that than you thought."),
-    dict(k="stand", g="lantern", cost=[("ward", 8), ("salt", 30)], requires=["owned:rampart>=1"],
+    dict(k="stand", g="lantern", cost=[("salt", 30), ("hush", 20)], requires=["owned:rampart>=1"],
          n="Someone Has to Stand There", kind="unlocks a focus",
          text="A wall no one watches is a suggestion."),
     dict(k="owed", g="scales", cost=[("ward", 20), ("lucidity", 40)], requires=["owned:rampart>=3"], fx=[rate("dread", -0.3)],
          n="Nothing Is Owed", kind="changes generation",
          text="You have been paying for this in fear, a little every night, and no one ever asked you to."),
-    dict(k="grew", g="spiral", cost=[("nacre", 40), ("vellum", 20)], requires=["vdone:tide>=6"], fx=[visioncost(0.10)],
+    dict(k="grew", g="spiral", cost=[("nacre", 40), ("vellum", 20)], requires=["vdone:tide>=3"], fx=[visioncost(0.10)],
          n="It Grew When I Did", kind="a realization · changes the work",
          text="It was only the dark, once. Then it was being left, and being laughed at, and being wrong. Every fear you would not look at, it took, and it grew."),
     dict(k="mine", g="mirror", great=True, cost=[("vellum", 30), ("nacre", 40), ("lucidity", 60)],
@@ -397,12 +415,12 @@ VISIONS = [
          text="Six years old, asking for the hall light to be left on. Being told he was too big for that now."),
     dict(k="garden", requires=["rev:letsea"], of=[("hush", 20, 5), ("salt", 15, 5)],
          n="The Salt Garden", text="Nothing grows in it. You tend it anyway, and something is growing."),
-    dict(k="tide", rep=True, requires=["rev:tidefolk"], of=[("salt", 20, 10), ("silt", 60, 10)], fx=[gain("sift", 0.1)],
+    dict(k="tide", rep=True, requires=["rev:tidefolk"], of=[("salt", 20, 10), ("silt", 30, 10)], fx=[gain("sift", 0.1)],
          n="The Long Tide",
          text="Each pour shows one fear it took, and how old he was when it took it."),
     dict(k="unblink", rep=True, requires=["rev:grew"], of=[("echo", 30, 10), ("hush", 20, 10)], fx=[revcost(0.04)],
          n="The Unblinking", text="Stop closing your eyes at the part you do not like."),
-    dict(k="well", requires=["rev:grew"], of=[("nacre", 20, 5), ("echo", 40, 5)], fx=[gain("conjure", 0.4), housing("longhouse", 1)],
+    dict(k="well", requires=["rev:grew"], of=[("nacre", 20, 10), ("echo", 40, 10)], fx=[gain("conjure", 0.4), housing("longhouse", 1)],
          n="The Well Remembers",
          text="Everything he pushed down is down here, sorted, and the Nobody has been living on it."),
     dict(k="hour", rep=True, requires=["rev:clocks"], of=[("moonsilver", 60, 10), ("echo", 50, 10)], fx=[speed("*", 0.03)],
@@ -432,7 +450,7 @@ VISIONS = [
 
 # ---- units: k, section, strength, cost, shown when, name, blurb
 UNITS = [
-    ("drifter", "Levied", 1, [("echo", 6), ("silt", 4)], ["rev:mine"], "Drifter Levy",
+    ("drifter", "Levied", 1, [("echo", 6), ("silt", 2)], ["rev:mine"], "Drifter Levy",
      "Half-finished figures from The Drift, who will stand where they are put."),
     ("guard", "Levied", 3, [("echo", 10), ("ward", 2)], ["won:ford"], "Waking Guard",
      "People who have been awake a long time and have stopped minding."),
@@ -514,7 +532,7 @@ REACH_BRING = {
 # Temper drains Chorus from level 78 and Rally drains Echo from 58. (The Last Lamp is not safe
 # with Tallow first: Keep the Lamps stops once Lucidity is full, and the Tallow Press keeps
 # filling it, so the simulated player locked there at level 91.)
-PRIMARY_OWN = {"The Gathering Shore", "The Understair"}
+PRIMARY_OWN = {"The Understair"}
 # the price of the dive at the end of each chapter: only its golden beat brings it
 GATES = {40: ("dread", 1), 60: ("chorus", 1), 80: ("mettle", 1)}
 
