@@ -834,6 +834,21 @@ namespace WhatLiesInTheDepths.EditorTools
             return t;
         }
 
+        /// <summary>One copy of the benefit line inside its masked window: unwrapped and free to
+        /// run long, since the marquee sizes and moves it.</summary>
+        static TMP_Text BenefitLine(string name, RectTransform window)
+        {
+            var t = Line(name, window, "", TypeRole.Label400, 12f, Tok.Prose);
+            t.overflowMode = TextOverflowModes.Overflow;
+            var rt = t.rectTransform;
+            rt.anchorMin = new Vector2(0f, 0.5f);
+            rt.anchorMax = new Vector2(0f, 0.5f);
+            rt.pivot = new Vector2(0f, 0.5f);
+            rt.sizeDelta = new Vector2(100f, 17f);
+            rt.anchoredPosition = Vector2.zero;
+            return t;
+        }
+
         /// <summary>Small caps tracked .16em, and — like every tracked run — set without pair
         /// kerning, which TMP would otherwise let swallow the tracking at each kerned pair.</summary>
         static TMP_Text Tracked(TMP_Text t)
@@ -1126,7 +1141,30 @@ namespace WhatLiesInTheDepths.EditorTools
             Size(benGround).ignoreLayout = true;
             var benCaption = Line("Caption", ben, "WHEN WON", TypeRole.Label700, 8f, Tok.Ink3);
             Tracked(benCaption);
-            var benValue = Line("Value", ben, "", TypeRole.Label400, 12f, Tok.Prose);
+            // The caption keeps its whole width (the view sets it to the words it is given);
+            // what it gave or would give is read through the rest of the pill, and creeps
+            // along when it is longer than that, rather than running out past the pill's edge.
+            var benCaptionSize = Size(benCaption, flexW: 0f);
+            benCaptionSize.minWidth = benCaptionSize.preferredWidth = Mathf.Ceil(benCaption.GetPreferredValues("WHEN WON").x);
+            var benWindow = Node("Value", ben, 0, 0, 100f, 17f);
+            var benWindowSize = Size(benWindow, h: 17f, flexW: 1f);
+            benWindowSize.minWidth = 0f;
+            benWindowSize.preferredWidth = 0f;
+            benWindow.gameObject.AddComponent<RectMask2D>();
+            var benGroup = benWindow.gameObject.AddComponent<CanvasGroup>();
+            benGroup.blocksRaycasts = false;
+            var benValue = BenefitLine("Label", benWindow);
+            var benEcho = BenefitLine("Echo", benWindow);
+            benEcho.gameObject.SetActive(false);
+            var benMarquee = benWindow.gameObject.AddComponent<Marquee>();
+            benMarquee.viewport = benWindow;
+            benMarquee.label = benValue;
+            benMarquee.echo = benEcho;
+            benMarquee.group = benGroup;
+            benMarquee.pixelsPerSecond = 22f;
+            benMarquee.gap = 48f;
+            benMarquee.holdSeconds = 2f;
+            benMarquee.fadeSeconds = 0.2f;
 
             Img(Node("Rule", slotGround.transform, W - 244f, 0, 1f, 152f), null, Tok.Haze2);
             var right = Node("Arithmetic", slotGround.transform, W - 243f, 0, 243f, 152f);
@@ -1197,6 +1235,7 @@ namespace WhatLiesInTheDepths.EditorTools
             view.placeBlurb = placeBlurb;
             view.benefitCaption = benCaption;
             view.benefitValue = benValue;
+            view.benefitMarquee = benMarquee;
             view.fieldCaption = fieldCaption;
             view.fieldNumber = fieldNumber;
             view.yours = yours;

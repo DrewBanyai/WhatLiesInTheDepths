@@ -45,6 +45,9 @@ namespace WhatLiesInTheDepths.UI
         [Header("Reading band — 880 x 152, and it never empties")]
         public Image placeArt;
         public TMP_Text kindCaption, placeName, placeBlurb, benefitCaption, benefitValue;
+        /// <summary>Reads the benefit through the rest of its pill, creeping along when it is
+        /// longer than that.</summary>
+        public Marquee benefitMarquee;
         public TMP_Text fieldCaption, fieldNumber, yours;
         public GameObject chanceRow;
         public Image chanceGround, chanceBorder;
@@ -253,8 +256,19 @@ namespace WhatLiesInTheDepths.UI
             if (kindCaption != null) { kindCaption.text = Strings.T(won ? "ui.assault.taken" : "ui.assault.next").ToUpperInvariant(); kindCaption.color = Theme.Get(won ? Tok.TealD : Tok.IrisD); }
             if (placeName != null) placeName.text = place.n;
             if (placeBlurb != null) placeBlurb.text = place.bl;
-            if (benefitCaption != null) benefitCaption.text = Strings.T(won ? "ui.assault.gave" : "ui.assault.whenWon").ToUpperInvariant();
-            if (benefitValue != null) benefitValue.text = TealBold(place.ben);
+            if (benefitCaption != null)
+            {
+                string cap = Strings.T(won ? "ui.assault.gave" : "ui.assault.whenWon").ToUpperInvariant();
+                if (benefitCaption.text != cap)
+                {
+                    benefitCaption.text = cap;
+                    // The caption keeps all of its width; the benefit gives way.
+                    var le = benefitCaption.GetComponent<LayoutElement>();
+                    if (le != null) le.minWidth = le.preferredWidth = Mathf.Ceil(benefitCaption.GetPreferredValues(cap).x);
+                }
+            }
+            if (benefitMarquee != null) benefitMarquee.Show(TealBold(place.ben));
+            else if (benefitValue != null) benefitValue.text = TealBold(place.ben);
 
             if (fieldCaption != null) fieldCaption.text = Strings.T(won ? "ui.assault.fielded" : "ui.assault.field").ToUpperInvariant();
             if (fieldNumber != null) fieldNumber.text = Fmt.Count(place.en);
@@ -265,10 +279,15 @@ namespace WhatLiesInTheDepths.UI
                     : Strings.T("ui.assault.youBring", mine + Fmt.Count(a) + "</color></b>");
 
             if (chanceRow != null) chanceRow.SetActive(!won);
+            // A place can be next on the road and still be shut: the way to it opens only when
+            // what it requires holds (usually a depth). The line says so, instead of the odds,
+            // so a greyed Give battle never looks like a fault.
+            string shut = isNext && !won ? ShutReason(s, place) : null;
             if (!won && chanceLabel != null)
             {
-                var v = Judge(c);
-                chanceLabel.text = v == Verdict.None ? Strings.T("ui.assault.noChanceHere") : Strings.T("ui.assault.toTake", "<b>" + Pct(c) + "%</b>");
+                var v = shut != null ? Verdict.None : Judge(c);
+                chanceLabel.text = shut
+                    ?? (v == Verdict.None ? Strings.T("ui.assault.noChanceHere") : Strings.T("ui.assault.toTake", "<b>" + Pct(c) + "%</b>"));
                 PaintVerdict(v, chanceGround, chanceBorder, chanceLabel);
             }
 
@@ -285,6 +304,28 @@ namespace WhatLiesInTheDepths.UI
                     giveBattleLabel.color = live ? Theme.Get(Tok.Veil) : DisabledInk;
                 }
             }
+        }
+
+        /// <summary>Why the next place cannot be entered yet, or null when it can. Names the first
+        /// thing it is waiting on: a depth reads as the veil it opens at.</summary>
+        static string ShutReason(GameState s, RoadLocation place)
+        {
+            if (place?.requires == null || s.Open(place)) return null;
+            foreach (var r in place.requires)
+            {
+                if (s.Dream.Holds(r)) continue;
+                const string parted = "parted>=";
+                if (r.StartsWith(parted, System.StringComparison.Ordinal)
+                    && int.TryParse(r.Substring(parted.Length), out int n))
+                    return Strings.T("ui.assault.opensAtVeil", "<b>" + Fmt.Count(n + 1) + "</b>");
+                if (r.StartsWith("rev:", System.StringComparison.Ordinal))
+                {
+                    var rev = s.revelations.Find(x => x.k == r.Substring(4));
+                    if (rev != null) return Strings.T("ui.assault.opensWithRealization", "<b>" + rev.n + "</b>");
+                }
+                return Strings.T("ui.assault.notOpenYet");
+            }
+            return null;
         }
 
         // ---- battle ------------------------------------------------------------
