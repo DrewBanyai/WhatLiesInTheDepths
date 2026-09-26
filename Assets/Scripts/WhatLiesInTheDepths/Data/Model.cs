@@ -139,6 +139,8 @@ namespace WhatLiesInTheDepths.Data
         public string bl;
         public List<string> fx;
         public List<Offer> of;        // each offer: n of resource r buys g percent
+        /// <summary>A newly arrived Vision lights the Visions dot until the player has been to it.</summary>
+        public bool seen = true;
         public int sel;               // which offer is selected
         public float p;               // percent complete 0-100
         public bool a;                // channelling: submits the selected offer every second

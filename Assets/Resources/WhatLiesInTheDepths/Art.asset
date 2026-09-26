@@ -247,8 +247,12 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 893414e0c8f1fba4ab9d046ba8ed7863, type: 3}
   - key: Glyphs/Ui/cross
     sprite: {fileID: 21300000, guid: 1eb89f03b361bb8408ee86fe32936b7e, type: 3}
+  - key: Glyphs/Ui/door
+    sprite: {fileID: 21300000, guid: b4268ccff75e307499c40c5cae21eb8f, type: 3}
   - key: Glyphs/Ui/mark
     sprite: {fileID: 21300000, guid: 7276dd13ff09e7e42a9a46c6abe2fdc5, type: 3}
+  - key: Glyphs/Ui/reset
+    sprite: {fileID: 21300000, guid: d9583b99ea08a31499245f7ce03e12cc, type: 3}
   - key: Glyphs/Ui/sword
     sprite: {fileID: 21300000, guid: f9d72d08d485c92479e1b83d7e63e739, type: 3}
   - key: Glyphs/Unit/bearer

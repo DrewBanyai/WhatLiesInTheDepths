@@ -168,16 +168,22 @@
     "ui.ending.hardReset": "Hard reset",
     "ui.ending.continue": "Continue",
     "ui.ending.exit": "Exit",
+    "ui.question.exit.kicker": "Leaving",
     "ui.question.exit.title": "Leave the dream?",
-    "ui.question.exit.body": "The dream saves itself. Nothing is asked of you here except whether to go.",
+    "ui.question.exit.body": "It will be here. It is always here.",
+    "ui.question.exit.save": "The dream last saved <b>{0}</b> ago, and saves itself every {1}. Anything since then will not be waiting for you.",
     "ui.question.exit.no": "No, stay",
     "ui.question.exit.yes": "Yes, leave",
-    "ui.question.reset.title": "Clear it all?",
-    "ui.question.reset.body": "Everything the dream has made will be gone, and it does not come back.",
+    "ui.question.reset.kicker": "Clearing everything",
+    "ui.question.reset.title": "Start the dream over?",
+    "ui.question.reset.body": "Every veil you have parted, every construct you have raised, every Realization and every Vision — all of it goes, and you begin again at the Shallows with nothing.",
+    "ui.question.reset.save": "This clears the save itself. There is no copy of it, and it cannot be undone.",
     "ui.question.reset.no": "No, go back",
     "ui.question.reset.yes": "Yes, clear it all",
     "ui.question.saveNote": "{0} since the last save.",
-    "ui.options.saved": "The dream saved itself {0} ago.",
+    "ui.options.saved": "The dream was last saved {0} ago.",
+    "ui.options.save": "Save",
+    "ui.options.savedNow": "Saved",
     "ui.visions.caption": "{0} visions",
     "ui.visions.channelling": ", {0} channelling",
     "ui.visions.kind.golden": "A golden Vision",
@@ -1721,6 +1727,7 @@
       "The rider still rides the roads with nobody in the saddle. The thing on the stairs has found other stairs. The peoples of the dream keep their doors shut at night now, and their lamps lit, and they do not come to the Palace.",
       "He sleeps soundly. He is free of it. Down in the country beyond his dreams, something else is grazing, and it has his face."
     ],
-    "construct.altar.fx": []
+    "construct.altar.fx": [],
+    "ui.built.save": "Save"
   }
 }

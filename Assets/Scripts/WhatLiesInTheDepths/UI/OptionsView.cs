@@ -35,15 +35,48 @@ namespace WhatLiesInTheDepths.UI
 
         [Header("The save")]
         public TMP_Text saveLine;
+        public UiButton save;
+        public Image saveBorder;
+        public TMP_Text saveLabel;
+        float _savedFor;
 
         [Header("Beginning again")]
         public UiButton hardReset;
         public Image hardResetBlock;
 
         bool _muted;
+        bool _repaint;
+
+        // A palette or contrast change sends every bound graphic back to its token, which
+        // would put the selection mark back on the first card and clear the mute box. So the
+        // page's own marks are drawn again after any theme change, once everything else has
+        // taken it.
+        void OnEnable() { Theme.Changed += AskRepaint; _repaint = true; }
+        void OnDisable() => Theme.Changed -= AskRepaint;
+        void AskRepaint() => _repaint = true;
+
+        void LateUpdate()
+        {
+            if (!_repaint) return;
+            _repaint = false;
+            _muted = GameSettings.Muted;
+            PaintMute();
+            PaintPalettes(GameSettings.PaletteIndex);
+            PaintSave();
+        }
 
         void Start()
         {
+            // The page opens showing what is in effect — what was saved, or the defaults —
+            // rather than what the builder happened to draw.
+            if (master != null) master.Set(GameSettings.Master, false);
+            if (music != null) music.Set(GameSettings.Music, false);
+            if (effects != null) effects.Set(GameSettings.Effects, false);
+            _muted = GameSettings.Muted;
+            PaintMute();
+            if (contrast != null) contrast.SetSilently((int)GameSettings.ContrastLevel);
+            if (fullScreen != null) fullScreen.Set(Screen.fullScreen, false);
+
             Hook(master, masterValue);
             Hook(music, musicValue);
             Hook(effects, effectsValue);
@@ -51,16 +84,8 @@ namespace WhatLiesInTheDepths.UI
             if (mute != null) mute.Clicked += () =>
             {
                 _muted = !_muted;
-                // The three rows above drop to 40% and stop responding, and their values
-                // are kept — unmuting restores exactly what was there.
-                if (soundRows != null)
-                {
-                    soundRows.alpha = _muted ? 0.4f : 1f;
-                    soundRows.blocksRaycasts = !_muted;
-                    soundRows.interactable = !_muted;
-                }
-                if (muteBox != null) muteBox.color = Theme.Get(_muted ? Tok.Iris : Tok.Track);
-                Hear();
+                PaintMute();
+                GameSettings.SetMuted(_muted);
             };
 
             for (int i = 0; i < paletteCards.Count; i++)
@@ -71,15 +96,40 @@ namespace WhatLiesInTheDepths.UI
             }
 
             if (contrast != null)
-                contrast.Selected += i => Theme.Contrast = (Contrast)Mathf.Clamp(i, 0, 2);
+                contrast.Selected += i => GameSettings.SetContrast((Contrast)Mathf.Clamp(i, 0, 2));
+
+            if (save != null)
+            {
+                // Saves at once and restarts the two-minute count; the button says so briefly.
+                save.Clicked += () =>
+                {
+                    Data.GameState.I?.SaveNow();
+                    _savedFor = 1.5f;
+                    PaintSave();
+                };
+                save.Hovered += _ => PaintSave();
+            }
+            PaintSave();
 
             if (hardReset != null) hardReset.Clicked += () => Router.I?.AskHardReset();
 
             if (fullScreen != null)
                 fullScreen.Changed += on => Screen.fullScreen = on;
 
-            ChoosePalette(0);
-            Hear();
+            PaintPalettes(GameSettings.PaletteIndex);
+        }
+
+        /// <summary>Muted, the three rows above drop to 40% and stop responding, and their
+        /// values are kept — unmuting restores exactly what was there.</summary>
+        void PaintMute()
+        {
+            if (soundRows != null)
+            {
+                soundRows.alpha = _muted ? 0.4f : 1f;
+                soundRows.blocksRaycasts = !_muted;
+                soundRows.interactable = !_muted;
+            }
+            if (muteBox != null) muteBox.color = Theme.Get(_muted ? Tok.Iris : Tok.Track);
         }
 
         /// <summary>A bar, its readout beside it, and the music: all three move on the frame
@@ -101,10 +151,9 @@ namespace WhatLiesInTheDepths.UI
         /// nothing to carry yet, so nothing listens to it.</summary>
         void Hear()
         {
-            if (Jukebox.I == null) return;
-            float m = master != null ? master.Value : 1f;
-            float k = music != null ? music.Value : 1f;
-            Jukebox.I.SetVolume(m * k, _muted);
+            GameSettings.SetVolumes(master != null ? master.Value : GameSettings.Master,
+                                    music != null ? music.Value : GameSettings.Music,
+                                    effects != null ? effects.Value : GameSettings.Effects);
         }
 
         void Update()
@@ -112,15 +161,32 @@ namespace WhatLiesInTheDepths.UI
             // The save clock is real. Staleness is given in whole seconds, always.
             if (saveLine != null && SaveClock.I != null)
                 saveLine.text = Strings.T("ui.options.saved", Fmt.Seconds(SaveClock.I.Staleness));
+
+            if (_savedFor > 0f && (_savedFor -= Time.unscaledDeltaTime) <= 0f) PaintSave();
+        }
+
+        void PaintSave()
+        {
+            bool just = _savedFor > 0f;
+            bool hover = save != null && save.IsHovered;
+            if (saveLabel != null)
+            {
+                saveLabel.text = Strings.T(just ? "ui.options.savedNow" : "ui.options.save");
+                saveLabel.color = Theme.Get(just ? Tok.TealD : Tok.IrisD);
+            }
+            if (saveBorder != null) saveBorder.color = Theme.Get(just ? Tok.TealD : hover ? Tok.Iris : Tok.IrisB);
         }
 
         /// <summary>A palette is a whole token set, not a filter. Switching one rewrites all
         /// twenty-eight values at once, and anything written as a literal hex will not follow.</summary>
         void ChoosePalette(int index)
         {
-            if (index >= 0 && index < palettes.Count && palettes[index] != null)
-                Theme.Use(palettes[index]);
+            GameSettings.SetPalette(index);
+            PaintPalettes(GameSettings.PaletteIndex);
+        }
 
+        void PaintPalettes(int index)
+        {
             for (int i = 0; i < paletteBorders.Count; i++)
                 if (paletteBorders[i] != null)
                     paletteBorders[i].color = Theme.Get(i == index ? Tok.Iris : Tok.Haze);

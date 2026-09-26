@@ -156,8 +156,11 @@ namespace WhatLiesInTheDepths.EditorTools
             y = GroupHead(page, "THE SAVE", y);
             var saveNote = Node("SaveNote", page, 0, y, PageW, 48f);
             Img(saveNote, SpriteFactory.Round(9), Tok.Block);
-            var saveLine = Txt("Line", saveNote, 14f, 0, PageW - 28f, 48f, "", TypeRole.Label400, 12f, Tok.Ink2,
+            var saveLine = Txt("Line", saveNote, 14f, 0, PageW - 28f - 124f, 48f, "", TypeRole.Label400, 12f, Tok.Ink2,
                                TextAlignmentOptions.MidlineLeft);
+            // Saving by hand, beside the line that says when it last happened.
+            var saveButton = OutlineButton("Save", saveNote, PageW - 8f - 110f, 8f, 110f, 32f, "Save", 15f, 9,
+                                           Tok.IrisB, Tok.IrisD);
             y += 66f;
 
             // --- Beginning again. The only rose ground in any menu, with the consequence
@@ -193,6 +196,9 @@ namespace WhatLiesInTheDepths.EditorTools
                 view.palettes.Add(p);
             }
             view.saveLine = saveLine;
+            view.save = saveButton.button;
+            view.saveBorder = saveButton.border;
+            view.saveLabel = saveButton.label;
             view.hardReset = reset.button;
             view.hardResetBlock = blockImg;
 
@@ -281,45 +287,70 @@ namespace WhatLiesInTheDepths.EditorTools
             Save(root.gameObject, "UI_Achievements");
         }
 
-        // 560 wide, radius 14, a 44px mark, a Cormorant 27px title and a serif italic body,
-        // with the save in a block panel beneath. Neither is a window.
+        // Options spec, sections 3 and 4: 560 wide, radius 14, padding 26 / 28 / 24, 13 between
+        // rows. A 44 mark tile (radius 12) with its glyph at 24; a small-caps kicker over a
+        // Cormorant 27 title; a serif italic body at 14.5; a block panel for the one fact about
+        // the save; then the two answers, 40 tall, radius 10, Cormorant 16.5. The Hard reset
+        // question is the same shape made grave: rose frame, rose tile, rose kicker, and the
+        // only filled rose button in the game. Rows are stacked by the view once the words are
+        // in, so a longer language pushes the answers down instead of under the text.
         static void Question(QuestionView.Kind kind, string prefabName)
         {
             bool reset = kind == QuestionView.Kind.HardReset;
+            const float CardW = PageW, Inner = PageW - 56f;
             var root = Node(prefabName, null, 0, 0, W, TrackH);
 
-            var card = Panel("Question", root, PageX, 300f, PageW, 330f, 14);
+            var card = Panel("Question", root, PageX, 300f, CardW, 330f, 14);
+            card.anchorMin = card.anchorMax = new Vector2(0.5f, 0.5f);
+            card.pivot = new Vector2(0.5f, 0.5f);
+            card.anchoredPosition = new Vector2(0f, 40f);
             var frame = card.Find("Border").GetComponent<Image>();
-            var mark = Img(Node("Mark", card, 28f, 28f, 44f, 44f),
-                           (reset ? null : SpriteFactory.Glyph("Tab", "exit")) ?? SpriteFactory.Load("Disc"),
-                           reset ? Tok.RoseD : Tok.IrisD);
+            var shadow = card.Find("Shadow").GetComponent<Image>();
 
-            var title = Txt("Title", card, 88f, 30f, 440f, 34f, "", TypeRole.Serif, 27f, Tok.Ink);
-            var body = Prose("Body", card, 28f, 88f, 504f, 60f, "", 15f, Tok.Ink2, 1.6f, TypeRole.SerifItalic);
+            var tile = Node("Mark", card, 28f, 26f, 44f, 44f);
+            var tileGround = Img(tile, SpriteFactory.Round(12), reset ? Tok.RoseL : Tok.IrisL);
+            var glyph = Img(Node("Glyph", tile, 10f, 10f, 24f, 24f),
+                            SpriteFactory.Glyph("Ui", reset ? "reset" : "door") ?? SpriteFactory.Load("Disc"),
+                            reset ? Tok.RoseD : Tok.IrisD);
 
-            var note = Node("SaveNote", card, 28f, 158f, 504f, 46f);
+            var kicker = Caps("Kicker", card, 28f, 83f, Inner, 10f, "", 8.5f, reset ? Tok.RoseD : Tok.IrisD);
+            var title = Txt("Title", card, 28f, 99f, Inner, 30f, "", TypeRole.Serif, 27f, Tok.Ink);
+            var body = Prose("Body", card, 28f, 142f, Inner, 46f, "", 14.5f, Tok.Prose, 1.58f, TypeRole.SerifItalic);
+
+            var note = Node("SaveNote", card, 28f, 201f, Inner, 42f);
             Img(note, SpriteFactory.Round(9), Tok.Block);
-            var saveNote = Txt("Line", note, 14f, 0, 476f, 46f, "", TypeRole.Label400, 12f, Tok.Ink2,
-                               TextAlignmentOptions.MidlineLeft);
-            note.gameObject.SetActive(!reset);
+            var saveNote = Prose("Line", note, 12f, 10f, Inner - 24f, 22f, "", 13f, Tok.Ink2, 1.5f, TypeRole.Label400);
+            saveNote.richText = true;
 
-            // No sits first, because it is the safe answer and the cheap one.
-            var no = PrimaryButton("No", card, 28f, 226f, 240f, 40f, "No", 16f, 10);
-            var yes = OutlineButton("Yes", card, 292f, 226f, 240f, 40f, "Yes", 16f, 10, Tok.RoseB, Tok.RoseD);
+            // The safe answer sits first and is the filled one.
+            float bw = (Inner - 10f) * 0.5f;
+            var answers = Node("Answers", card, 28f, 260f, Inner, 40f);
+            var no = PrimaryButton("No", answers, 0f, 0f, bw, 40f, "", 16.5f, 10);
+            var yes = reset
+                ? PrimaryButton("Yes", answers, bw + 10f, 0f, bw, 40f, "", 16.5f, 10, Tok.RoseD, Tok.Veil)
+                : PrimaryButton("Yes", answers, bw + 10f, 0f, bw, 40f, "", 16.5f, 10, Tok.Veil, Tok.RoseD);
+            var yesBorder = Img(Stretch(Node("Border", yes.root)), SpriteFactory.Outline(10), Tok.RoseB, reset ? 0f : 1f);
+            yesBorder.transform.SetSiblingIndex(0);
 
             var view = root.gameObject.AddComponent<QuestionView>();
             view.kind = kind;
+            view.card = card;
             view.frame = frame;
-            view.mark = mark;
+            view.shadow = shadow;
+            view.markGround = tileGround;
+            view.mark = glyph;
+            view.kicker = kicker;
             view.title = title;
             view.body = body;
+            view.noteRoot = note;
             view.saveNote = saveNote;
+            view.answers = answers;
             view.no = no.button;
             view.noGround = no.ground;
             view.noLabel = no.label;
             view.yes = yes.button;
-            view.yesGround = yes.root.GetComponent<Image>();
-            view.yesBorder = yes.border;
+            view.yesGround = yes.ground;
+            view.yesBorder = yesBorder;
             view.yesLabel = yes.label;
 
             Save(root.gameObject, prefabName);

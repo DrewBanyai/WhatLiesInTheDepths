@@ -106,21 +106,108 @@ namespace WhatLiesInTheDepths.Data
             if (I != null && I != this) { Destroy(this); return; }
             I = this;
             Dream = new Dream(startMidGame);
+            if (!startMidGame) Load();
         }
 
         void Start()
         {
-            // Subscribed here rather than in OnEnable so the clock's Awake has certainly run.
+            // Subscribed here rather than in OnEnable so the clocks' Awakes have certainly run.
             if (GameClock.I != null) GameClock.I.Tick += OnTick;
+            if (SaveClock.I != null) SaveClock.I.Saved += Save;
+            // The Options page's choices are in effect from the first frame, not only once
+            // the page has been opened.
+            WhatLiesInTheDepths.Core.GameSettings.Load();
         }
 
         void OnDestroy()
         {
             if (GameClock.I != null) GameClock.I.Tick -= OnTick;
+            if (SaveClock.I != null) SaveClock.I.Saved -= Save;
             if (I == this) I = null;
         }
 
-        void Update() => Dream?.Step(Time.deltaTime);
+        // ---- the save ---------------------------------------------------------------
+
+        public const string SaveSlot = "dream";
+
+        /// <summary>Writes the dream down. The save clock calls this every two minutes and when
+        /// the player presses Save; leaving the game calls it too. The debug snapshot is never
+        /// saved, so it cannot overwrite a real dream.</summary>
+        public void Save()
+        {
+            WhatLiesInTheDepths.Core.GameSettings.Save();
+            if (Dream == null || startMidGame || _resetting) return;
+            if (SaveStore.Write(SaveSlot, DreamSave.Write(Dream)))
+                Debug.Log("[What Lies In The Depths] Saved to " + SaveStore.Describe(SaveSlot));
+        }
+
+        bool _resetting;
+
+        /// <summary>Forgets the save and starts a new dream from the first journal entry.</summary>
+        public void HardReset()
+        {
+            _resetting = true;
+            SaveStore.Delete(SaveSlot);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(
+                UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+        }
+
+        /// <summary>Saves, then leaves. A web page cannot close itself, so there it only saves.</summary>
+        public void SaveAndQuit()
+        {
+            SaveNow();
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
+
+        void Load()
+        {
+            string text = SaveStore.Read(SaveSlot);
+            if (string.IsNullOrEmpty(text)) return;
+            if (TryLoad(text)) return;
+            // The current save would not read: fall back to the one before it.
+            string previous = SaveStore.ReadBackup(SaveSlot);
+            if (!string.IsNullOrEmpty(previous) && previous != text) TryLoad(previous);
+        }
+
+        bool TryLoad(string text)
+        {
+            var d = new Dream(false);
+            if (!DreamSave.Read(d, text, out string error))
+            {
+                Debug.LogWarning("[What Lies In The Depths] The save could not be read (" + error + "); starting a new dream.");
+                return false;
+            }
+            Dream = d;
+            return true;
+        }
+
+        // Leaving the game saves it. A phone backgrounds an app without quitting it (and may
+        // then close it without warning), and a browser tab loses focus before it is closed, so
+        // each of those is a save point as well as quitting on the desktop.
+        void OnApplicationPause(bool paused) { if (paused) SaveNow(); }
+        void OnApplicationQuit() => SaveNow();
+        void OnApplicationFocus(bool focused)
+        {
+            if (!focused && Application.platform == RuntimePlatform.WebGLPlayer) SaveNow();
+        }
+
+        /// <summary>Saves at once and restarts the two-minute count, so the Options page and
+        /// the Exit question read "saved 0s ago".</summary>
+        public void SaveNow()
+        {
+            if (SaveClock.I != null) SaveClock.I.SaveNow();
+            else Save();
+        }
+
+        void Update()
+        {
+            Dream?.Step(Time.deltaTime);
+            WhatLiesInTheDepths.Core.GameSettings.Flush();
+        }
 
         void OnTick() => Dream?.Tick();
     }

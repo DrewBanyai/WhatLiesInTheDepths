@@ -870,6 +870,17 @@ namespace WhatLiesInTheDepths.Data
             Dirty();
         }
 
+        /// <summary>Called once a save has been laid over a new dream: prices follow what is
+        /// built, and everything derived is worked out again from the restored state.</summary>
+        public void Restored()
+        {
+            foreach (var c in constructs) Reprice(c);
+            Dirty();
+        }
+
+        /// <summary>The Oneiri count frozen by an exodus, or -1. Kept by the save.</summary>
+        public int ExodusAt { get => _exodusAt; set => _exodusAt = value; }
+
         /// <summary>Work that fills continuously: every Focus with anything on it, and the dive.
         /// A thing with nothing on it holds its progress; it never resets.</summary>
 
