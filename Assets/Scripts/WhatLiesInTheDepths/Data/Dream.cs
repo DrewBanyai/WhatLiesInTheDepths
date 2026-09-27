@@ -41,6 +41,35 @@ namespace WhatLiesInTheDepths.Data
         /// <summary>Greater realizations the mass has kept, oldest first. They sit inside it
         /// and, now and then, remember.</summary>
         public readonly List<string> absorbed = new List<string>();
+        /// <summary>Every realization, in the order it was realized. The lantern lights one pane
+        /// for each, in this order, from the flame outward.</summary>
+        public readonly List<string> kept = new List<string>();
+
+        /// <summary>How many Revelations one dream can realize: all of them, less one of each
+        /// pair that withdraws the other (the choice at the bottom). The lantern has this many panes.</summary>
+        public int Realizable
+        {
+            get
+            {
+                var pairs = new HashSet<string>();
+                foreach (var r in revelations)
+                    if (r.withdraws != null)
+                        foreach (var k in r.withdraws)
+                            if (k != r.k && revelations.Any(x => x.k == k))
+                                pairs.Add(string.CompareOrdinal(r.k, k) < 0 ? r.k + "|" + k : k + "|" + r.k);
+                return revelations.Count - pairs.Count;
+            }
+        }
+
+        /// <summary>Brings <see cref="kept"/> into line with what is realized: a realization it
+        /// does not list joins the end, in content order (a save from before the lantern), and
+        /// one no longer realized leaves it.</summary>
+        public void SettleKept()
+        {
+            kept.RemoveAll(k => !revelations.Any(r => r.k == k && r.realized));
+            foreach (var r in revelations)
+                if (r.realized && !kept.Contains(r.k)) kept.Add(r.k);
+        }
         public readonly List<VisionDef> visions = new List<VisionDef>();
         /// <summary>Golden Visions already finished. Their sigils are in the iris and never
         /// leave it; resting on one reads back what it changed.</summary>
@@ -266,6 +295,7 @@ namespace WhatLiesInTheDepths.Data
             if (!Spend(r.cost)) return false;
             r.realized = true;
             if (r.great && !absorbed.Contains(r.k)) absorbed.Add(r.k);
+            if (!kept.Contains(r.k)) kept.Add(r.k);
             unlocks.Add("rev:" + r.k);
             unlocks.AddRange(r.grants);
             Withdraw(r);

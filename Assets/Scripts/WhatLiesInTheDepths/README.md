@@ -90,6 +90,8 @@ After any change to `design.py`, rerun `Tools/Content/sim/report.py` and update 
   been read. Everything authored comes from the content on every start, so a save made before
   a balance change still loads. A saved id the content no longer has is skipped.
 - Upgrades are not restored field by field; the dream re-applies them from its own content.
+- The order Revelations were realized is saved (`kept`), because the lantern lights its panes 
+  in that order. A save from before the lantern lights them in content order.
 - `Ursine.SaveStore` decides where the save lives: a file with a `.bak` beside it on native
   builds, `PlayerPrefs` (IndexedDB) on the web. The slot is `dream`.
 - Options are kept in a separate `settings` slot (`Core/GameSettings.cs`), so a hard reset
@@ -142,6 +144,8 @@ for a thing by its id.
 | `Art/Glyphs/Source`, `Ui`, `Achievement` | the Journal's 4 source marks, 7 interface marks, 1 achievement mark | white, tinted |
 | `Art/Spec` | construct plates, place art, unit portraits (nightmares on a dusk ground), the veil plate, the mass, the eye, the road, the palace grounds, the ending | own colors |
 | `Art/Spec/Map` | Mind Palace forms, pale fills and a ground line | own colors |
+
+The Revelations lantern is not a picture: `UI/LanternView.cs` draws it at runtime from `Core/Lantern.cs` in the palette's tokens, with one pane per Revelation the dream can realize. `Art/Spec/Art_Mass.png`, the brain it replaced, is no longer used.
 
 Glyphs are white so a token can tint them — a glyph is always its label's color. Artwork
 keeps its own colors, because artwork does not follow the palette. The finale's places and

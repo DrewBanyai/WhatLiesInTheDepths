@@ -645,7 +645,8 @@
     "rev.salt.kind": "unlocks a focus",
     "rev.salt.text": "A whole sea dried here and left only its salt. You know something about that.",
     "rev.salt.fx": [
-      "unlocks the <b>Let It Out</b> focus"
+      "unlocks the <b>Let It Out</b> focus",
+      "a realization: <b>It Holds Because I Hold It</b>"
     ],
     "rev.letsea.name": "Let the Sea Go",
     "rev.letsea.kind": "unlocks a construct",
@@ -678,7 +679,8 @@
     "rev.written.text": "Whatever you only remember, the Nobody can eat. Whatever you write down is harder to swallow.",
     "rev.written.fx": [
       "unlocks the <b>Copy the Vellum</b> focus",
-      "unlocks <b>Scriptorium</b>"
+      "unlocks <b>Scriptorium</b>",
+      "a realization: <b>It Grew When I Did</b>"
     ],
     "rev.holds.name": "It Holds Because I Hold It",
     "rev.holds.kind": "unlocks a construct",

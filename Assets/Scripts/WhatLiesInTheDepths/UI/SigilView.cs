@@ -126,14 +126,17 @@ namespace WhatLiesInTheDepths.UI
             float x = Mathf.Cos(a) * _r * (_outer ? 1.02f : 1f) + Mathf.Sin(t * _w1 + _p1) * _amp;
             float y = Mathf.Sin(a) * _r * (_outer ? 0.84f : 0.90f) + Mathf.Sin(t * _w2 + _p2) * _amp * 0.9f;
 
-            // Nothing drifts through the readout's footprint (668 x 368 at the center): a
-            // sigil that would is pushed out along its own ray, so it appears to skirt it.
+            // Nothing drifts through the footprint the lantern and its readout share (668 x 368,
+            // centered 80 above the field's middle): a sigil that would is pushed out along its
+            // own ray from the footprint's center, so it appears to skirt it.
             const float EW = 334f, EH = 184f;
-            if (Mathf.Abs(x) < EW && Mathf.Abs(y) < EH)
+            float fy = y + RevelationsView.FootprintLift;
+            if (Mathf.Abs(x) < EW && Mathf.Abs(fy) < EH)
             {
                 float push = Mathf.Min(EW / Mathf.Max(Mathf.Abs(x), 0.001f),
-                                       EH / Mathf.Max(Mathf.Abs(y), 0.001f));
-                x *= push; y *= push;
+                                       EH / Mathf.Max(Mathf.Abs(fy), 0.001f));
+                x *= push; fy *= push;
+                y = fy - RevelationsView.FootprintLift;
             }
 
             // The spec measures y downward; a RectTransform measures it up.

@@ -79,7 +79,7 @@ namespace WhatLiesInTheDepths.UI
             {
                 stepper.Configure(() => GameState.I != null ? GameState.I.OneiriFree : 0);
                 stepper.Set(t.w, t.cap);
-                stepper.Changed += w => { _t.w = w; GameState.I?.Dirty(); Refresh(); };
+                stepper.Changed += w => { _t.w = w; _t.seen = true; GameState.I?.Dirty(); Refresh(); };
             }
 
             if (action != null)
@@ -87,6 +87,7 @@ namespace WhatLiesInTheDepths.UI
                 {
                     var s = GameState.I;
                     if (s == null) return;
+                    _t.seen = true;   // using a card is certainly having seen it
                     // Pressing another card moves your effort; pressing the lit one puts
                     // it down, and then nothing is filled.
                     s.attendedTaskId = s.attendedTaskId == _t.id ? null : _t.id;
@@ -110,7 +111,7 @@ namespace WhatLiesInTheDepths.UI
             var btn = GetComponent<UiButton>();
             if (btn != null) btn.Hovered += h =>
             {
-                if (h && !_t.seen) { _t.seen = true; dot?.Set(false); }
+                if (h) _t.seen = true;
                 _cardHover = h;
                 Refresh();
             };
@@ -199,6 +200,10 @@ namespace WhatLiesInTheDepths.UI
         public void Refresh()
         {
             if (_t == null) return;
+            // The dot is read from the task every time, never remembered: leaving the Focus
+            // page marks every card seen without touching the cards, and a dot set once at
+            // Bind would stay lit until the next rebuild.
+            if (dot != null) dot.Set(!_t.seen);
             var s = GameState.I;
             bool mine = s != null && s.attendedTaskId == _t.id;
             bool binding = s != null && s.BindingOpen;

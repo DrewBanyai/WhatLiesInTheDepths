@@ -30,6 +30,8 @@ namespace WhatLiesInTheDepths.Data
         public List<ConstructDef> constructs => Dream.constructs;
         public List<RevelationDef> revelations => Dream.revelations;
         public List<string> absorbed => Dream.absorbed;
+        public List<string> kept => Dream.kept;
+        public int Realizable => Dream.Realizable;
         public List<VisionDef> visions => Dream.visions;
         public List<VisionDef> visionsAbsorbed => Dream.visionsAbsorbed;
         public List<RoadLocation> road => Dream.road;

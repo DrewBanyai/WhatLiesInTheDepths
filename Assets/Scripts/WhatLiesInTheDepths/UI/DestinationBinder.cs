@@ -71,6 +71,8 @@ namespace WhatLiesInTheDepths.UI
                     foreach (var v in s.visions) if (s.Shown(v)) v.seen = true;
                     break;
             }
+            // Seen is saved state: ask for a redraw so every card and the save hear of it.
+            s.Dirty();
         }
 
         /// <summary>A destination that has nothing in it does not appear, and a new one simply

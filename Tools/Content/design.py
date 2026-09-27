@@ -324,7 +324,9 @@ REVELATIONS = [
     dict(k="written", g="stair", cost=[("nacre", 20), ("hush", 25), ("moonsilver", 50)], requires=[L(55)],
          n="Written, It Stays", kind="unlocks a focus",
          text="Whatever you only remember, the Nobody can eat. Whatever you write down is harder to swallow."),
-    dict(k="holds", g="knot", cost=[("moonsilver", 50), ("salt", 40)], requires=[L(44)],
+    # Appears with Salt, which it costs (as does the Rampart it unlocks): a card never names a
+    # resource the player has not seen. It was level 44, three levels before Salt existed.
+    dict(k="holds", g="knot", cost=[("moonsilver", 50), ("salt", 40)], requires=["rev:salt"],
          n="It Holds Because I Hold It", kind="unlocks a construct",
          text="Walls here are made of belief. You have more of that than you thought."),
     dict(k="stand", g="lantern", cost=[("salt", 30), ("hush", 20)], requires=["owned:rampart>=1"],
@@ -333,7 +335,8 @@ REVELATIONS = [
     dict(k="owed", g="scales", cost=[("ward", 20), ("lucidity", 40)], requires=["owned:rampart>=3"], fx=[rate("dread", -0.3)],
          n="Nothing Is Owed", kind="changes generation",
          text="You have been paying for this in fear, a little every night, and no one ever asked you to."),
-    dict(k="grew", g="spiral", cost=[("nacre", 40), ("vellum", 20)], requires=["vdone:tide>=3"], fx=[visioncost(0.10)],
+    # Waits for Vellum, which it costs, as well as for the Tide.
+    dict(k="grew", g="spiral", cost=[("nacre", 40), ("vellum", 20)], requires=["vdone:tide>=3", "rev:written"], fx=[visioncost(0.10)],
          n="It Grew When I Did", kind="a realization · changes the work",
          text="It was only the dark, once. Then it was being left, and being laughed at, and being wrong. Every fear you would not look at, it took, and it grew."),
     dict(k="mine", g="mirror", great=True, cost=[("vellum", 30), ("nacre", 40), ("lucidity", 60)],

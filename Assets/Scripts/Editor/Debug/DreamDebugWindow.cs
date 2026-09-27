@@ -166,6 +166,7 @@ namespace WhatLiesInTheDepths.EditorTools
                         {
                             r.realized = false;
                             d.absorbed.Remove(r.k);
+                            d.kept.Remove(r.k);
                             if (r.withdraws != null)
                                 foreach (var w in r.withdraws) d.unlocks.EditorRemove("withdrawn:" + w);
                             Forget("rev:" + r.k, r.grants);
@@ -177,6 +178,7 @@ namespace WhatLiesInTheDepths.EditorTools
                         // Free: the debugger reaches the state, it does not pay for it.
                         r.realized = true;
                         if (r.great && !d.absorbed.Contains(r.k)) d.absorbed.Add(r.k);
+                        if (!d.kept.Contains(r.k)) d.kept.Add(r.k);
                         d.unlocks.Add("rev:" + r.k);
                         d.Withdraw(r);
                         d.unlocks.AddRange(r.grants);

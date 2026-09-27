@@ -183,9 +183,17 @@ static class Sim
             cands.Add(Tuple.Create("vision " + v.k, new List<Amount> { new Amount(o.r, v.OfferCost(o)) }, v.great ? 0.4 : 0.8));
         }
         var best = cands.OrderBy(x => x.Item3 * x.Item2.Sum(a => Math.Max(0, a.n - d.Held(a.k)) / Math.Max(1, d.Ceiling(a.k)))).FirstOrDefault();
-        if (best == null) return;
-        targetName = best.Item1;
-        foreach (var a in best.Item2) if (d.Held(a.k) < a.n) missing.Add(a.k);
+        if (best != null)
+        {
+            targetName = best.Item1;
+            foreach (var a in best.Item2) if (d.Held(a.k) < a.n) missing.Add(a.k);
+        }
+        // The dive's own toll counts too. A veil that spends Chorus (or Dread, or Mettle) is
+        // waiting on it; without this, a savings target that needs Echo kept every Oneiri off
+        // Rally, and the veil crawled along on attention alone.
+        if (d.veil != null && !d.veil.AtFull && d.HoldOfDive == Hold.Short && d.veil.spend != null)
+            foreach (var a in d.veil.spend) if (a.k != "reverie" && d.Held(a.k) < a.n) missing.Add(a.k);
+        if (best == null && missing.Count == 0) return;
         // what the makers of the missing are themselves short of is missing too
         for (int pass = 0; pass < 3; pass++)
             foreach (var tk in d.ShownTasks.Where(x => missing.Any(m => Makes(x, m)) && d.HoldOf(x) == Hold.Short).ToList())

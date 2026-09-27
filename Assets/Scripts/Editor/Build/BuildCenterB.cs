@@ -95,32 +95,28 @@ namespace WhatLiesInTheDepths.EditorTools
             center.pivot = new Vector2(0.5f, 0.5f);
             center.anchoredPosition = Vector2.zero;
 
-            var massRt = Node("Mass", center, 0, 0, 480f, 480f);
-            massRt.anchorMin = massRt.anchorMax = new Vector2(0.5f, 0.5f);
-            massRt.pivot = new Vector2(0.5f, 0.5f);
-            massRt.anchoredPosition = Vector2.zero;
-            var massGroup = massRt.gameObject.AddComponent<CanvasGroup>();
-            var massImg = Img(massRt, SpriteFactory.Load("Art_Mass"), Tok.Veil);
-            massImg.color = Color.white;
-            var massThemed = massImg.GetComponent<ThemedGraphic>();
-            if (massThemed != null) Object.DestroyImmediate(massThemed);
-
-            // Five places inside the mass, in the spec's 360 viewBox (the mass draws 380px
-            // scaled 1.26, so 480/360 px a unit); each a 24-grid sigil at .92.
-            const float MassUnit = 480f / 360f;
-            float[,] spots = { { 142, 150 }, { 218, 150 }, { 180, 198 }, { 150, 106 }, { 210, 106 } };
-            var absorbed = new Image[5];
-            for (int i = 0; i < 5; i++)
-            {
-                float size = 24f * 0.92f * MassUnit;
-                var spot = Node("Absorbed" + i, massRt, 0, 0, size, size);
-                spot.anchorMin = spot.anchorMax = new Vector2(0.5f, 0.5f);
-                spot.pivot = new Vector2(0.5f, 0.5f);
-                spot.anchoredPosition = new Vector2((spots[i, 0] - 180f) * MassUnit,
-                                                    -(spots[i, 1] - 180f) * MassUnit);
-                absorbed[i] = Artwork(spot, SpriteFactory.Glyph("Sigil", "lantern"));
-                absorbed[i].raycastTarget = false;
-            }
+            // The lantern: 374 lantern units at .85, centered on the footprint nothing drifts
+            // through, whose middle sits 80 above the field's (field y 280). Its glass, frame
+            // and flame are drawn at runtime from Core/Lantern, one pane per Revelation the
+            // dream can realize; only its light is built here.
+            var lanternRt = Node("Lantern", center, 0, 0, Lantern.Width * RevelationsView.LanternScale * 2f,
+                                 Lantern.Height * RevelationsView.LanternScale);
+            lanternRt.anchorMin = lanternRt.anchorMax = new Vector2(0.5f, 0.5f);
+            lanternRt.pivot = new Vector2(0.5f, 1f);
+            lanternRt.anchoredPosition = new Vector2(0f, RevelationsView.FootprintLift
+                                                        + Lantern.Height * RevelationsView.LanternScale * 0.5f);
+            var lanternGroup = lanternRt.gameObject.AddComponent<CanvasGroup>();
+            var glowRt = Node("Glow", lanternRt, 0, 0, 300f, 300f);
+            glowRt.anchorMin = glowRt.anchorMax = new Vector2(0.5f, 1f);
+            glowRt.pivot = new Vector2(0.5f, 0.5f);
+            glowRt.anchoredPosition = new Vector2(0f, -Lantern.Flame.y * RevelationsView.LanternScale);
+            // The lantern's light is light, not a surface: white, and the view sets how much.
+            var glow = Artwork(glowRt, SpriteFactory.Load("Bloom_Field"));
+            glow.color = new Color(1f, 1f, 1f, 0f);
+            glow.raycastTarget = false;
+            var lantern = lanternRt.gameObject.AddComponent<LanternView>();
+            lantern.scale = RevelationsView.LanternScale;
+            lantern.glow = glow;
 
             // Italic 11px ink4, 12 above the field's foot; the field is the only thing it names.
             var caption = Txt("Caption", field, 0f, 720f - 12f - 16f, W, 16f, "nine realizations within reach",
@@ -134,11 +130,13 @@ namespace WhatLiesInTheDepths.EditorTools
             sigilLayer.pivot = new Vector2(0.5f, 0.5f);
             sigilLayer.anchoredPosition = Vector2.zero;
 
-            // Readout: 600 x 300, dead center, one fixed position. It never moves.
+            // Readout: 600 x 300, centered on the lantern, which yields behind it. Reading a lit
+            // pane back moves it into the band beneath the lantern instead (the view does that),
+            // so the pane being read stays in sight.
             var readout = Node("Readout", center, 0, 0, 600f, 300f);
             readout.anchorMin = readout.anchorMax = new Vector2(0.5f, 0.5f);
             readout.pivot = new Vector2(0.5f, 0.5f);
-            readout.anchoredPosition = Vector2.zero;
+            readout.anchoredPosition = new Vector2(0f, RevelationsView.FootprintLift);
             // The root is only a hit area; its children draw it, shadow under ground.
             Img(readout, null, Tok.Veil, 0f, true);
             var readoutHover = readout.gameObject.AddComponent<UiButton>();
@@ -236,10 +234,9 @@ namespace WhatLiesInTheDepths.EditorTools
 
             var view = root.gameObject.AddComponent<RevelationsView>();
             view.field = field;
-            view.mass = massRt;
-            view.massGroup = massGroup;
+            view.lantern = lantern;
+            view.lanternGroup = lanternGroup;
             view.fieldCaption = caption;
-            view.absorbedSlots = absorbed;
             view.sigilLayer = sigilLayer;
             view.sigilPrefab = Load("UI_Sigil").GetComponent<SigilView>();
             view.readout = readout.gameObject;

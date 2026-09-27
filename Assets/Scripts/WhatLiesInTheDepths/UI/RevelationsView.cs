@@ -1,6 +1,9 @@
 // What Lies In The Depths — center destination. Spec section 6.
 // This is the one place anything overlays anything, and it pays for it by making the field
 // visibly yield rather than sitting a panel on top of live content.
+//
+// At its center hangs the lantern: one pane for every Revelation the dream can realize, lit in
+// the order they were realized, gold for a greater one. A lit pane reads its realization back.
 using System.Collections.Generic;
 using WhatLiesInTheDepths.Core;
 using WhatLiesInTheDepths.Data;
@@ -15,18 +18,25 @@ namespace WhatLiesInTheDepths.UI
 {
     public sealed class RevelationsView : MonoBehaviour
     {
+        /// <summary>Lantern units to canvas units.</summary>
+        public const float LanternScale = 0.85f;
+        /// <summary>How far above the field's middle the footprint nothing drifts through is
+        /// centered — and the lantern with it, and the readout over it.</summary>
+        public const float FootprintLift = 80f;
+        /// <summary>Where a lit pane's readout hangs: its top, this far below the field's middle,
+        /// in the band under the lantern.</summary>
+        const float KeptTop = 92f;
+
         [Header("Field")]
         public RectTransform field;
-        public RectTransform mass;
-        public CanvasGroup massGroup;
+        public LanternView lantern;
+        public CanvasGroup lanternGroup;
         public RectTransform sigilLayer;
         public SigilView sigilPrefab;
         [Tooltip("Italic, 11px, ink4, 12 above the field's foot. Gone while a readout is open.")]
         public TMP_Text fieldCaption;
-        [Tooltip("Five places inside the mass for kept greater realizations, filled in order.")]
-        public Image[] absorbedSlots;
 
-        [Header("Readout — 600 x 300, dead center, one fixed position")]
+        [Header("Readout — 600 x 300 over the lantern; beneath it when reading a lit pane back")]
         public GameObject readout;
         public Image readoutGround;
         public Image readoutBorder;
@@ -61,14 +71,9 @@ namespace WhatLiesInTheDepths.UI
         const float Grace = 1f / 6f;          // "about a sixth of a second"
         float _t;                             // the field's own clock, in seconds
 
-        // Absorbed sigils remember: at no fixed interval one warms to gold and cools back
-        // over about two seconds. Nothing is being announced.
         static readonly Color DisabledInk = new Color32(0xB6, 0xAE, 0xCB, 0xFF);   // spec's raw
-        static readonly Color Rest = new Color32(0x8D, 0x74, 0xB4, 0xFF);   // artwork, not a token
-        static readonly Color Warm = new Color32(0xD6, 0xAC, 0x6E, 0xFF);
-        const float RestAlpha = 0.46f, WarmAlpha = 0.80f, RememberFor = 1.9f;
-        float[] _nextRemember;
         float _judgeIn;
+        readonly List<bool> _greats = new List<bool>();
         float _captionAlpha = 1f, _captionWant = 1f;
 
         string _built;
@@ -78,9 +83,9 @@ namespace WhatLiesInTheDepths.UI
             Build();
             if (fieldHover != null) fieldHover.Hovered += OnFieldHover;
             if (readoutHover != null) readoutHover.Hovered += OnReadoutHover;
-            HookKept();
-            // Realizing is a single click, no confirmation. The sigil leaves the field (a
-            // greater one is taken into the mass) and the field is drawn again without it.
+            if (lantern != null) lantern.PaneHovered += OnPaneHover;
+            // Realizing is a single click, no confirmation. The sigil leaves the field, the
+            // next pane of the lantern lights, and the field is drawn again without it.
             if (realize != null)
                 realize.Clicked += () =>
                 {
@@ -112,7 +117,7 @@ namespace WhatLiesInTheDepths.UI
             if (s == null) return string.Empty;
             var b = new System.Text.StringBuilder();
             foreach (var r in s.ShownRevelations) b.Append(r.k).Append(',');
-            b.Append('|').Append(s.absorbed.Count);
+            b.Append('|').Append(s.kept.Count);
             return b.ToString();
         }
 
@@ -133,21 +138,16 @@ namespace WhatLiesInTheDepths.UI
                                               Strings.Number(within));
             }
 
-            if (absorbedSlots != null)
+            if (lantern != null)
             {
-                _nextRemember = new float[absorbedSlots.Length];
-                for (int i = 0; i < absorbedSlots.Length; i++)
+                lantern.Build(s.Realizable);
+                _greats.Clear();
+                foreach (var k in s.kept)
                 {
-                    var slot = absorbedSlots[i];
-                    if (slot == null) continue;
-                    bool kept = i < s.absorbed.Count;
-                    slot.gameObject.SetActive(kept);
-                    if (!kept) continue;
-                    var kept_ = s.revelations.Find(r => r.k == s.absorbed[i]);
-                    Art.Apply(slot, Art.Sigil(kept_ != null && !string.IsNullOrEmpty(kept_.g) ? kept_.g : s.absorbed[i]));
-                    slot.color = new Color(Rest.r, Rest.g, Rest.b, RestAlpha);
-                    _nextRemember[i] = 2f + i * 3.5f + Random.value * 5f;
+                    var d = s.revelations.Find(r => r.k == k);
+                    _greats.Add(d != null && d.great);
                 }
+                lantern.Show(s.kept.Count, _greats);
             }
 
             int index = 0;
@@ -169,8 +169,6 @@ namespace WhatLiesInTheDepths.UI
                 if (v.Def != null) v.Tick(_t, dt, v == _open);
 
             if (_closeAt >= 0f && Time.unscaledTime >= _closeAt) Close();
-
-            Remember();
 
             // A sigil says whether it can be afforded before anyone rests on it: short
             // grays it, above a ceiling sets it to .45. Judged twice a second, not per frame.
@@ -201,29 +199,6 @@ namespace WhatLiesInTheDepths.UI
                 v.Paint();
                 if (v.group != null)
                     v.group.alpha = ((_open == null && _keptOpen < 0) || _open == v ? 1f : 0.18f) * v.BaseAlpha;
-            }
-        }
-
-        void Remember()
-        {
-            if (absorbedSlots == null || _nextRemember == null) return;
-            for (int i = 0; i < absorbedSlots.Length; i++)
-            {
-                var slot = absorbedSlots[i];
-                if (slot == null || !slot.gameObject.activeSelf) continue;
-                float d = _t - _nextRemember[i];
-                if (d > 0f && d < RememberFor)
-                {
-                    float u = Mathf.Sin(d / RememberFor * Mathf.PI);   // up and back down
-                    var c = Color.Lerp(Rest, Warm, u);
-                    c.a = Mathf.Lerp(RestAlpha, WarmAlpha, u);
-                    slot.color = c;
-                }
-                else if (d >= RememberFor)
-                {
-                    slot.color = new Color(Rest.r, Rest.g, Rest.b, RestAlpha);
-                    _nextRemember[i] = _t + 7f + Random.value * 13f;   // a while before it surfaces again
-                }
             }
         }
 
@@ -275,6 +250,7 @@ namespace WhatLiesInTheDepths.UI
             var d = v.Def;
             d.seen = true;
             Purchasable(true);
+            Place(false);
             if (readout != null) readout.SetActive(true);
             FillBody(d);
             if (costs != null && costPillPrefab != null)
@@ -290,8 +266,9 @@ namespace WhatLiesInTheDepths.UI
             }
             PaintCost(d);
 
-            // The field yields: mass to .25, unhovered sigils to .18, and the caption goes.
-            if (massGroup != null) massGroup.alpha = 0.25f;
+            // The field yields: the lantern behind the readout to .25, unhovered sigils to .18,
+            // and the caption goes.
+            if (lanternGroup != null) lanternGroup.alpha = 0.25f;
             _captionWant = 0f;
             foreach (var s in _sigils)
                 if (s.group != null) s.group.alpha = (s == v ? 1f : 0.18f) * s.BaseAlpha;
@@ -299,7 +276,7 @@ namespace WhatLiesInTheDepths.UI
 
         /// <summary>The part of the readout that says what a realization is: its mark, kind,
         /// name, text and effects, gold for a greater one. Shared by a sigil still in the
-        /// field and a greater one already kept in the mass.</summary>
+        /// field and a realization already lit in the lantern.</summary>
         void FillBody(RevelationDef d)
         {
             Art.Apply(markGlyph, Art.Sigil(string.IsNullOrEmpty(d.g) ? d.k : d.g));
@@ -408,38 +385,21 @@ namespace WhatLiesInTheDepths.UI
             _touchedReadout = false;
             _closeAt = -1f;
             if (readout != null) readout.SetActive(false);
-            if (massGroup != null) massGroup.alpha = 1f;
+            if (lanternGroup != null) lanternGroup.alpha = 1f;
             _captionWant = 1f;
             foreach (var s in _sigils)
                 if (s.group != null) s.group.alpha = s.BaseAlpha;
         }
 
 
-        // ---- A greater realization kept in the mass reads back out, as a golden Vision does
-        // from the iris: resting on its mark opens the readout for it, with nothing to pay and
-        // nothing to press. The readout lets the pointer through while it shows a kept one, so
-        // the mark underneath keeps it open and the pointer can step from one mark to the next.
+        // ---- A lit pane reads its realization back, as a golden Vision does from the iris:
+        // resting on it opens the readout for it, with nothing to pay and nothing to press, in
+        // the band beneath the lantern so the pane stays in sight. The readout lets the pointer
+        // through while it shows a kept one, and the pointer can step from pane to pane.
 
         int _keptOpen = -1;
-        bool _keptHooked;
 
-        void HookKept()
-        {
-            if (_keptHooked || absorbedSlots == null) return;
-            _keptHooked = true;
-            for (int i = 0; i < absorbedSlots.Length; i++)
-            {
-                var slot = absorbedSlots[i];
-                if (slot == null) continue;
-                slot.raycastTarget = true;
-                var btn = slot.GetComponent<UiButton>();
-                if (btn == null) btn = slot.gameObject.AddComponent<UiButton>();
-                int captured = i;
-                btn.Hovered += h => OnKeptHover(captured, h);
-            }
-        }
-
-        void OnKeptHover(int i, bool entering)
+        void OnPaneHover(int i, bool entering)
         {
             if (entering)
             {
@@ -455,40 +415,77 @@ namespace WhatLiesInTheDepths.UI
         void OpenKept(int i)
         {
             var s = GameState.I;
-            if (s == null || i < 0 || i >= s.absorbed.Count) return;
-            var d = s.revelations.Find(r => r.k == s.absorbed[i]);
+            if (s == null || i < 0 || i >= s.kept.Count) return;
+            var d = s.revelations.Find(r => r.k == s.kept[i]);
             if (d == null) return;
             if (_open != null) Close();
             _keptOpen = i;
             _touchedReadout = false;
-            if (readout != null) readout.SetActive(true);
             FillBody(d);
             Purchasable(false);
-            if (readoutContents != null)
-            {
-                readoutContents.alpha = 1f;
-                LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)readoutContents.transform);
-            }
+            if (readoutContents != null) readoutContents.alpha = 1f;
             if (markPanel != null)
             {
                 var mg = markPanel.GetComponent<CanvasGroup>();
                 if (mg != null) mg.alpha = 1f;
             }
             _laidOut = null;
-            // The field yields around it as it does for a sigil.
-            if (massGroup != null) massGroup.alpha = 0.25f;
+            if (readout != null) readout.SetActive(true);
+            Place(true);
+            // The sigils yield around it as they do for one another; the lantern does not,
+            // because the pane being read is the point.
+            if (lanternGroup != null) lanternGroup.alpha = 1f;
             _captionWant = 0f;
             foreach (var v in _sigils)
                 if (v.group != null) v.group.alpha = 0.18f * v.BaseAlpha;
         }
 
+        /// <summary>Where the readout sits. Over the lantern, 600 x 300, for a sigil in the field;
+        /// for a lit pane, in the band beneath the lantern, only as tall as what it says (there
+        /// is no foot: nothing to pay, nothing to press).</summary>
+        void Place(bool kept)
+        {
+            if (readout == null) return;
+            var rt = (RectTransform)readout.transform;
+            float h = 300f;
+            if (kept && readoutContents != null)
+            {
+                var body = (RectTransform)readoutContents.transform;
+                LayoutRebuilder.ForceRebuildLayoutImmediate(body);
+                h = Mathf.Clamp(LayoutUtility.GetPreferredHeight(body), 150f, 268f);
+            }
+            rt.pivot = new Vector2(0.5f, kept ? 1f : 0.5f);
+            rt.sizeDelta = new Vector2(600f, h);
+            rt.anchoredPosition = new Vector2(0f, kept ? -KeptTop : FootprintLift);
+            if (readoutContents != null)
+            {
+                var c = (RectTransform)readoutContents.transform;
+                c.sizeDelta = new Vector2(c.sizeDelta.x, h);
+                LayoutRebuilder.ForceRebuildLayoutImmediate(c);
+            }
+            if (markPanel != null)
+            {
+                var mp = markPanel.rectTransform;
+                mp.sizeDelta = new Vector2(mp.sizeDelta.x, h);
+                if (markRule != null) markRule.rectTransform.sizeDelta = new Vector2(markRule.rectTransform.sizeDelta.x, h);
+            }
+            if (markGlyph != null)
+            {
+                var g = markGlyph.rectTransform;
+                g.anchoredPosition = new Vector2(g.anchoredPosition.x, -(h - g.sizeDelta.y) * 0.5f);
+            }
+        }
+
         /// <summary>Shows or hides the parts of the readout that are about paying: the cost
         /// pills, Realize and the reason line. A kept realization has none of them, and the
-        /// readout then lets the pointer through to the mark beneath it.</summary>
+        /// readout then lets the pointer through.</summary>
         void Purchasable(bool on)
         {
             if (costs != null) costs.gameObject.SetActive(on);
             if (realize != null) realize.gameObject.SetActive(on);
+            // A kept realization's readout has no foot at all, rule included.
+            var foot = readoutContents != null ? readoutContents.transform.Find("Foot") : null;
+            if (foot != null) foot.gameObject.SetActive(on);
             if (!on && reasonLine != null) reasonLine.gameObject.SetActive(false);
             if (readout != null)
             {

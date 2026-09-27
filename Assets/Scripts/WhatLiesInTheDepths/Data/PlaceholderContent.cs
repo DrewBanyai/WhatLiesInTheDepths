@@ -231,6 +231,8 @@ namespace WhatLiesInTheDepths.Data
             // The spec's demo mind has already kept two.
             s.absorbed.Add("lantern");
             s.absorbed.Add("glass");
+            s.kept.Add("lantern");
+            s.kept.Add("glass");
         }
 
         // ---- Visions -----------------------------------------------------------

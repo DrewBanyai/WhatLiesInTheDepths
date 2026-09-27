@@ -96,7 +96,8 @@ namespace WhatLiesInTheDepths.UI
                     hoverTarget.Hovered += h =>
                     {
                         _hovered = h;
-                        if (h && !_c.seen) { _c.seen = true; dot?.Set(false); }
+                        if (h) _c.seen = true;
+                        dot?.Set(!_c.seen);
                         Paint(h);
                     };
 
@@ -165,6 +166,8 @@ namespace WhatLiesInTheDepths.UI
         public void Refresh()
         {
             if (_c == null || GameState.I == null) return;
+            // Read from the construct every time, so a visit that marked it seen clears it here too.
+            if (dot != null) dot.Set(!_c.seen);
 
             // Something built once and done — The Silent Altar — has nothing left to buy: no
             // count, no price and no Build, so it never looks like something to buy more of.

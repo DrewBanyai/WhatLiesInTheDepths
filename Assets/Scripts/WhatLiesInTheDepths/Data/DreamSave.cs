@@ -51,6 +51,7 @@ namespace WhatLiesInTheDepths.Data
                 revs[r.k] = Obj(("realized", r.realized), ("seen", r.seen));
             o["revelations"] = revs;
             o["absorbed"] = d.absorbed.Cast<object>().ToList();
+            o["kept"] = d.kept.Cast<object>().ToList();
 
             var visions = new JsonObject();
             foreach (var v in d.visions.Concat(d.visionsDone))
@@ -155,6 +156,11 @@ namespace WhatLiesInTheDepths.Data
                     if (revs[r.k] is JsonObject ro) r.realized = Bool(ro["realized"], false);
             d.absorbed.Clear();
             d.absorbed.AddRange(Ids(o["absorbed"]));
+            // The order the lantern lit in. A save from before the lantern has none; every
+            // realization it holds then lights in content order.
+            d.kept.Clear();
+            d.kept.AddRange(IdList(o["kept"]));
+            d.SettleKept();
 
             // Visions: progress on all of them; the finished one-offs leave the field for the
             // list of finished ones, as completing them did.
@@ -262,5 +268,9 @@ namespace WhatLiesInTheDepths.Data
         static bool Bool(object v, bool fallback) => v is bool b ? b : fallback;
         static HashSet<string> Ids(object v)
             => v is List<object> l ? new HashSet<string>(l.OfType<string>()) : new HashSet<string>();
+
+        /// <summary>Ids in the order they were written, where the order is the point.</summary>
+        static List<string> IdList(object v)
+            => v is List<object> l ? l.OfType<string>().Distinct().ToList() : new List<string>();
     }
 }

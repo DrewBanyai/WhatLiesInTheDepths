@@ -227,10 +227,10 @@ namespace WhatLiesInTheDepths.Data
             r = Rev(s, "tidefolk", "spiral", C("salt", 60, "moonsilver", 60, "echo", 40), false, 388f, 197.5f, null, L("parted>=51"));
             r = Rev(s, "somewhere", "key", C("nacre", 30, "echo", 50), false, 306f, 335.0f, null, L("max:nacre"));
             r = Rev(s, "written", "stair", C("nacre", 20, "hush", 25, "moonsilver", 50), false, 388f, 112.5f, null, L("parted>=54"));
-            r = Rev(s, "holds", "knot", C("moonsilver", 50, "salt", 40), false, 306f, 250.0f, null, L("parted>=43"));
+            r = Rev(s, "holds", "knot", C("moonsilver", 50, "salt", 40), false, 306f, 250.0f, null, L("rev:salt"));
             r = Rev(s, "stand", "lantern", C("salt", 30, "hush", 20), false, 388f, 27.5f, null, L("owned:rampart>=1"));
             r = Rev(s, "owed", "scales", C("ward", 20, "lucidity", 40), false, 306f, 165.0f, Fx_(E(Fx.Rate, "dread", -0.3)), L("owned:rampart>=3"));
-            r = Rev(s, "grew", "spiral", C("nacre", 40, "vellum", 20), false, 388f, 302.5f, Fx_(E(Fx.VisionCost, null, 0.1)), L("vdone:tide>=3"));
+            r = Rev(s, "grew", "spiral", C("nacre", 40, "vellum", 20), false, 388f, 302.5f, Fx_(E(Fx.VisionCost, null, 0.1)), L("vdone:tide>=3", "rev:written"));
             r = Rev(s, "mine", "mirror", C("vellum", 30, "nacre", 40, "lucidity", 60), true, 306f, 80.0f, null, L("parted>=57", "vision:well"));
             r = Rev(s, "lost", "glass", C("ward", 15, "echo", 40), false, 388f, 217.5f, Fx_(E(Fx.Power, "Levied", 0.2)), L("lost:any"));
             r = Rev(s, "manyvoices", "branch", C("chorus", 20, "salt", 50), false, 306f, 355.0f, Fx_(E(Fx.Gain, "rally", 0.5)), L("parted>=63"));
