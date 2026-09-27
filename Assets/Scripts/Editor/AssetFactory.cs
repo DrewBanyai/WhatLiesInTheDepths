@@ -95,10 +95,40 @@ namespace WhatLiesInTheDepths.EditorTools
         /// is set in a monospaced face, where they are inherent.</summary>
         static TMP_FontAsset Font(string ttfName)
         {
-            var asset = FontAssetBuilder.Build(FontsDir, ttfName);
+            var asset = FontAssetBuilder.Build(FontsDir, ttfName, characters: Characters);
             // The project is in Linear color space; see FontAssetBuilder.Weight.
             FontAssetBuilder.Weight(asset, LinearDilate);
             return asset;
+        }
+
+        /// <summary>Every character the game can set, taught to every face up front so that
+        /// playing never adds a glyph to a font asset (and so never changes the file). It is
+        /// whatever Strings.json and the scripts' string literals contain, plus ASCII and the
+        /// typographic marks the spec sets. Adding text with a new character changes the set,
+        /// and the next Build All UI relearns the faces once. Worked out once per build.</summary>
+        static string Characters => _characters ??= GatherCharacters();
+        static string _characters;
+
+        /// <summary>Marks the spec uses or is likely to: quotes, dashes, the ellipsis, the
+        /// middle dot, the multiplication and minus signs, and a no-break space.</summary>
+        const string Typographic = "\u00A0\u2018\u2019\u201C\u201D\u2013\u2014\u2026\u2022\u00B7\u00D7\u2212";
+
+        static readonly System.Text.RegularExpressions.Regex Literal =
+            new System.Text.RegularExpressions.Regex(@"""(?:[^""\\\n]|\\.)*""|'(?:[^'\\\n]|\\.)'");
+
+        static string GatherCharacters()
+        {
+            var sources = new System.Collections.Generic.List<string> { FontAssetBuilder.Ascii, Typographic };
+            if (File.Exists(Strings.AssetPath)) sources.Add(File.ReadAllText(Strings.AssetPath));
+            foreach (var cs in Directory.GetFiles("Assets/Scripts", "*.cs", SearchOption.AllDirectories))
+                foreach (var line in File.ReadAllLines(cs))
+                {
+                    string trimmed = line.TrimStart();
+                    if (trimmed.StartsWith("//") || trimmed.StartsWith("///")) continue;
+                    foreach (System.Text.RegularExpressions.Match m in Literal.Matches(line))
+                        sources.Add(m.Value);
+                }
+            return FontAssetBuilder.CharacterSet(sources.ToArray());
         }
 
         /// <summary>Chosen by comparing Game view captures with the spec rendered in Chromium:
@@ -107,6 +137,7 @@ namespace WhatLiesInTheDepths.EditorTools
 
         public static TypeKit BuildTypeKit()
         {
+            _characters = null;   // Strings.json may have changed since the last build
             Directory.CreateDirectory(ResourcesDir);
             string path = $"{ResourcesDir}/TypeKit.asset";
 

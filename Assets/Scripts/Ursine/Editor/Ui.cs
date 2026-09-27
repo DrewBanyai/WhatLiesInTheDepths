@@ -140,12 +140,30 @@ namespace Ursine.EditorTools
 
         // ---- prefabs -----------------------------------------------------------
 
+        /// <summary>How many prefabs Save wrote and left alone since the counters were reset.</summary>
+        public static int Written, Unchanged;
+
+        public static void ResetCounts() => Written = Unchanged = 0;
+
+        /// <summary>Saves a built hierarchy as a prefab and destroys the hierarchy. If a prefab
+        /// already at that path says exactly the same thing, it is left as it is: rewriting it
+        /// would renumber every object in the file and change it for nothing. See PrefabDiff.</summary>
         public static GameObject Save(GameObject go, string dir, string name)
         {
             System.IO.Directory.CreateDirectory(dir);
             string path = $"{dir}/{name}.prefab";
+
+            var existing = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (existing != null && PrefabDiff.Same(go, existing))
+            {
+                Object.DestroyImmediate(go);
+                Unchanged++;
+                return existing;
+            }
+
             var asset = PrefabUtility.SaveAsPrefabAsset(go, path, out bool ok);
             if (!ok) Debug.LogError($"[Ursine] Failed to save {path}.");
+            else Written++;
             Object.DestroyImmediate(go);
             return asset;
         }

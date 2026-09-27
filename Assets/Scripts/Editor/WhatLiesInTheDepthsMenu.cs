@@ -1,6 +1,8 @@
 // What Lies In The Depths — the one-click build.
 // Tools > What Lies In The Depths > Build All UI. Everything downstream is generated, so this is
-// re-runnable: change a builder, run it again, and the prefabs are rewritten in place.
+// re-runnable: change a builder, run it again, and the prefabs are rewritten in place. A prefab
+// whose content has not changed is left untouched (Ursine's PrefabDiff), so a rebuild only
+// changes the files it actually changes.
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -20,6 +22,7 @@ namespace WhatLiesInTheDepths.EditorTools
                 // everything downstream reads from them.
                 // Read the strings file fresh: the build adds its labels to it as it goes.
                 Ursine.Text.Loc.Reload();
+                Ursine.EditorTools.Ui.ResetCounts();
 
                 EditorUtility.DisplayProgressBar("What Lies In The Depths", "Palettes and type", 0.05f);
                 AssetFactory.BuildPalettes();
@@ -56,6 +59,7 @@ namespace WhatLiesInTheDepths.EditorTools
                 AssetDatabase.Refresh();
                 int reverted = RefreshInstances();
                 Debug.Log("[What Lies In The Depths] Build complete. UI_Screen.prefab is the composite — drop it into a scene."
+                          + $" {Ursine.EditorTools.Ui.Written} prefab(s) rewritten, {Ursine.EditorTools.Ui.Unchanged} unchanged and left alone."
                           + (reverted > 0 ? $" {reverted} UI_Screen instance(s) in the open scene took the rebuild." : string.Empty));
             }
             finally
@@ -85,6 +89,8 @@ namespace WhatLiesInTheDepths.EditorTools
                 {
                     if (!PrefabUtility.IsAnyPrefabInstanceRoot(root)) continue;
                     if (PrefabUtility.GetCorrespondingObjectFromOriginalSource(root) != prefab) continue;
+                    // Nothing pinned, nothing to revert: leave the scene clean.
+                    if (!PrefabUtility.HasPrefabInstanceAnyOverrides(root, false)) continue;
 
                     PrefabUtility.RevertPrefabInstance(root, InteractionMode.AutomatedAction);
                     EditorSceneManager.MarkSceneDirty(scene);

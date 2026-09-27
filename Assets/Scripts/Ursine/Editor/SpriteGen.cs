@@ -200,12 +200,25 @@ namespace Ursine.EditorTools
             tex.Apply();
             Directory.CreateDirectory(dir);
             string path = $"{dir}/{name}.png";
-            File.WriteAllBytes(path, tex.EncodeToPNG());
+            var png = tex.EncodeToPNG();
             Object.DestroyImmediate(tex);
 
-            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
+            // The same drawing encodes to the same bytes: leave the file, and its import,
+            // alone unless the drawing changed.
+            bool same = File.Exists(path) && System.Linq.Enumerable.SequenceEqual(File.ReadAllBytes(path), png);
+            if (!same)
+            {
+                File.WriteAllBytes(path, png);
+                AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
+            }
             var imp = (TextureImporter)AssetImporter.GetAtPath(path);
             if (imp == null) return;
+            if (same && imp.textureType == TextureImporterType.Sprite
+                     && imp.spriteImportMode == SpriteImportMode.Single
+                     && imp.spriteBorder == border && !imp.mipmapEnabled
+                     && imp.filterMode == FilterMode.Bilinear && imp.alphaIsTransparency
+                     && imp.wrapMode == TextureWrapMode.Clamp)
+                return;
 
             imp.textureType = TextureImporterType.Sprite;
             imp.spriteImportMode = SpriteImportMode.Single;

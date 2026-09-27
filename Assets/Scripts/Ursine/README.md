@@ -31,9 +31,10 @@ error rather than a thing someone notices later.
 | | |
 |---|---|
 | `SpriteImport.cs` | Imports a folder of PNGs as sprites and indexes them by name. |
-| `SpriteGen.cs` | Generated placeholder sprites: 9-sliced rounded rects and outlines, soft shadows, radial blooms, scrims, rings, discs, flat plates. |
-| `Ui.cs` | Prefab construction plumbing — nodes, stretching, stacks, rows, grids, scroll views, saving and nesting prefabs. Geometry only, no opinions. |
-| `FontAssetBuilder.cs` | TextMeshPro font assets from TTFs in the project; an asset whose TTF has changed is cleared so it relearns its glyphs. |
+| `SpriteGen.cs` | Generated placeholder sprites: 9-sliced rounded rects and outlines, soft shadows, radial blooms, scrims, rings, discs, flat plates. A PNG whose pixels have not changed is not rewritten. |
+| `Ui.cs` | Prefab construction plumbing — nodes, stretching, stacks, rows, grids, scroll views, saving and nesting prefabs. Geometry only, no opinions. Saving skips a prefab whose content has not changed. |
+| `PrefabDiff.cs` | Compares a freshly built hierarchy with its saved prefab by content — objects, components and serialized values, with internal references compared by hierarchy position rather than file id — so an unchanged prefab is not rewritten with new file ids. |
+| `FontAssetBuilder.cs` | TextMeshPro font assets from TTFs in the project. Given a character set, it teaches the asset every glyph up front, so play mode adds nothing and the file stays put; it relearns only when the TTF, the set or the atlas settings change (a hash kept in the asset's .meta). |
 
 ## The hooks a game installs
 
