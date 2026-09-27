@@ -71,9 +71,24 @@ namespace WhatLiesInTheDepths.Data
                 if (r.realized && !kept.Contains(r.k)) kept.Add(r.k);
         }
         public readonly List<VisionDef> visions = new List<VisionDef>();
-        /// <summary>Golden Visions already finished. Their sigils are in the iris and never
-        /// leave it; resting on one reads back what it changed.</summary>
-        public readonly List<VisionDef> visionsAbsorbed = new List<VisionDef>();
+        /// <summary>Every Vision finished at least once, in the order each first finished (a
+        /// repeatable counts from its first completion). The iris lights one pane for each, in
+        /// this order, clockwise from the top; resting on a lit pane reads back what it changed.</summary>
+        public readonly List<string> visionsFinished = new List<string>();
+
+        /// <summary>How many Visions one dream holds, finished or not. The iris has this many panes.</summary>
+        public int VisionTotal => visions.Count + visionsDone.Count(v => !visions.Contains(v));
+
+        /// <summary>Brings <see cref="visionsFinished"/> into line with what has been finished: a
+        /// Vision it does not list joins the end (one-offs in the order they finished, then
+        /// repeatables in content order; a save from before the iris window), and one no longer
+        /// finished leaves it.</summary>
+        public void SettleFinished()
+        {
+            visionsFinished.RemoveAll(k => { var v = FindVision(k); return v == null || v.done <= 0; });
+            foreach (var v in visionsDone.Concat(visions))
+                if (v.done > 0 && !visionsFinished.Contains(v.k)) visionsFinished.Add(v.k);
+        }
         public readonly List<RoadLocation> road = new List<RoadLocation>();
         public readonly List<UnitDef> units = new List<UnitDef>();
         /// <summary>One-off Visions already finished, in the order they finished. They have left
@@ -574,12 +589,14 @@ namespace WhatLiesInTheDepths.Data
             return true;
         }
 
-        /// <summary>A Vision reaching its end. A repeatable one counts the completion and begins
-        /// again, dearer; a one-off leaves the field, and a golden one is kept by the eye.</summary>
+        /// <summary>A Vision reaching its end. The first time, it lights the next pane of the
+        /// iris. A repeatable one counts the completion and begins again, dearer; a one-off
+        /// leaves the field.</summary>
         public void CompleteVision(VisionDef v)
         {
             if (v == null) return;
             v.done += 1;
+            if (!visionsFinished.Contains(v.k)) visionsFinished.Add(v.k);   // the next pane lights
             if (unlocks.Add("vision:" + v.k)) unlocks.AddRange(v.grants);
             if (v.rep) { v.p = 0f; }
             else
@@ -588,12 +605,11 @@ namespace WhatLiesInTheDepths.Data
                 v.p = 100f;
                 visions.Remove(v);
                 if (!visionsDone.Contains(v)) visionsDone.Add(v);
-                if (v.great && !visionsAbsorbed.Contains(v)) visionsAbsorbed.Add(v);
             }
             Dirty();
         }
 
-        VisionDef FindVision(string k) => visions.FirstOrDefault(x => x.k == k) ?? visionsDone.FirstOrDefault(x => x.k == k);
+        public VisionDef FindVision(string k) => visions.FirstOrDefault(x => x.k == k) ?? visionsDone.FirstOrDefault(x => x.k == k);
 
         // ---- the army -------------------------------------------------------------
 

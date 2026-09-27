@@ -23,8 +23,8 @@ wherever it counts most. Along the way you:
 - **Focus** your effort on tasks that turn one resource into another.
 - **Build constructs** in a Mind Palace that hold and produce more of it.
 - **Come to realizations** that change how the dream works.
-- **Channel visions** that reshape the descent. The golden ones are taken into the eye
-  and never leave.
+- **Channel visions** that reshape the descent. Each one finished lights a pane of glass
+  in the eye's iris, and the golden ones burn gold there.
 - **March an army** down a road of nightmare-held places, taking them one at a time,
   because what waits below will not be talked to.
 

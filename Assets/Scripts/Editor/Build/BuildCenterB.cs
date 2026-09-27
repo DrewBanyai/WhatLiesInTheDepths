@@ -514,6 +514,16 @@ namespace WhatLiesInTheDepths.EditorTools
             center.pivot = new Vector2(0.5f, 0.5f);
             center.anchoredPosition = Vector2.zero;
 
+            // The eye's light, behind it: white, grown and brightened by the iris as its panes
+            // light. It is light, not a surface, as the lantern's is.
+            var eyeGlowRt = Node("Glow", center, 0, 0, 460f, 300f);
+            eyeGlowRt.anchorMin = eyeGlowRt.anchorMax = new Vector2(0.5f, 0.5f);
+            eyeGlowRt.pivot = new Vector2(0.5f, 0.5f);
+            eyeGlowRt.anchoredPosition = Vector2.zero;
+            var eyeGlow = Artwork(eyeGlowRt, SpriteFactory.Load("Bloom_Field"));
+            eyeGlow.color = new Color(1f, 1f, 1f, 0f);
+            eyeGlow.raycastTarget = false;
+
             var eyeRt = Node("Eye", center, 0, 0, 480f, 250f);
             eyeRt.anchorMin = eyeRt.anchorMax = new Vector2(0.5f, 0.5f);
             eyeRt.pivot = new Vector2(0.5f, 0.5f);
@@ -533,10 +543,14 @@ namespace WhatLiesInTheDepths.EditorTools
             fieldCaption.raycastTarget = false;
             fieldCaption.transform.SetSiblingIndex(center.GetSiblingIndex());
 
-            var irisRing = Node("IrisRing", eyeRt, 0, 0, 0, 0);
-            irisRing.anchorMin = irisRing.anchorMax = new Vector2(0.5f, 0.5f);
-            irisRing.pivot = new Vector2(0.5f, 0.5f);
-            irisRing.anchoredPosition = Vector2.zero;
+            // The iris window: its panes are drawn at runtime, one per Vision the dream holds,
+            // over the art's iris, which is 70 across the ring and 34 at the pupil's edge.
+            var irisRt = Node("Iris", eyeRt, 0, 0, IrisWindowView.Outer * 2f, IrisWindowView.Outer * 2f);
+            irisRt.anchorMin = irisRt.anchorMax = new Vector2(0.5f, 0.5f);
+            irisRt.pivot = new Vector2(0.5f, 0.5f);
+            irisRt.anchoredPosition = Vector2.zero;
+            var irisWindow = irisRt.gameObject.AddComponent<IrisWindowView>();
+            irisWindow.glow = eyeGlow;
 
             var markLayer = Node("Marks", center, 0, 0, 0, 0);
             markLayer.anchorMin = markLayer.anchorMax = new Vector2(0.5f, 0.5f);
@@ -545,6 +559,8 @@ namespace WhatLiesInTheDepths.EditorTools
 
             // Readout: 620 x 336, dead center. A left column of 344 that says what the Vision
             // is and how far along it is, a 1px rule, and a tinted right column that pours.
+            // 336 is its least height: a Vision with a long thought grows it, from the middle
+            // out (the view measures the left column), and the columns and rule stretch with it.
             var readout = Node("Readout", center, 0, 0, 620f, 336f);
             readout.anchorMin = readout.anchorMax = new Vector2(0.5f, 0.5f);
             readout.pivot = new Vector2(0.5f, 0.5f);
@@ -560,6 +576,16 @@ namespace WhatLiesInTheDepths.EditorTools
             var border = Img(Stretch(Node("Border", readout)), SpriteFactory.Outline(14), Tok.Haze);
             border.raycastTarget = false;
 
+            // A column pinned to the readout's top and bottom, so it takes whatever height the
+            // readout has.
+            void FullHeight(RectTransform rt, float x, float w)
+            {
+                rt.anchorMin = new Vector2(0f, 0f);
+                rt.anchorMax = new Vector2(0f, 1f);
+                rt.pivot = new Vector2(0f, 1f);
+                rt.offsetMin = new Vector2(x, 0f);
+                rt.offsetMax = new Vector2(x + w, 0f);
+            }
             VerticalLayoutGroup Column(RectTransform rt, float gap)
             {
                 var v = rt.gameObject.AddComponent<VerticalLayoutGroup>();
@@ -598,6 +624,7 @@ namespace WhatLiesInTheDepths.EditorTools
 
             // --- left: 344, padding 19 / 20 / 17, gap 10
             var left = Node("Left", ground.transform, 0, 0, 344f, 336f);
+            FullHeight(left, 0f, 344f);
             Column(left, 10f);
 
             var head = Node("Head", left, 0, 0, 304f, 60f);
@@ -641,8 +668,9 @@ namespace WhatLiesInTheDepths.EditorTools
             Caps("Caption", effects, 0, 0, 280f, 10f, "ON COMPLETION", 8f, Tok.Ink3);
 
             // --- the rule, then right: 275, its own faint ground, padding 19 / 20 / 17, gap 9
-            Img(Node("Rule", ground.transform, 344f, 0, 1f, 336f), null, Tok.Haze2);
+            FullHeight(Img(Node("Rule", ground.transform, 344f, 0, 1f, 336f), null, Tok.Haze2).rectTransform, 344f, 1f);
             var right = Node("Right", ground.transform, 345f, 0, 275f, 336f);
+            FullHeight(right, 345f, 275f);
             var rightGround = Img(right, null, Tok.Veil);
             rightGround.raycastTarget = false;
             Column(right, 9f);
@@ -690,8 +718,9 @@ namespace WhatLiesInTheDepths.EditorTools
             chHint.fontStyle = FontStyles.Italic;
             chHint.margin = new Vector4(43f, -4f, 0f, 0f);
 
-            // A finished golden Vision, read back out of the iris: 420 wide, centered, 512 down
-            // the field. A 92 gold mark panel and a body that flows; veil on a gold-b edge.
+            // A finished Vision, read back out of its pane of the iris: 420 wide, centered, 512
+            // down the field. A 92 mark panel and a body that flows, veil on a colored edge; the
+            // view colors it gold for a golden Vision and iris for the rest.
             // The shadow is a sibling, because the plaque clips what it holds to its corners.
             var pShadow = Img(Node("PlaqueShadow", field, (W - 420f) * 0.5f - 20f, 512f + 2f, 460f, 200f),
                               SpriteFactory.Load("Shadow_Readout"), Tok.GoldD, 0.4f);
@@ -740,6 +769,10 @@ namespace WhatLiesInTheDepths.EditorTools
             view.plaque = plaque.gameObject;
             view.plaqueHover = plaqueHover;
             view.plaqueShadow = pShadow.rectTransform;
+            view.plaqueKind = pKind;
+            view.plaqueMarkGround = pMarkGround;
+            view.plaqueMarkRule = pMarkRule;
+            view.plaqueBorder = pBorder;
             view.plaqueGlyph = pGlyph;
             view.plaqueName = pName;
             view.plaqueBlurb = pBlurb;
@@ -748,9 +781,10 @@ namespace WhatLiesInTheDepths.EditorTools
             view.eye = eyeRt;
             view.markLayer = markLayer;
             view.markPrefab = Load("UI_VisionMark").GetComponent<VisionMarkView>();
-            view.irisRing = irisRing;
+            view.iris = irisWindow;
             view.eyeHover = eyeBtn;
             view.readout = readout.gameObject;
+            view.readoutLeft = left;
             view.visionName = name;
             view.blurb = blurb;
             view.effects = effects;

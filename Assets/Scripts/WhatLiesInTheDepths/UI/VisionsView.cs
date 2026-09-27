@@ -2,6 +2,8 @@
 // In this menu the question is never what is this but how far along is it, so every mark
 // carries its own progress around its rim. Gold means the tier here, not the finish:
 // completion is marked by the ring closing, which needs no color.
+// At the center, the eye's iris is a window of glass, one pane per Vision, lit clockwise from
+// the top as each is first finished (IrisWindowView); resting on a lit pane reads it back.
 using System.Collections.Generic;
 using System.Linq;
 using WhatLiesInTheDepths.Core;
@@ -21,11 +23,15 @@ namespace WhatLiesInTheDepths.UI
         public RectTransform eye;
         public RectTransform markLayer;
         public VisionMarkView markPrefab;
-        public RectTransform irisRing;
+        [Tooltip("The iris window: one pane per Vision, lit as each is first finished.")]
+        public IrisWindowView iris;
         public UiButton eyeHover;
 
         [Header("Readout — 620 x 336, dead center, two columns with a rule between")]
         public GameObject readout;
+        [Tooltip("The left column. The readout grows to its height when a Vision says more than 336 holds.")]
+        public RectTransform readoutLeft;
+        const float ReadoutHeight = 336f;
         public TMP_Text visionName;
         public TMP_Text blurb;
         public RectTransform effects;
@@ -53,10 +59,14 @@ namespace WhatLiesInTheDepths.UI
         public TMP_Text fieldCaption;
         public CanvasGroup eyeGroup;
 
-        [Header("Plaque — a finished golden Vision, read back out of the iris")]
+        [Header("Plaque — a finished Vision, read back out of its pane of the iris")]
         public GameObject plaque;
         public UiButton plaqueHover;
         public RectTransform plaqueShadow;
+        public TMP_Text plaqueKind;
+        public Image plaqueMarkGround;
+        public Image plaqueMarkRule;
+        public Image plaqueBorder;
         public Image plaqueGlyph;
         public TMP_Text plaqueName;
         public TMP_Text plaqueBlurb;
@@ -71,15 +81,9 @@ namespace WhatLiesInTheDepths.UI
         static readonly Color RightGroundGreat = new Color32(0xFC, 0xFA, 0xF4, 0xFF);
         static readonly Color DisabledInk      = new Color32(0xB6, 0xAE, 0xCB, 0xFF);
 
-        // The iris: golden Visions already finished travel clockwise on a ring of 52 inside
-        // it, upright, once every 175 seconds, and now and then one warms to gold.
-        sealed class Kept { public VisionDef def; public RectTransform rt; public Image glyph; public float next; }
-        readonly List<Kept> _kept = new List<Kept>();
-        static readonly Color KeptInk   = new Color32(0x8D, 0x74, 0xB4, 0xFF);
-        static readonly Color KeptWarm  = new Color32(0xD6, 0xAC, 0x6E, 0xFF);
-        static readonly Color KeptRead  = new Color32(0x8A, 0x6A, 0x2F, 0xFF);
-        const float KeptAlpha = 0.66f, KeptWarmAlpha = 0.96f, KeptDur = 2.0f, IrisRadius = 52f;
-        float _clock;
+        // The iris window: which of its lit panes were golden Visions, in the order they lit.
+        readonly List<bool> _greats = new List<bool>();
+        int _lit = -1;
         int _plaqueIndex = -1;
         bool _plaqueTouched;
         float _plaqueCloseAt = -1f;
@@ -91,13 +95,14 @@ namespace WhatLiesInTheDepths.UI
 
         readonly List<VisionMarkView> _marks = new List<VisionMarkView>();
         VisionMarkView _open;
-        float _orbit, _irisOrbit;
+        float _orbit;
         bool _eyeRested;
 
         void Start()
         {
             Build();
-            BuildIris();
+            PaintIris();
+            if (iris != null) iris.PaneHovered += OnPaneHover;
             if (fieldHover != null) fieldHover.Hovered += h => { if (!h) { Close(); ClosePlaque(); } };
             if (plaqueHover != null)
                 plaqueHover.Hovered += h =>
@@ -113,7 +118,7 @@ namespace WhatLiesInTheDepths.UI
             Close();
 
             if (eyeHover != null)
-                eyeHover.Hovered += h => _eyeRested = h;   // resting anywhere on the eye stops the ring dead
+                eyeHover.Hovered += h => _eyeRested = h;   // resting anywhere on the eye holds the marks still
 
             if (pour != null)
                 pour.Clicked += () =>
@@ -155,7 +160,7 @@ namespace WhatLiesInTheDepths.UI
             foreach (var m in _marks) if (m != null) Destroy(m.gameObject);
             _marks.Clear();
             Build();
-            BuildIris();
+            PaintIris();
             PaintCaption();
         }
 
@@ -194,20 +199,6 @@ namespace WhatLiesInTheDepths.UI
                 ((RectTransform)m.transform).anchoredPosition = pos;
             }
 
-            // The iris ring stops dead while the pointer is anywhere on the eye or on an
-            // open plaque.
-            _clock += Time.unscaledDeltaTime;
-            if (!_eyeRested && _plaqueIndex < 0)
-                _irisOrbit -= Time.unscaledDeltaTime * 0.036f;      // clockwise, y up
-            for (int i = 0; i < _kept.Count; i++)
-            {
-                var k = _kept[i];
-                float a = _irisOrbit + i * Mathf.PI * 2f / _kept.Count;
-                k.rt.anchoredPosition = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * IrisRadius;
-                k.rt.rotation = Quaternion.identity;               // staying upright
-                Remember(k, i);
-            }
-
             if (_plaqueCloseAt >= 0f && Time.unscaledTime >= _plaqueCloseAt) ClosePlaque();
             if (plaque != null && plaque.activeSelf && plaqueShadow != null)
             {
@@ -229,12 +220,12 @@ namespace WhatLiesInTheDepths.UI
             if (s != null)
             {
                 // A mark whose Vision has left the field (finished, channelled while the
-                // menu was elsewhere) goes; a Vision newly shown gets its mark; a golden one
-                // just kept joins the iris.
+                // menu was elsewhere) goes; a Vision newly shown gets its mark; one finished
+                // for the first time lights the next pane of the iris.
                 foreach (var m in _marks.ToArray())
                     if (m.Def == null || !s.visions.Contains(m.Def)) { Retire(m.Def); return; }
                 if (Signature() != _built) { Rebuild(); return; }
-                if (_kept.Count != s.visionsAbsorbed.Count) BuildIris();
+                PaintIris();
             }
             PaintCaption();
             if (_open != null) Paint();              // the purse moved: affordability did too
@@ -245,65 +236,35 @@ namespace WhatLiesInTheDepths.UI
             if (_closeAt >= 0f && Time.unscaledTime >= _closeAt) Close();
         }
 
-        // Now and then one remembers: it warms to gold and cools back over two seconds.
-        void Remember(Kept k, int i)
-        {
-            if (k.glyph == null) return;
-            if (_plaqueIndex >= 0)
-            {
-                bool read = i == _plaqueIndex;
-                k.glyph.color = read ? KeptRead : new Color(KeptInk.r, KeptInk.g, KeptInk.b, 0.28f);
-                return;
-            }
-            float d = _clock - k.next;
-            if (d > 0f && d < KeptDur)
-            {
-                float u = Mathf.Sin(d / KeptDur * Mathf.PI);
-                var c = Color.Lerp(KeptInk, KeptWarm, u);
-                c.a = Mathf.Lerp(KeptAlpha, KeptWarmAlpha, u);
-                k.glyph.color = c;
-            }
-            else
-            {
-                if (d >= KeptDur) k.next = _clock + 8f + Random.value * 14f;
-                k.glyph.color = new Color(KeptInk.r, KeptInk.g, KeptInk.b, KeptAlpha);
-            }
-        }
-
-        void BuildIris()
+        /// <summary>Lights the iris to match the dream: one pane per Vision, the first
+        /// <c>visionsFinished.Count</c> of them lit in the order they finished, gold for golden.
+        /// Cheap when nothing has changed.</summary>
+        void PaintIris()
         {
             var s = GameState.I;
-            if (s == null || irisRing == null) return;
-            foreach (Transform c in irisRing) Destroy(c.gameObject);
-            _kept.Clear();
-            for (int i = 0; i < s.visionsAbsorbed.Count; i++)
+            if (s == null || iris == null) return;
+            int total = s.VisionTotal;
+            if (iris.Count == total && _lit == s.visionsFinished.Count) return;
+            iris.Build(total);
+            _greats.Clear();
+            foreach (var k in s.visionsFinished)
             {
-                var d = s.visionsAbsorbed[i];
-                // A 34 hit circle holding the Vision's glyph at .82 of its 28 grid.
-                var go = new GameObject("Kept " + d.k, typeof(RectTransform), typeof(Image));
-                var rt = (RectTransform)go.transform;
-                rt.SetParent(irisRing, false);
-                rt.sizeDelta = new Vector2(34f, 34f);
-                var hit = go.GetComponent<Image>();
-                hit.color = new Color(1f, 1f, 1f, 0f);
-                var btn = go.AddComponent<UiButton>();
-                int captured = i;
-                btn.Hovered += h => { if (h) ShowPlaque(captured); };
-
-                var g = new GameObject("Glyph", typeof(RectTransform), typeof(Image));
-                var grt = (RectTransform)g.transform;
-                grt.SetParent(rt, false);
-                grt.sizeDelta = new Vector2(23f, 23f);
-                var img = g.GetComponent<Image>();
-                img.raycastTarget = false;
-                Art.Apply(img, Art.Vision(d.k));
-                img.color = new Color(KeptInk.r, KeptInk.g, KeptInk.b, KeptAlpha);
-
-                _kept.Add(new Kept { def = d, rt = rt, glyph = img, next = _clock + 3f + i * 4.5f + Random.value * 6f });
+                var d = s.FindVision(k);
+                _greats.Add(d != null && d.great);
             }
+            _lit = s.visionsFinished.Count;
+            iris.Show(_lit, _greats);
         }
 
-        // A finished one-off leaves the field. A golden one is taken into the eye.
+        // Resting on a lit pane opens its plaque. Stepping off the pane does not close it: the
+        // plaque closes on leaving the field, or on leaving the plaque once inside it, so the
+        // walk down from the iris is free, and the pointer can step from pane to pane.
+        void OnPaneHover(int i, bool entering)
+        {
+            if (entering) ShowPlaque(i);
+        }
+
+        // A finished one-off leaves the field; its pane of the iris has already lit.
         void Retire(VisionDef d)
         {
             var s = GameState.I;
@@ -316,9 +277,9 @@ namespace WhatLiesInTheDepths.UI
                 _marks.Remove(m);
                 Destroy(m.gameObject);
             }
-            // The dream has already taken it off the field and, if golden, into the eye.
+            // The dream has already taken it off the field and lit its pane.
             _built = Signature();
-            if (_kept.Count != s.visionsAbsorbed.Count) BuildIris();
+            PaintIris();
             Close();
             PaintCaption();
             s.Dirty();
@@ -327,15 +288,28 @@ namespace WhatLiesInTheDepths.UI
         void ShowPlaque(int i)
         {
             var s = GameState.I;
-            if (s == null || i < 0 || i >= s.visionsAbsorbed.Count || plaque == null) return;
+            if (s == null || i < 0 || i >= s.visionsFinished.Count || plaque == null) return;
             if (_plaqueIndex == i && plaque.activeSelf) return;
+            var d = s.FindVision(s.visionsFinished[i]);
+            if (d == null) return;
             Close();                                  // a readout and a plaque are never both open
             _plaqueIndex = i;
             _plaqueTouched = false;
             _plaqueCloseAt = -1f;
-            var d = s.visionsAbsorbed[i];
 
+            // The plaque takes the Vision's tier: gold for a golden one, iris for the rest. Each
+            // part is rebound to its token rather than painted, so a palette swap keeps the tier.
+            bool great = d.great;
+            if (plaqueKind != null)
+                plaqueKind.text = Strings.T(great ? "ui.visions.record.golden" : "ui.visions.record.plain").ToUpperInvariant();
+            Tint(plaqueKind, great ? Tok.GoldD : Tok.IrisD);
+            Tint(plaqueMarkGround, great ? Tok.GoldL : Tok.IrisL);
+            Tint(plaqueMarkRule, great ? Tok.GoldB : Tok.IrisB);
+            Tint(plaqueBorder, great ? Tok.GoldB : Tok.IrisB);
+            if (plaqueShadow != null)
+                Tint(plaqueShadow.GetComponent<Image>(), great ? Tok.GoldD : Tok.Ink, great ? 0.4f : 0.45f);
             if (plaqueGlyph != null) Art.Apply(plaqueGlyph, Art.Vision(d.k));
+            Tint(plaqueGlyph, great ? Tok.GoldD : Tok.IrisD);
             if (plaqueName != null) plaqueName.text = d.n;
             if (plaqueBlurb != null) plaqueBlurb.text = d.bl;
             if (plaqueEffects != null && effectRowPrefab != null)
@@ -358,6 +332,14 @@ namespace WhatLiesInTheDepths.UI
             if (fieldCaption != null) fieldCaption.alpha = 0f;
             foreach (var other in _marks)
                 if (other.group != null) other.group.alpha = 0.4f;
+        }
+
+        static void Tint(Graphic g, Tok t, float a = 1f)
+        {
+            if (g == null) return;
+            var bound = g.GetComponent<Ursine.Theming.ThemedGraphic>();
+            if (bound != null) bound.Bind((int)t, a);
+            else g.color = Theme.Get(t, a);
         }
 
         void ClosePlaque()
@@ -543,16 +525,31 @@ namespace WhatLiesInTheDepths.UI
                 channelHint.color = Theme.Get(warn ? Tok.RoseD : Tok.Ink3);
             }
 
-            if (readout != null)
-                LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)readout.transform);
+            if (readout != null) FitReadout();
+        }
+
+        /// <summary>336 tall, or taller when the left column needs it: a long thought pushes the
+        /// progress and the completion panel down rather than running underneath them. The
+        /// readout is centered, so it grows from the middle out.</summary>
+        void FitReadout()
+        {
+            var rt = (RectTransform)readout.transform;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rt);
+            if (readoutLeft == null) return;
+            float h = Mathf.Max(ReadoutHeight, Mathf.Ceil(LayoutUtility.GetPreferredHeight(readoutLeft)));
+            if (Mathf.Abs(rt.sizeDelta.y - h) < 0.5f) return;
+            rt.sizeDelta = new Vector2(rt.sizeDelta.x, h);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rt);
         }
 
         void BuildRows(VisionDef d)
         {
             if (effects != null && effectRowPrefab != null)
             {
+                // Switched off before they go: Destroy waits for the frame's end, and the readout
+                // is measured before then.
                 foreach (Transform c in effects)
-                    if (c.name != "Caption") Destroy(c.gameObject);
+                    if (c.name != "Caption") { c.gameObject.SetActive(false); Destroy(c.gameObject); }
                 string teal = "#" + ColorUtility.ToHtmlStringRGB(Theme.Get(Tok.TealD));
                 foreach (var f in d.fx)
                 {
@@ -566,7 +563,7 @@ namespace WhatLiesInTheDepths.UI
 
             _offerRows.Clear();
             if (offers == null || offerRowPrefab == null) return;
-            foreach (Transform c in offers) Destroy(c.gameObject);
+            foreach (Transform c in offers) { c.gameObject.SetActive(false); Destroy(c.gameObject); }
             for (int i = 0; i < d.of.Count; i++)
             {
                 int captured = i;

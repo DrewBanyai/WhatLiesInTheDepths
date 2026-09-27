@@ -192,7 +192,7 @@ namespace WhatLiesInTheDepths.EditorTools
         void Visions()
         {
             var d = Dream;
-            if (!Section("visions", $"Visions ({d.visions.Count} on the eye, {d.visionsAbsorbed.Count} kept)")) return;
+            if (!Section("visions", $"Visions ({d.visions.Count} on the eye, {d.visionsFinished.Count} of {d.VisionTotal} lit in the iris)")) return;
 
             foreach (var v in d.visions.ToList())
             {
@@ -205,30 +205,40 @@ namespace WhatLiesInTheDepths.EditorTools
                     if (!Mathf.Approximately(p, v.p)) { v.p = p; Changed(); }
                     bool channel = GUILayout.Toggle(v.a, "pour", "Button", GUILayout.Width(46f));
                     if (channel != v.a) { v.a = channel; Changed(); }
-                    if (GUILayout.Button("Finish", GUILayout.Width(56f))) { v.p = 100f; Changed(); }
+                    // Free, as everywhere here: it completes as a pour would, lighting its pane.
+                    if (GUILayout.Button("Finish", GUILayout.Width(56f))) { d.CompleteVision(v); Changed(); }
                     if (GUILayout.Button("Reset", GUILayout.Width(52f)))
                     {
-                        v.p = 0f; v.done = 0; v.a = false; Changed();
+                        v.p = 0f; v.done = 0; v.a = false;
+                        d.SettleFinished();
+                        Changed();
                     }
                     Shows("shown:vision:" + v.k);
                 }
             }
 
-            if (d.visionsAbsorbed.Count > 0)
+            if (d.visionsFinished.Count > 0)
             {
-                EditorGUILayout.LabelField("Kept in the iris:", EditorStyles.miniBoldLabel);
-                foreach (var v in d.visionsAbsorbed.ToList())
+                EditorGUILayout.LabelField("Lit in the iris, in order:", EditorStyles.miniBoldLabel);
+                foreach (var k in d.visionsFinished.ToList())
+                {
+                    var v = d.FindVision(k);
+                    if (v == null) continue;
                     using (new EditorGUILayout.HorizontalScope())
                     {
-                        EditorGUILayout.LabelField("  " + v.n, GUILayout.MinWidth(120f));
+                        EditorGUILayout.LabelField("  " + (v.great ? "◆ " : "") + v.n + (v.rep ? $"  ×{v.done}" : ""),
+                                                   GUILayout.MinWidth(120f));
                         if (GUILayout.Button("Put it back", GUILayout.Width(88f)))
                         {
-                            d.visionsAbsorbed.Remove(v);
+                            // Unfinished again: back on the field from nothing, its pane dark.
+                            d.visionsDone.Remove(v);
                             if (!d.visions.Contains(v)) d.visions.Add(v);
-                            v.p = 0f;
+                            v.p = 0f; v.done = 0; v.a = false;
+                            d.SettleFinished();
                             Changed();
                         }
                     }
+                }
             }
         }
 

@@ -274,9 +274,13 @@ namespace WhatLiesInTheDepths.Data
               Fx("all Focus rates <b>+3%</b>"),
               O(F("reverie", 900, 1), F("whispers", 70, 1)), 1, 37f, true, 4, false, false, 300f);
 
-            // Golden Visions the spec's demo mind has already finished.
+            // Golden Visions the spec's demo mind has already finished: they light the first
+            // panes of the iris.
             void Kept(string k, string n, string bl, List<string> fx)
-                => s.visionsAbsorbed.Add(new VisionDef { k = k, n = n, bl = bl, fx = fx, great = true, p = 100f });
+            {
+                s.visionsDone.Add(new VisionDef { k = k, n = n, bl = bl, fx = fx, great = true, p = 100f, done = 1 });
+                s.visionsFinished.Add(k);
+            }
             Kept("bell", "The Bell That Answers",
                  "You rang it once, badly, and something under the floor rang back.",
                  Fx("Whispers gain <b>+18%</b>", "Chorus ceiling <b>+240</b>", "the Journal gained an entry"));

@@ -58,7 +58,7 @@ namespace WhatLiesInTheDepths.Data
                 visions[v.k] = Obj(("p", v.p), ("a", v.a), ("sel", v.sel), ("done", v.done), ("seen", v.seen));
             o["visions"] = visions;
             o["visionsDone"] = d.visionsDone.Select(v => (object)v.k).ToList();
-            o["visionsAbsorbed"] = d.visionsAbsorbed.Select(v => (object)v.k).ToList();
+            o["visionsFinished"] = d.visionsFinished.Cast<object>().ToList();
 
             var road = new JsonObject();
             foreach (var l in d.road)
@@ -180,9 +180,11 @@ namespace WhatLiesInTheDepths.Data
                 d.visions.Remove(v);
                 if (!d.visionsDone.Contains(v)) d.visionsDone.Add(v);
             }
-            var vabs = Ids(o["visionsAbsorbed"]);
-            d.visionsAbsorbed.Clear();
-            d.visionsAbsorbed.AddRange(all.Where(v => vabs.Contains(v.k)));
+            // The order the iris lit in. A save from before the iris window has none; every
+            // Vision it has finished then lights, the finished one-offs first.
+            d.visionsFinished.Clear();
+            d.visionsFinished.AddRange(IdList(o["visionsFinished"]));
+            d.SettleFinished();
 
             // The road: a place taken hands its unit to the roster, as taking it did.
             if (o["road"] is JsonObject road)

@@ -193,6 +193,8 @@
     "ui.visions.pour": "Pour",
     "ui.visions.complete": "Complete",
     "ui.visions.again": "Begin again",
+    "ui.visions.record.golden": "A golden Vision · complete",
+    "ui.visions.record.plain": "A Vision · complete",
     "ui.visions.hint.full": "nothing left to pour into",
     "ui.visions.hint.idle": "once a second, while you can pay",
     "ui.visions.hint.waiting": "waiting on {0}",

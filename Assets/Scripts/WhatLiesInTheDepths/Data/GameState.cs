@@ -33,7 +33,9 @@ namespace WhatLiesInTheDepths.Data
         public List<string> kept => Dream.kept;
         public int Realizable => Dream.Realizable;
         public List<VisionDef> visions => Dream.visions;
-        public List<VisionDef> visionsAbsorbed => Dream.visionsAbsorbed;
+        public List<string> visionsFinished => Dream.visionsFinished;
+        public int VisionTotal => Dream.VisionTotal;
+        public VisionDef FindVision(string k) => Dream.FindVision(k);
         public List<RoadLocation> road => Dream.road;
         public List<UnitDef> units => Dream.units;
         public Dictionary<string, UnitDef> unitsUnlockedBy => Dream.unitsUnlockedBy;
