@@ -26,6 +26,8 @@ namespace WhatLiesInTheDepths.UI
         /// <summary>Where a lit pane's readout hangs: its top, this far below the field's middle,
         /// in the band under the lantern.</summary>
         const float KeptTop = 92f;
+        /// <summary>How tall that band is before a lit pane's readout has to rise into the lantern.</summary>
+        const float KeptRoom = 268f;
 
         [Header("Field")]
         public RectTransform field;
@@ -250,12 +252,11 @@ namespace WhatLiesInTheDepths.UI
             var d = v.Def;
             d.seen = true;
             Purchasable(true);
-            Place(false);
             if (readout != null) readout.SetActive(true);
             FillBody(d);
             if (costs != null && costPillPrefab != null)
             {
-                foreach (Transform c in costs) Destroy(c.gameObject);
+                foreach (Transform c in costs) { c.gameObject.SetActive(false); Destroy(c.gameObject); }
                 _pills.Clear();
                 foreach (var a in d.cost)
                 {
@@ -265,6 +266,7 @@ namespace WhatLiesInTheDepths.UI
                 }
             }
             PaintCost(d);
+            Place(false);                            // sized to what it now says
 
             // The field yields: the lantern behind the readout to .25, unhovered sigils to .18,
             // and the caption goes.
@@ -298,7 +300,9 @@ namespace WhatLiesInTheDepths.UI
 
             if (effects != null && effectRowPrefab != null)
             {
-                foreach (Transform c in effects) Destroy(c.gameObject);
+                // Switched off before they go: Destroy waits for the frame's end, and the
+                // readout is measured before then.
+                foreach (Transform c in effects) { c.gameObject.SetActive(false); Destroy(c.gameObject); }
                 effects.gameObject.SetActive(d.fx != null && d.fx.Count > 0);
                 foreach (var f in d.fx)
                 {
@@ -440,23 +444,25 @@ namespace WhatLiesInTheDepths.UI
                 if (v.group != null) v.group.alpha = 0.18f * v.BaseAlpha;
         }
 
-        /// <summary>Where the readout sits. Over the lantern, 600 x 300, for a sigil in the field;
-        /// for a lit pane, in the band beneath the lantern, only as tall as what it says (there
-        /// is no foot: nothing to pay, nothing to press).</summary>
+        /// <summary>Where the readout sits, and how tall it is. Over the lantern for a sigil in the
+        /// field: 600 x 300, or taller when what it says needs more, growing from the middle out.
+        /// For a lit pane, in the band beneath the lantern, only as tall as what it says (there
+        /// is no foot: nothing to pay, nothing to press); one too tall for the band rises into
+        /// the lantern rather than past the field's foot. Call it after the body is filled.</summary>
         void Place(bool kept)
         {
             if (readout == null) return;
             var rt = (RectTransform)readout.transform;
-            float h = 300f;
-            if (kept && readoutContents != null)
+            float h = kept ? 150f : 300f;
+            if (readoutContents != null)
             {
                 var body = (RectTransform)readoutContents.transform;
                 LayoutRebuilder.ForceRebuildLayoutImmediate(body);
-                h = Mathf.Clamp(LayoutUtility.GetPreferredHeight(body), 150f, 268f);
+                h = Mathf.Max(h, Mathf.Ceil(LayoutUtility.GetPreferredHeight(body)));
             }
             rt.pivot = new Vector2(0.5f, kept ? 1f : 0.5f);
             rt.sizeDelta = new Vector2(600f, h);
-            rt.anchoredPosition = new Vector2(0f, kept ? -KeptTop : FootprintLift);
+            rt.anchoredPosition = new Vector2(0f, kept ? -KeptTop + Mathf.Max(0f, h - KeptRoom) : FootprintLift);
             if (readoutContents != null)
             {
                 var c = (RectTransform)readoutContents.transform;
