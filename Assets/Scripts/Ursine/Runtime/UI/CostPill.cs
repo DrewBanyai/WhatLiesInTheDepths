@@ -65,5 +65,27 @@ namespace Ursine.UI
         {
             if (glyph != null) glyph.gameObject.SetActive(show);
         }
+
+        /// <summary>A pill with its glyph can drop the resource's name when a row is too narrow
+        /// for every name: the glyph still says which resource it is.</summary>
+        public void ShowLabel(bool show)
+        {
+            if (label != null && label.gameObject.activeSelf != show) label.gameObject.SetActive(show);
+        }
+
+        public bool LabelShown => label != null && label.gameObject.activeSelf;
+
+        /// <summary>How wide this pill is with its name showing, whether or not it is showing now.</summary>
+        public float WidthWithLabel()
+        {
+            var rt = (RectTransform)transform;
+            float w = LayoutUtility.GetPreferredWidth(rt);
+            if (label != null && !label.gameObject.activeSelf)
+            {
+                var row = GetComponent<HorizontalOrVerticalLayoutGroup>();
+                w += label.GetPreferredValues(label.text).x + (row != null ? row.spacing : 0f);
+            }
+            return w;
+        }
     }
 }

@@ -125,10 +125,30 @@ namespace WhatLiesInTheDepths.UI
                 pillState(_pills[i], res != null ? res.n : a.k, a, s);
             }
 
+            FitCosts();
+
             bool pay = s.Judge(cost) == Refusal.None;
             if (muster != null) muster.SetInteractable(pay);
             if (musterGround != null) musterGround.color = Theme.Get(pay ? Tok.Iris : Tok.Track);
             if (musterLabel != null) musterLabel.color = pay ? Theme.Get(Tok.Veil) : DisabledInk;
+        }
+
+        // Beside Muster there is room for about 222 of pills. A late unit's three prices, with
+        // four figures and names like Whispers, need half again that, and a squeezed row runs its
+        // words into each other. So when the names will not all fit, every pill on the card drops
+        // its name and keeps its glyph and amount (about 70 each at most) — all or none, so the
+        // row never mixes the two. The names come back when the prices fall or the row widens.
+        void FitCosts()
+        {
+            if (costs == null || _pills.Count == 0) return;
+            var row = costs.GetComponent<HorizontalOrVerticalLayoutGroup>();
+            float gap = row != null ? row.spacing : 5f;
+            float room = costs.rect.width > 1f ? costs.rect.width : 222f;
+            float need = gap * (_pills.Count - 1);
+            foreach (var p in _pills) need += p.WidthWithLabel();
+            bool names = need <= room + 0.5f;
+            if (_pills[0].LabelShown == names) return;
+            foreach (var p in _pills) p.ShowLabel(names);
         }
 
         // The Constructs cost pills unchanged, which includes both refusals: rose when you are
