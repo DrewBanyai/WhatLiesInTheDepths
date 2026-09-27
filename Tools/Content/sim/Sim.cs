@@ -50,18 +50,68 @@ static class Sim
                 heldBy[k] = (heldBy.TryGetValue(k, out var h) ? h : 0) + dt;
                 if (k == "silt") siltLocked += dt;
             }
+            var doneBefore = d.tasks.ToDictionary(x => x.id, x => d.done.TryGetValue(x.id, out var dn) ? dn : 0);
+            double fathomsBefore = d.fathomsTotal;
             d.Step((float)dt);
+            if (d.veilIndex < 100)
+            {
+                foreach (var tk in d.tasks)
+                {
+                    int inc = (d.done.TryGetValue(tk.id, out var dn) ? dn : 0) - doneBefore[tk.id];
+                    if (inc > 0) SiltBy("Focus: " + tk.n, inc * SiltIn(tk.cost));
+                }
+                if (d.fathomsTotal > fathomsBefore && d.veil != null) SiltBy("Dive", (d.fathomsTotal - fathomsBefore) * SiltIn(d.veil.spend));
+            }
             double siltAfter = d.Held("silt");
             if (siltAfter > siltBefore && d.veilIndex < 100) siltEarned += siltAfter - siltBefore;
             if (siltAfter < siltBefore && d.veilIndex < 100) siltFocus += siltBefore - siltAfter;
             t += dt; tickAcc += dt; thinkAcc += dt; bindAcc += dt;
-            if (tickAcc >= 1) { tickAcc -= 1; d.Tick(); }
+            if (tickAcc >= 1)
+            {
+                tickAcc -= 1;
+                if (d.veilIndex < 100)
+                {
+                    double have = d.Held("silt");
+                    foreach (var v in d.visions)
+                    {
+                        if (!v.a || v.of == null || v.of.Count == 0) continue;
+                        var offer = v.of[Math.Max(0, Math.Min(v.sel, v.of.Count - 1))];
+                        if (offer.r != "silt") continue;
+                        double c = v.OfferCost(offer);
+                        if (have < c) continue;
+                        have -= c;
+                        SiltBy("Vision: " + v.n, c);
+                    }
+                }
+                d.Tick();
+            }
             if (thinkAcc >= 2)
             {
                 thinkAcc = 0;
                 var cis = d.constructs.FirstOrDefault(c => c.g == "cistern");
                 int cisBefore = cis?.owned ?? 0; double sb = d.Held("silt");
+                var ownedBefore = d.constructs.ToDictionary(x => x, x => (x.owned, SiltIn(x.cost)));
+                var realizedBefore = d.revelations.Where(x => !x.realized).ToDictionary(x => x, x => SiltIn(x.cost));
+                var unitsBefore = d.units.ToDictionary(x => x, x => (x.c, SiltIn(d.MusterCost(x))));
                 Think();
+                if (d.veilIndex < 100)
+                {
+                    foreach (var kv in ownedBefore)
+                    {
+                        int built = kv.Key.owned - kv.Value.owned;
+                        if (built <= 0 || kv.Value.Item2 <= 0) continue;
+                        // Each one costs a little more than the last; the first's price is known,
+                        // the rest are read off the price now, averaged.
+                        SiltBy("Construct: " + kv.Key.n, (kv.Value.Item2 + (built > 1 ? SiltIn(kv.Key.cost) : kv.Value.Item2)) / 2 * built);
+                    }
+                    foreach (var kv in realizedBefore)
+                        if (kv.Key.realized && kv.Value > 0) SiltBy("Revelation: " + kv.Key.n, kv.Value);
+                    foreach (var kv in unitsBefore)
+                    {
+                        int m = kv.Key.c - kv.Value.c;
+                        if (m > 0 && kv.Value.Item2 > 0) SiltBy("Muster: " + kv.Key.n, m * kv.Value.Item2);
+                    }
+                }
                 if (d.veilIndex < 100)
                 {
                     double spent = Math.Max(0, sb - d.Held("silt"));
@@ -84,6 +134,10 @@ static class Sim
     // Silt bookkeeping: how much the dives brought up, how long the dive stood still because
     // what it brings was full, and how many Cisterns were built to make room.
     static double siltEarned, siltLocked, siltFocus, siltCistern, siltOther;
+    static readonly bool noSiltVisions = Environment.GetEnvironmentVariable("SIM_NO_SILT_VISIONS") == "1";
+    static readonly Dictionary<string, double> siltBy = new Dictionary<string, double>();
+    static void SiltBy(string what, double n) { if (n > 0) siltBy[what] = (siltBy.TryGetValue(what, out var h) ? h : 0) + n; }
+    static double SiltIn(List<Amount> cost) => cost == null ? 0 : cost.Where(a => a.k == "silt").Sum(a => a.n);
     static readonly Dictionary<string, double> heldBy = new Dictionary<string, double>();
 
     static void Milestones()
@@ -189,6 +243,8 @@ static class Sim
             {
                 var o = v.of[i]; double cost = v.OfferCost(o);
                 if (d.Ceiling(o.r) < cost) continue;
+                // What-if: SIM_NO_SILT_VISIONS=1 never pours Silt into a Vision.
+                if (noSiltVisions && o.r == "silt") continue;
                 double score = d.Held(o.r) / cost;
                 if (score > bestScore) { bestScore = score; best = i; }
             }
@@ -277,6 +333,10 @@ static class Sim
         Console.WriteLine("resources never shown: " + string.Join(", ", d.resources.Where(r => !d.Shown(r)).Select(r => r.k)));
         Console.WriteLine("dive held full, by what filled: " + string.Join(", ", heldBy.Select(kv => $"{kv.Key} {kv.Value / 60:0} min")));
         Console.WriteLine($"silt spent to the bottom: Focus {siltFocus:0}, Cisterns {siltCistern:0}, everything else {siltOther:0}");
+        double sinks = siltBy.Values.Sum();
+        Console.WriteLine($"silt sinks to the bottom (total {sinks:0}):");
+        foreach (var kv in siltBy.OrderByDescending(x => x.Value))
+            Console.WriteLine($"  sink {kv.Value,9:0}  {kv.Value / Math.Max(1, sinks) * 100,5:0.0}%  {kv.Key}");
         Console.WriteLine($"silt: earned to the bottom {siltEarned:0}, ceiling {d.Ceiling("silt"):0}, dive held full {siltLocked / 60:0} min, cisterns {d.constructs.FirstOrDefault(c => c.g == "cistern")?.owned ?? 0}");
         Console.WriteLine("constructs: " + string.Join(", ", d.constructs.Where(c => c.owned > 0).Select(c => $"{c.g}x{c.owned}")));
     }

@@ -24,7 +24,7 @@ if "--seeds" in args:
 
 def play(path, seed):
     out = subprocess.run([RUN, path, f"--seed={seed}"], capture_output=True, text=True).stdout
-    events, lost, silt = {}, 0, {}
+    events, lost, silt, sinks = {}, 0, {}, []
     for line in out.splitlines():
         m = re.match(r"\[\s*(\d+)h(\d+)m\] L(\d+)\s+(\S+)", line)
         if m:
@@ -33,10 +33,13 @@ def play(path, seed):
             if k == "lost": lost += 1
             if k in ("STALLED", "TIME"): events["_stalled"] = t
             events.setdefault(k, t)
+        m = re.match(r"\s+sink\s+(\d+)\s+([\d.]+)%\s+(.*)", line)
+        if m: sinks.append((int(m.group(1)), float(m.group(2)), m.group(3)))
         m = re.match(r"silt: earned to the bottom (\d+).*cisterns (\d+)", line)
         if m: silt = {"earned": int(m.group(1)), "cisterns": int(m.group(2))}
     events["_lost"] = lost
     events["_silt"] = silt
+    events["_sinks"] = sinks
     return events
 
 
@@ -87,3 +90,18 @@ lost = [r["_lost"] for r in good]
 silt = good[0]["_silt"]
 print(f"\nBattles lost per run: {', '.join(map(str, lost))}.")
 if silt: print(f"Silt earned before the bottom: {silt['earned']:,}; Cisterns built: {silt['cisterns']}.")
+
+import json
+try:
+    _en = json.load(open(os.path.join(HERE, "..", "..", "..", "Assets", "Resources", "WhatLiesInTheDepths", "Strings.json"), encoding="utf-8"))["en"]
+except Exception:
+    _en = {}
+def named(label):
+    kind, _, key = label.partition(": ")
+    return f"{kind}: {_en.get(key, key)}" if key else label
+
+sinks = good[0]["_sinks"]
+if sinks:
+    print("\n| Where the Silt went (seed %d) | Silt | Share |\n| --- | --- | --- |" % seeds[0])
+    for n, pct, what in sinks[:8]:
+        print(f"| {named(what)} | {n:,} | {pct:.0f}% |")
