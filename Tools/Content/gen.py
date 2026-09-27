@@ -50,7 +50,7 @@ def fx_line(e):
     if kind == "Power":
         who = "every unit" if of == "*" else f"{of} units"
         return f"{who} <b>+{pct(n)}</b> strength"
-    if kind == "Enemy": return f"the road fields <b>−{pct(n)}</b>"
+    if kind == "Enemy": return f"every place on the road fields <b>{pct(n)}</b> less strength"
     if kind == "Muster": return f"mustering costs <b>−{pct(n)}</b>"
     if kind == "Housing": return f"each {CONSTRUCT_NAME.get(of, of)} houses <b>+{fmtn(n)}</b> Oneiri"
     if kind == "Exodus": return "no new Oneiri come, and the unbound ones leave"

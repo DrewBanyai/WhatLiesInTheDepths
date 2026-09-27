@@ -481,7 +481,7 @@
     "construct.beacon.name": "The Beacon",
     "construct.beacon.blurb": "A light left on at the end of the world.",
     "construct.beacon.fx": [
-      "the road fields <b>−30%</b>"
+      "every place on the road fields <b>30%</b> less strength"
     ],
     "construct.kiln.name": "The Night Kiln",
     "construct.kiln.blurb": "Where his nightmares are fired hard enough to fight with.",
@@ -735,7 +735,7 @@
     "rev.nothiding.kind": "a realization · changes the road",
     "rev.nothiding.text": "The places it holds are not defended. They are kept, like a pantry.",
     "rev.nothiding.fx": [
-      "the road fields <b>−5%</b>"
+      "every place on the road fields <b>5%</b> less strength"
     ],
     "rev.clocks.name": "Every Clock Is Late",
     "rev.clocks.kind": "changes generation",
@@ -798,7 +798,7 @@
     "rev.hollowed.kind": "changes the road",
     "rev.hollowed.text": "The trees it ate from the inside are still standing, and they remember what it tasted like.",
     "rev.hollowed.fx": [
-      "the road fields <b>−10%</b>",
+      "every place on the road fields <b>10%</b> less strength",
       "a realization: <b>Every People Has Come</b> (with 3 others)"
     ],
     "rev.everypeople.name": "Every People Has Come",
@@ -1531,7 +1531,7 @@
     "place.clock.ben": "all Focus <b>+10%</b> faster",
     "place.mirror.name": "The Mirror That Lies",
     "place.mirror.blurb": "It shows him exactly as he fears he is, and it is very convincing.",
-    "place.mirror.ben": "the road fields <b>−10%</b>",
+    "place.mirror.ben": "every place on the road fields <b>10%</b> less strength",
     "place.stairtop.name": "The Top of the Stair",
     "place.stairtop.blurb": "The top of the stair down to the cupboard, at night, with the light off.",
     "place.stairtop.ben": "Sworn units <b>+25%</b> strength",
