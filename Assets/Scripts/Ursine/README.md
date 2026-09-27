@@ -7,36 +7,53 @@ error rather than a thing someone notices later.
 
 ## What is here
 
+### Runtime
+
 | | |
 |---|---|
-| `Runtime/Core/GameClock.cs`, `SaveClock.cs` | `GameClock` — one heartbeat everything accrues on, plus a per-frame event for things that are drawn rather than counted. `SaveClock` — an autosave interval and how stale the save is. Ursine keeps the clock; what a save *contains* is the game's business. |
-| `Runtime/Core/Fmt.cs` | How an incremental game writes a number: no abbreviation, a sign and one decimal on every rate including zero, period rather than frequency. |
-| `Runtime/Economy/Resource.cs` | `Res`, `Amount`, and `Refusal` — the difference between being short of something (time fixes it) and a cost above a ceiling (time never will). |
-| `Runtime/Economy/Ledger.cs` | One purse: spending, granting, judging a cost, the single sentence a refusal is allowed, and tick accrual. Plus `WorkerPool`, for interchangeable workers bound to tasks. |
-| `Runtime/Combat/Odds.cs` | Odds from a strength ratio, straight in log₂, so doubling an army is always worth the same amount of confidence. |
-| `Runtime/Geometry/CubicPath.cs` | A path of SVG-style cubic segments (`C` and `S`), sampled by arc length, so a point can be placed a fraction of the way along it. |
-| `Runtime/Theming/` | `Palette` and `Theme` — swap every color at once at runtime. `ThemedGraphic` binds a graphic to a token so the swap reaches it. |
-| `Runtime/Text/TypeKit.cs` | Type roles named for the job rather than the typeface, and `Typeset` for applying them: small caps, figures, and CSS-style line height included. |
-| `Runtime/UI/` | One widget per file: `UiButton`, `FillBar`, `ProgressTrack`, `Stepper`, `CostPill`, `AttentionDot`, `SegmentedToggle`, `ToggleSwitch`, `VolumeBar`, `Fader`, `TintOnHover`, `FixedStage`, plus `PathLine` (an anti-aliased stroked path, solid or dashed), `PrefabRect` (a prefab root's design size) and `SpriteSet` (a name-to-sprite lookup). |
-| `Editor/SpriteImport.cs` | Imports a folder of PNGs as sprites and indexes them by name. |
-| `Editor/SpriteGen.cs` | Generated placeholder sprites: 9-sliced rounded rects and outlines, soft shadows, radial blooms, scrims, rings, discs, flat plates. |
-| `Editor/Ui.cs` | Prefab construction plumbing — nodes, stretching, stacks, rows, grids, scroll views, saving and nesting prefabs. Geometry only, no opinions. |
-| `Editor/FontAssetBuilder.cs` | TextMeshPro font assets from TTFs in the project; an asset whose TTF has changed is cleared so it relearns its glyphs. |
+| `Core/GameClock.cs`, `SaveClock.cs` | `GameClock` — one heartbeat everything accrues on, plus a per-frame event for things that are drawn rather than counted. `SaveClock` — an autosave interval (120 s by default) and how stale the save is. Ursine keeps the clock; what a save *contains* is the game's business. |
+| `Core/SaveStore.cs` | Where a save lives on each platform. Native builds write a file under `Application.persistentDataPath`, through a temporary file and with the previous save kept as `.bak`, so a crash mid-save leaves the last good one. WebGL writes to `PlayerPrefs`, which the browser keeps in IndexedDB. It stores and returns text under a slot name and never looks inside. |
+| `Core/Unlocks.cs` | The set of things that have happened. An unlock is a string; setting one is the only way anything opens up, and nothing unsets one but starting over. What a screen shows is a question asked of this set, so a load needs no catch-up code. |
+| `Core/Fmt.cs` | How an incremental game writes a number: no abbreviation, a sign and one decimal on every rate including zero, period rather than frequency, whole units held (9.6 held is 9), and no floating-point dust in fractional amounts. |
+| `Economy/Resource.cs` | `Res`, `Amount`, and `Refusal` — the difference between being short of something (time fixes it) and a cost above a ceiling (time never will). |
+| `Economy/Ledger.cs` | One purse: spending, granting, judging a cost, the single sentence a refusal is allowed, and tick accrual. Plus `WorkerPool`, for interchangeable workers bound to tasks. |
+| `Combat/Odds.cs` | Odds from a strength ratio, straight in log₂, so doubling an army is always worth the same amount of confidence, and what a loss costs. |
+| `Geometry/CubicPath.cs` | A path of SVG-style cubic segments (`C` and `S`), sampled by arc length, so a point can be placed a fraction of the way along it. |
+| `Theming/` | `Palette` and `Theme` — swap every color at once at runtime, with a contrast step. `ThemedGraphic` binds a graphic to a token so the swap reaches it. |
+| `Text/TypeKit.cs` | Type roles named for the job rather than the typeface, and `Typeset` for applying them: small caps, figures, and CSS-style line height included. |
+| `Text/Loc.cs` | Every word a player reads, looked up by key from one strings file with a section per language. A key missing from the current language falls back to English; one missing from English shows as `⟦key⟧` so it cannot go unnoticed. |
+| `Text/MiniJson.cs` | A small JSON reader and writer that keeps object keys in written order. Unity's `JsonUtility` cannot read a dictionary, and a strings file or a save is mostly dictionaries. |
+| `Audio/Jukebox.cs` | The music: a set of tracks played endlessly in a random order that never repeats recently played tracks, each dissolving into the next over two alternating sources. |
+| `UI/` | One widget per file: `UiButton`, `FillBar`, `ProgressTrack`, `Stepper`, `CostPill`, `AttentionDot`, `SegmentedToggle`, `ToggleSwitch`, `VolumeBar`, `Fader`, `TintOnHover`, `FixedStage`, `Marquee` (a line that stands still when it fits and makes one unhurried pass when it does not), `LocalizedText` (a label that fills itself from the strings file and follows a language change), plus `PathLine` (an anti-aliased stroked path, solid or dashed), `PrefabRect` (a prefab root's design size) and `SpriteSet` (a name-to-sprite lookup). |
 
-## The two hooks a game must install
+### Editor
 
-Ursine cannot know what a game's tokens mean or where its assets live, so two things are
-handed to it, once, at startup:
+| | |
+|---|---|
+| `SpriteImport.cs` | Imports a folder of PNGs as sprites and indexes them by name. |
+| `SpriteGen.cs` | Generated placeholder sprites: 9-sliced rounded rects and outlines, soft shadows, radial blooms, scrims, rings, discs, flat plates. |
+| `Ui.cs` | Prefab construction plumbing — nodes, stretching, stacks, rows, grids, scroll views, saving and nesting prefabs. Geometry only, no opinions. |
+| `FontAssetBuilder.cs` | TextMeshPro font assets from TTFs in the project; an asset whose TTF has changed is cleared so it relearns its glyphs. |
+
+## The hooks a game installs
+
+Ursine cannot know what a game's tokens mean, where its assets live or where its words are
+kept, so a few things are handed to it, once, at startup:
 
 ```csharp
 Ursine.Theming.Theme.DefaultPalette = () => Resources.Load<Palette>("MyGame/Palette_Default");
 Ursine.Theming.Theme.ContrastFilter = (token, level, color) => /* what a contrast step does */;
 Ursine.Text.TypeKit.Default        = () => Resources.Load<TypeKit>("MyGame/TypeKit");
+Ursine.Text.Loc.Source             = () => Resources.Load<TextAsset>("MyGame/Strings").text;
+Ursine.Text.Loc.Warn               = message => Debug.LogWarning(message);   // optional
 ```
 
-See `Assets/Scripts/WhatLiesInTheDepths/Core/Tokens.cs` for a worked example: it declares
-the game's token enum, wraps `Theme` so call sites read `Theme.Get(Tok.Ink)`, and installs
-all three from a `[RuntimeInitializeOnLoadMethod]` that is also an `[InitializeOnLoadMethod]`
+`SaveStore.Warn` has a default and can be replaced the same way.
+
+See `Assets/Scripts/WhatLiesInTheDepths/Core/Tokens.cs` and `Core/Strings.cs` for worked
+examples. `Tokens.cs` declares the game's token enum, wraps `Theme` so call sites read
+`Theme.Get(Tok.Ink)`, and installs the theming and type hooks; `Strings.cs` installs `Loc`.
+Both do it from a `[RuntimeInitializeOnLoadMethod]` that is also an `[InitializeOnLoadMethod]`,
 so editor-time prefab building gets them too.
 
 ## Two conventions worth keeping
@@ -51,6 +68,13 @@ or gamepad support should add it deliberately, not bolt it onto these.
 
 ## Not yet portable, but close
 
-Living in the game today and worth lifting if a second project wants them: the task model
-(workers bound to a task, base time divided by workers, cost taken at completion, progress
-that holds rather than resets), and the destination router with its one-underline rule.
+Living in the game today and worth lifting if a second project wants them:
+
+- **The condition grammar** (`Dream.Holds`): an unlock id, or a count compared with `>=`
+  (`done:absorb>=10`, `owned:hut>=2`, `held:silt>=40`). It is general apart from the names of
+  the counts it knows.
+- **The task model**: workers bound to a task, base time divided by workers, cost taken at
+  completion, progress that holds rather than resets.
+- **The destination router** with its one-underline rule (`Core/Router.cs`).
+- **The save shape** (`Data/DreamSave.cs`): versioned JSON of only what the player changed,
+  keyed by id, so a save survives a content change.
