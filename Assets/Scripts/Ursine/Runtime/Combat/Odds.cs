@@ -21,8 +21,9 @@ namespace Ursine.Combat
             return 0.5 * (1.0 + Math.Log(ratio, 2.0));
         }
 
-        /// <summary>What a loss costs, as a fraction of strength.</summary>
-        public static double LossFraction(Random rng, double min = 0.25, double max = 0.45)
+        /// <summary>What a loss costs, as a fraction of strength: a flat tenth by default. Pass a
+        /// range to make it vary; the roll is taken either way, so the stream of rolls is the same.</summary>
+        public static double LossFraction(Random rng, double min = 0.10, double max = 0.10)
             => min + rng.NextDouble() * (max - min);
     }
 }

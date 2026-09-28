@@ -654,7 +654,7 @@ namespace WhatLiesInTheDepths.Data
         /// <summary>What a defeat cost, for the band to tell.</summary>
         public sealed class Loss { public double before, after; public int pct; }
 
-        /// <summary>Driven back: a quarter to nearly half the army, taken out in bodies, picked
+        /// <summary>Driven back: a tenth of the army, taken out in bodies, picked
         /// in proportion to how many of each there are. Recorded, so a Realization can wait on a
         /// first defeat.</summary>
         public Loss LoseBattle(RoadLocation place, System.Random rng)

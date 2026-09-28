@@ -389,7 +389,7 @@ namespace WhatLiesInTheDepths.UI
             }
             else
             {
-                // A loss costs a quarter to nearly half the army; the dream takes it.
+                // A loss costs a tenth of the army; the dream takes it.
                 var loss = s.Dream.LoseBattle(b.place, _rng);
                 _told = new Told { win = false, place = b.place, before = loss.before, after = loss.after, lost = loss.pct };
                 _reading = b.place;
