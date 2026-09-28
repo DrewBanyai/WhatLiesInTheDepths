@@ -1717,6 +1717,12 @@
       "<b>Absorb</b> also gives <b>+2</b> Silt"
     ],
     "ui.built.drew_banyai": "Drew Banyai",
-    "ui.built.with_thanks": "With thanks"
+    "ui.built.with_thanks": "With thanks",
+    "rev.weight.name": "Let the Weight Help",
+    "rev.weight.kind": "changes the descent",
+    "rev.weight.text": "You stop kicking against the water. The weight does the work, and it is quicker than you ever were.",
+    "rev.weight.fx": [
+      "dives <b>+33%</b> faster"
+    ]
   }
 }
