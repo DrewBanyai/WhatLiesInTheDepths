@@ -3,7 +3,8 @@
 // visibly yield rather than sitting a panel on top of live content.
 //
 // At its center hangs the lantern: one pane for every Revelation the dream can realize, lit in
-// the order they were realized, gold for a greater one. A lit pane reads its realization back.
+// the order they were realized, gold for a greater one, blue for a side of a choice. A lit pane
+// reads its realization back.
 using System.Collections.Generic;
 using WhatLiesInTheDepths.Core;
 using WhatLiesInTheDepths.Data;
@@ -76,6 +77,7 @@ namespace WhatLiesInTheDepths.UI
         static readonly Color DisabledInk = new Color32(0xB6, 0xAE, 0xCB, 0xFF);   // spec's raw
         float _judgeIn;
         readonly List<bool> _greats = new List<bool>();
+        readonly List<bool> _choices = new List<bool>();
         float _captionAlpha = 1f, _captionWant = 1f;
 
         string _built;
@@ -144,12 +146,14 @@ namespace WhatLiesInTheDepths.UI
             {
                 lantern.Build(s.Realizable);
                 _greats.Clear();
+                _choices.Clear();
                 foreach (var k in s.kept)
                 {
                     var d = s.revelations.Find(r => r.k == k);
                     _greats.Add(d != null && d.great);
+                    _choices.Add(d != null && d.Choice);
                 }
-                lantern.Show(s.kept.Count, _greats);
+                lantern.Show(s.kept.Count, _greats, _choices);
             }
 
             int index = 0;
@@ -277,7 +281,7 @@ namespace WhatLiesInTheDepths.UI
         }
 
         /// <summary>The part of the readout that says what a realization is: its mark, kind,
-        /// name, text and effects, gold for a greater one. Shared by a sigil still in the
+        /// name, text and effects, gold for a greater one, blue for a side of a choice. Shared by a sigil still in the
         /// field and a realization already lit in the lantern.</summary>
         void FillBody(RevelationDef d)
         {
@@ -285,18 +289,21 @@ namespace WhatLiesInTheDepths.UI
             if (kindCaption != null)
             {
                 kindCaption.text = (d.kind ?? string.Empty).ToUpperInvariant();
-                kindCaption.color = Theme.Get(d.great ? Tok.GoldD : Tok.IrisD);
+                kindCaption.color = Theme.Get(d.great ? Tok.GoldD : d.Choice ? Tok.BlueD : Tok.IrisD);
             }
             if (revelationName != null) revelationName.text = d.n;
             if (realization != null) realization.text = d.bl;
             // A greater realization keeps the veil ground; its border, mark and shadow turn gold.
+            // A side of a choice does the same in blue.
             if (readoutGround != null) readoutGround.color = Theme.Get(Tok.Veil);
-            if (readoutBorder != null) readoutBorder.color = Theme.Get(d.great ? Tok.GoldB : Tok.Haze);
+            bool choice = d.Choice;
+            if (readoutBorder != null) readoutBorder.color = Theme.Get(d.great ? Tok.GoldB : choice ? Tok.BlueB : Tok.Haze);
             if (readoutShadow != null)
-                readoutShadow.color = d.great ? Theme.Get(Tok.GoldD, 0.40f) : Theme.Get(Tok.Ink, 0.45f);
-            if (markPanel != null) markPanel.color = Theme.Get(d.great ? Tok.GoldL : Tok.IrisL);
-            if (markRule != null) markRule.color = Theme.Get(d.great ? Tok.GoldB : Tok.Haze2);
-            if (markGlyph != null) markGlyph.color = Theme.Get(d.great ? Tok.GoldD : Tok.IrisD);
+                readoutShadow.color = d.great ? Theme.Get(Tok.GoldD, 0.40f)
+                                    : choice ? Theme.Get(Tok.BlueD, 0.40f) : Theme.Get(Tok.Ink, 0.45f);
+            if (markPanel != null) markPanel.color = Theme.Get(d.great ? Tok.GoldL : choice ? Tok.BlueL : Tok.IrisL);
+            if (markRule != null) markRule.color = Theme.Get(d.great ? Tok.GoldB : choice ? Tok.BlueB : Tok.Haze2);
+            if (markGlyph != null) markGlyph.color = Theme.Get(d.great ? Tok.GoldD : choice ? Tok.BlueD : Tok.IrisD);
 
             if (effects != null && effectRowPrefab != null)
             {
@@ -344,7 +351,7 @@ namespace WhatLiesInTheDepths.UI
             if (realize != null) realize.SetInteractable(state == Refusal.None);
             if (realizeGround != null)
                 realizeGround.color = state == Refusal.None
-                    ? Theme.Get(d.great ? Tok.GoldD : Tok.Iris)
+                    ? Theme.Get(d.great ? Tok.GoldD : d.Choice ? Tok.BlueD : Tok.Iris)
                     : Theme.Get(Tok.Track);
             if (realizeLabel != null)
             {

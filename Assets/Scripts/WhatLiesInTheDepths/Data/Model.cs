@@ -123,6 +123,9 @@ namespace WhatLiesInTheDepths.Data
         /// that name each other are a choice: realizing either withdraws the other for good,
         /// and sets withdrawn:&lt;k&gt; for it, so a condition can read which way it went.</summary>
         public List<string> withdraws;
+        /// <summary>One side of a choice: it withdraws another when realized. Blue in the field,
+        /// the readout and the lantern, as a greater one is gold. Greater wins if it is both.</summary>
+        public bool Choice => !great && withdraws != null && withdraws.Count > 0;
         /// <summary>What it does once realized.</summary>
         public List<Effect> effects;
         /// <summary>The authored price; <see cref="cost"/> is after effects.</summary>

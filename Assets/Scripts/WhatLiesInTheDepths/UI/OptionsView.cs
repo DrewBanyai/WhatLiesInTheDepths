@@ -178,7 +178,7 @@ namespace WhatLiesInTheDepths.UI
         }
 
         /// <summary>A palette is a whole token set, not a filter. Switching one rewrites all
-        /// twenty-eight values at once, and anything written as a literal hex will not follow.</summary>
+        /// thirty-two values at once, and anything written as a literal hex will not follow.</summary>
         void ChoosePalette(int index)
         {
             GameSettings.SetPalette(index);

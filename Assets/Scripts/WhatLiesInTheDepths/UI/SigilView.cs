@@ -36,6 +36,7 @@ namespace WhatLiesInTheDepths.UI
         // The halo is light, not a surface: the spec's raw rgba, not a token.
         static readonly Color LilacLight = new Color32(156, 134, 206, 255);
         static readonly Color GoldLight  = new Color32(214, 172, 110, 255);
+        static readonly Color BlueLight  = new Color32(127, 159, 216, 255);
         static readonly Color GreatHover = new Color32(0x6E, 0x53, 0x16, 255);
         static readonly Color ShortInk   = new Color32(0x8E, 0x86, 0xA3, 255);
 
@@ -72,32 +73,38 @@ namespace WhatLiesInTheDepths.UI
         public void Paint()
         {
             if (Def == null) return;
-            bool great = Def.great, isShort = Def.state == Refusal.Short;
+            // Gold for a greater realization, blue for a side of a choice (the pair that
+            // withdraw each other), lilac for the rest. A marked one keeps its ring showing.
+            bool great = Def.great, choice = Def.Choice, marked = great || choice;
+            bool isShort = Def.state == Refusal.Short;
 
             if (glyph != null)
-                glyph.color = _hover ? (great ? GreatHover : Theme.Get(Tok.Ink))
+                glyph.color = _hover ? (great ? GreatHover : choice ? Theme.Get(Tok.BlueD) : Theme.Get(Tok.Ink))
                             : isShort ? ShortInk
-                            : Theme.Get(great ? Tok.GoldD : Tok.IrisD);
+                            : Theme.Get(great ? Tok.GoldD : choice ? Tok.BlueD : Tok.IrisD);
 
             if (halo != null)
             {
-                var c = great ? GoldLight : LilacLight;
-                c.a = great ? (_hover ? 0.40f : 0.22f) : (_hover ? 0.30f : 0.16f);
+                var c = great ? GoldLight : choice ? BlueLight : LilacLight;
+                c.a = marked ? (_hover ? 0.40f : 0.22f) : (_hover ? 0.30f : 0.16f);
                 if (isShort && !_hover) c.a *= 0.35f;
                 halo.color = c;
             }
 
             if (greaterRing != null)
-                greaterRing.color = great ? Theme.Get(_hover ? Tok.Gold : Tok.GoldB) : Theme.Get(Tok.IrisB);
+                greaterRing.color = great ? Theme.Get(_hover ? Tok.Gold : Tok.GoldB)
+                                  : choice ? Theme.Get(_hover ? Tok.Blue : Tok.BlueB)
+                                  : Theme.Get(Tok.IrisB);
             ApplyRing();
         }
 
         void ApplyRing()
         {
             if (greaterRing == null || Def == null) return;
-            float shown = Def.great ? Mathf.Lerp(0.55f, 1f, _ringShow) : _ringShow;
+            bool marked = Def.great || Def.Choice;
+            float shown = marked ? Mathf.Lerp(0.55f, 1f, _ringShow) : _ringShow;
             var c = greaterRing.color; c.a = shown; greaterRing.color = c;
-            float scale = Def.great ? 1f : Mathf.Lerp(0.88f, 1f, _ringShow);
+            float scale = marked ? 1f : Mathf.Lerp(0.88f, 1f, _ringShow);
             greaterRing.rectTransform.localScale = new Vector3(scale, scale, 1f);
         }
 

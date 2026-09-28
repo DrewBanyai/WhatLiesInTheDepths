@@ -1,7 +1,8 @@
 // What Lies In The Depths — the lantern in the Revelations field. Revelations spec, section 1.
 //
 // One pane for every Revelation that can be realized, dark until it is. Each realization lights
-// the next pane out from the flame, in the order they were realized; a greater one burns gold.
+// the next pane out from the flame, in the order they were realized; a greater one burns gold,
+// and one side of a choice burns blue.
 // The lantern's own light grows with what is lit. Resting on a lit pane reports it, so the
 // readout can read that realization back; a dark pane reports nothing.
 //
@@ -31,6 +32,7 @@ namespace WhatLiesInTheDepths.UI
 
         readonly List<PolygonGraphic> _panes = new List<PolygonGraphic>();
         readonly List<bool> _great = new List<bool>();
+        readonly List<bool> _choice = new List<bool>();
         PolygonGraphic _frame, _ring, _outline, _flame;
         int _lit, _hover = -1;
         float _t;
@@ -77,6 +79,7 @@ namespace WhatLiesInTheDepths.UI
             }
             _panes.Clear();
             _great.Clear();
+            _choice.Clear();
             _hover = -1;
 
             // The ring it hangs from, then the roof, collars and foot, all behind the glass.
@@ -110,6 +113,7 @@ namespace WhatLiesInTheDepths.UI
                 button.Hovered += h => OnPane(index, h);
                 _panes.Add(g);
                 _great.Add(false);
+                _choice.Add(false);
             }
 
             _flame = Layer("Flame");
@@ -140,11 +144,13 @@ namespace WhatLiesInTheDepths.UI
         }
 
         /// <summary>Lights the first <paramref name="lit"/> panes, in order; a pane whose
-        /// realization was a greater one burns gold.</summary>
-        public void Show(int lit, IList<bool> great)
+        /// realization was a greater one burns gold, and one that was a side of a choice burns
+        /// blue.</summary>
+        public void Show(int lit, IList<bool> great, IList<bool> choice = null)
         {
             _lit = Mathf.Clamp(lit, 0, _panes.Count);
             for (int i = 0; i < _great.Count; i++) _great[i] = great != null && i < great.Count && great[i];
+            for (int i = 0; i < _choice.Count; i++) _choice[i] = choice != null && i < choice.Count && choice[i] && !_great[i];
             if (_hover >= _lit) _hover = -1;
             Paint();
         }
@@ -193,9 +199,11 @@ namespace WhatLiesInTheDepths.UI
             bool lit = i < _lit, hover = i == _hover;
             if (lit)
             {
-                var tint = _great[i] ? Theme.Get(Tok.Gold) : Theme.Get(Tok.Iris);
-                g.inner = _great[i] ? Color.Lerp(Light, Theme.Get(Tok.Gold), 0.12f) : Light;
-                g.outer = Color.Lerp(Light, tint, hover ? 0.35f : _great[i] ? 0.9f : 0.55f);
+                // Gold for a greater realization, blue for a side of a choice, lilac for the rest.
+                bool strong = _great[i] || _choice[i];
+                var tint = Theme.Get(_great[i] ? Tok.Gold : _choice[i] ? Tok.Blue : Tok.Iris);
+                g.inner = strong ? Color.Lerp(Light, tint, 0.12f) : Light;
+                g.outer = Color.Lerp(Light, tint, hover ? 0.35f : strong ? 0.9f : 0.55f);
             }
             else
             {

@@ -1,5 +1,5 @@
 // What Lies In The Depths — the palettes, the type kit and the TMP font assets.
-// The twenty-eight tokens are copied from the :root block that is identical across the
+// The thirty-two tokens are copied from the :root block that is identical across the
 // whole spec set. Dusk and Parchment are whole token sets of their own, not filters:
 // the token names describe a role, not a lightness, so on Dusk --iris-l (an iris ground)
 // becomes dark and --iris-d (iris text) becomes light. Spec section 10.
@@ -21,7 +21,7 @@ namespace WhatLiesInTheDepths.EditorTools
 
         // ---- palettes ----------------------------------------------------------
 
-        /// <summary>The default set, exactly as specified. Twenty-eight values, in Tok order.</summary>
+        /// <summary>The default set, exactly as specified. Thirty-two values, in Tok order.</summary>
         static readonly string[] Dream =
         {
             "#F2EEF8", "#FCFAFE", "#E3DBEE", "#EDE7F4", "#E9E3F1",
@@ -30,7 +30,8 @@ namespace WhatLiesInTheDepths.EditorTools
             "#6FB3AB", "#3F7F77", "#EAF5F3",
             "#D3849F", "#A4506C", "#FBEFF3", "#F2DCE4", "#FBF0F4",
             "#D6AC6E", "#8A6A2F", "#FAF2E6", "#EEDCBB",
-            "#F8F5FC", "#EEE9F6"
+            "#F8F5FC", "#EEE9F6",
+            "#7F9FD8", "#46649F", "#EEF2FB", "#C5D3EE"
         };
 
         /// <summary>The same dream at night. PLACEHOLDER VALUES — the brief's section 9 says
@@ -43,7 +44,8 @@ namespace WhatLiesInTheDepths.EditorTools
             "#9C86CE", "#C6B7E4", "#2E2545", "#4B3E6B",
             "#6FB3AB", "#8FCFC7", "#1E3330", "#D3849F", "#E9A8BD", "#3A2430",
             "#5A3A48", "#2E1E28", "#D6AC6E", "#E7C894", "#33291A", "#5A4526",
-            "#241E33", "#2B2440"
+            "#241E33", "#2B2440",
+            "#86A5DC", "#AFC5EE", "#1E2538", "#374563"
         };
 
         /// <summary>Warm paper with more separation by default. PLACEHOLDER VALUES, as above.</summary>
@@ -54,7 +56,8 @@ namespace WhatLiesInTheDepths.EditorTools
             "#8A6FBE", "#5E4690", "#EFE9F8", "#BFAEDD",
             "#5E9E95", "#33736A", "#E4F0ED", "#C97189", "#94405C", "#F8E8EC",
             "#EED2DA", "#F9EDF0", "#C79A54", "#75561F", "#F6EDDB", "#E3CEA6",
-            "#F7F2E7", "#EAE2D3"
+            "#F7F2E7", "#EAE2D3",
+            "#6F90C8", "#3D5A92", "#EAEFF8", "#C0CEE7"
         };
 
         public static Palette BuildPalette(string name, string[] hexes)

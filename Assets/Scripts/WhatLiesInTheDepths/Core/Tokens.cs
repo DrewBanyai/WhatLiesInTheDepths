@@ -1,6 +1,6 @@
 // What Lies In The Depths — the color tokens, and the game's face on Ursine's theming.
 //
-// Spec: _Whole Screen.html section 13. Twenty-eight tokens, and nothing in the UI may use
+// Spec: _Whole Screen.html section 13. Thirty-two tokens, and nothing in the UI may use
 // a color that is not one of them. Ursine holds palettes as an indexed array because it
 // cannot know what a game's tokens mean; this file is where they get their names back, so
 // a call site still reads Theme.Get(Tok.Ink).
@@ -13,9 +13,11 @@ using TypeKit = Ursine.Text.TypeKit;
 
 namespace WhatLiesInTheDepths.Core
 {
-    /// <summary>The twenty-eight tokens, in the order of section 13. The four semantic hues
+    /// <summary>The thirty-two tokens, in the order of section 13. The five semantic hues
     /// matter more than the hexes: iris is the player's own agency, teal is gain, rose is
-    /// loss or shortfall, gold is a ceiling or the greater tier.</summary>
+    /// loss or shortfall, gold is a ceiling or the greater tier, blue is a choice — one of a
+    /// pair that withdraws the other. Blue was added last, so it sits at the end: every
+    /// index before it is unchanged.</summary>
     public enum Tok
     {
         Mist = 0, Veil, Haze, Haze2, Wait,
@@ -24,7 +26,8 @@ namespace WhatLiesInTheDepths.Core
         Teal, TealD, TealL,
         Rose, RoseD, RoseL, RoseB, RoseT,
         Gold, GoldD, GoldL, GoldB,
-        Block, Track
+        Block, Track,
+        Blue, BlueD, BlueL, BlueB
     }
 
     /// <summary>Orthogonal to the palette: it touches only the four ink steps and the three
@@ -35,7 +38,7 @@ namespace WhatLiesInTheDepths.Core
     /// <summary>The game's typed view of the live token set.</summary>
     public static class Theme
     {
-        public const int TokenCount = 28;
+        public const int TokenCount = 32;
 
         public const string PaletteResourceFolder = "WhatLiesInTheDepths";
 
@@ -54,7 +57,7 @@ namespace WhatLiesInTheDepths.Core
         }
 
         /// <summary>A palette is a whole token set, not a filter. Switching one rewrites all
-        /// twenty-eight values at once, and anything written as a literal will not follow.</summary>
+        /// thirty-two values at once, and anything written as a literal will not follow.</summary>
         public static void Use(Palette p) => UrsineTheme.Use(p);
 
         public static Color Get(Tok t) => UrsineTheme.Get((int)t);
@@ -69,7 +72,7 @@ namespace WhatLiesInTheDepths.Core
         { (int)Tok.Haze, (int)Tok.Haze2, (int)Tok.Wait };
 
         static readonly HashSet<int> Semantic = new HashSet<int>
-        { (int)Tok.IrisD, (int)Tok.TealD, (int)Tok.RoseD, (int)Tok.GoldD };
+        { (int)Tok.IrisD, (int)Tok.TealD, (int)Tok.RoseD, (int)Tok.GoldD, (int)Tok.BlueD };
 
         static Color ApplyContrast(int token, int level, Color c)
         {
