@@ -135,6 +135,10 @@ namespace WhatLiesInTheDepths.Data
         /// single choice. Null means idleness, which is a position you can hold.</summary>
         public string attendedTaskId;
         public bool attendingDive;
+        /// <summary>The dive had your attention when the veil filled. A full veil has nothing
+        /// to sink, so the attention is set down, but it is picked up again on the next veil
+        /// when this one is parted, unless it has been given to a Focus in the meantime.</summary>
+        public bool diveResumes;
 
         /// <summary>Every discount a won place has handed over, multiplied together. Mustering
         /// reads it; nothing else does.</summary>
@@ -677,6 +681,9 @@ namespace WhatLiesInTheDepths.Data
             veil = veils[veilIndex];
             // Oneiri belong to the dive, not the veil: the binding carries across.
             veil.w = Mathf.Min(bound, veil.cap);
+            // So does your attention: sinking on the last veil is sinking on this one.
+            if (diveResumes && attendedTaskId == null) attendingDive = true;
+            diveResumes = false;
             Dirty();
             return true;
         }
@@ -987,7 +994,7 @@ namespace WhatLiesInTheDepths.Data
                         Grant(DiveBring);
                         veil.sunk = Math.Min(veil.need, veil.sunk + 1);
                         fathomsTotal += 1;
-                        if (veil.AtFull) attendingDive = false;
+                        if (veil.AtFull && attendingDive) { attendingDive = false; diveResumes = true; }
                         changed = true;
                     }
                 }

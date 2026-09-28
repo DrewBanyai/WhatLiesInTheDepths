@@ -46,6 +46,7 @@ namespace WhatLiesInTheDepths.Data
 
         public string attendedTaskId { get => Dream.attendedTaskId; set => Dream.attendedTaskId = value; }
         public bool attendingDive { get => Dream.attendingDive; set => Dream.attendingDive = value; }
+        public bool diveResumes { get => Dream.diveResumes; set => Dream.diveResumes = value; }
         public double musterCostScale { get => Dream.musterCostScale; set => Dream.musterCostScale = value; }
 
         public List<Res> resources => Dream.resources;

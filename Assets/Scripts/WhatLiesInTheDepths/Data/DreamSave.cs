@@ -88,6 +88,7 @@ namespace WhatLiesInTheDepths.Data
             o["fathomsTotal"] = d.fathomsTotal;
             o["attendedTaskId"] = d.attendedTaskId;
             o["attendingDive"] = d.attendingDive;
+            o["diveResumes"] = d.diveResumes;
             o["musterCostScale"] = d.musterCostScale;
             o["exodusAt"] = (double)d.ExodusAt;
 
@@ -240,6 +241,7 @@ namespace WhatLiesInTheDepths.Data
             d.attendedTaskId = o["attendedTaskId"] as string;
             if (d.attendedTaskId != null && !d.tasks.Any(t => t.id == d.attendedTaskId)) d.attendedTaskId = null;
             d.attendingDive = Bool(o["attendingDive"], false);
+            d.diveResumes = Bool(o["diveResumes"], false);
             d.musterCostScale = o.Has("musterCostScale") ? Num(o["musterCostScale"]) : 1.0;
             d.ExodusAt = o.Has("exodusAt") ? (int)Num(o["exodusAt"]) : -1;
 

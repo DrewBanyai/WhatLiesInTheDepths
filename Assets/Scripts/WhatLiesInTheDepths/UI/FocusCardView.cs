@@ -92,6 +92,7 @@ namespace WhatLiesInTheDepths.UI
                     // it down, and then nothing is filled.
                     s.attendedTaskId = s.attendedTaskId == _t.id ? null : _t.id;
                     s.attendingDive = false;
+                    s.diveResumes = false;   // effort placed here is not waiting for the next veil
                     s.Dirty();
                 };
 

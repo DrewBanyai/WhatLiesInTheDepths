@@ -357,7 +357,7 @@ namespace WhatLiesInTheDepths.EditorTools
                     if (want != mine)
                     {
                         d.attendedTaskId = want ? t.id : null;
-                        if (want) d.attendingDive = false;
+                        if (want) { d.attendingDive = false; d.diveResumes = false; }
                         Changed();
                     }
                     Shows("shown:focus:" + t.id);
