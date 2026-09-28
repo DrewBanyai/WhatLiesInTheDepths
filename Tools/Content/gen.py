@@ -100,7 +100,13 @@ def unlock_lines(cond):
         if cond in u["when"]:
             if u["target"] == "Construct": out.append(f"every <b>{CONSTRUCT_NAME[u['of']]}</b> becomes <b>{u['n']}</b>")
             elif u["target"] == "Resource": out.append(f"<b>{rn(u['of'])}</b> becomes <b>{u['n']}</b>")
-            elif u["target"] == "Focus": out.append(f"<b>{FOCUS_NAME[u['of']]}</b> becomes <b>{u['n']}</b>")
+            elif u["target"] == "Focus" and u.get("n"): out.append(f"<b>{FOCUS_NAME[u['of']]}</b> becomes <b>{u['n']}</b>")
+            elif u["target"] == "Focus" and u.get("gain"):
+                # a Focus that now gives more: name only what it adds
+                base = dict(next(f[4] for f in D.FOCUS if f[0] == u["of"]))
+                for k, n in u["gain"]:
+                    extra = n - base.get(k, 0)
+                    if extra > 0: out.append(f"<b>{FOCUS_NAME[u['of']]}</b> also gives <b>+{fmtn(extra)}</b> {rn(k)}")
             elif u["target"] == "Unit": pass
     if any(cond in u["when"] and u["target"] == "Unit" for u in D.UPGRADES):
         out.append("every Sworn unit becomes its nightmare, <b>×2.5</b>")
@@ -312,6 +318,7 @@ for u in D.UPGRADES:
     if u.get("fx_lines"): parts.append(f'fx = Lines("upgrade.{uid}.fx")'); S[f"upgrade.{uid}.fx"] = u["fx_lines"]
     if "housing" in u: parts.append(f'housing = {u["housing"]}')
     if u.get("cost"): parts.append(f'cost = {amounts(u["cost"])}')
+    if u.get("gain"): parts.append(f'gain = {amounts(u["gain"])}')
     if "powerScale" in u: parts.append(f'powerScale = {fmtn(u["powerScale"])}')
     if "ceiling" in u: parts.append(f'ceiling = {u["ceiling"]}')
     w("            s.upgrades.Add(new UpgradeDef { " + ", ".join(parts) + " });")

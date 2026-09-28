@@ -175,6 +175,7 @@ namespace WhatLiesInTheDepths.Data
             s.upgrades.Add(new UpgradeDef { id = "abode", target = UpgradeTarget.Construct, of = "hut", when = L("rev:walls"), n = T("upgrade.abode.name"), b = T("upgrade.abode.blurb"), art = "abode", fx = Lines("upgrade.abode.fx"), housing = 3, cost = C("moonsilver", 12, "echo", 10) });
             s.upgrades.Add(new UpgradeDef { id = "whispers", target = UpgradeTarget.Resource, of = "echo", when = L("rev:answers"), n = T("upgrade.whispers.name"), art = "whispers", ceiling = 60 });
             s.upgrades.Add(new UpgradeDef { id = "converse", target = UpgradeTarget.Focus, of = "conjure", when = L("rev:answers"), n = T("upgrade.converse.name"), b = T("upgrade.converse.blurb") });
+            s.upgrades.Add(new UpgradeDef { id = "absorb-silt", target = UpgradeTarget.Focus, of = "absorb", when = L("rev:carried"), gain = C("reverie", 1, "silt", 2) });
             s.upgrades.Add(new UpgradeDef { id = "nm-unflinching", target = UpgradeTarget.Unit, of = "unflinching", when = L("rev:fear"), n = T("upgrade.nm-unflinching.name"), b = T("upgrade.nm-unflinching.blurb"), art = "hollowriders", cost = C("mettle", 4, "umbra", 4), powerScale = 2.5 });
             s.upgrades.Add(new UpgradeDef { id = "nm-laughing", target = UpgradeTarget.Unit, of = "laughing", when = L("rev:fear"), n = T("upgrade.nm-laughing.name"), b = T("upgrade.nm-laughing.blurb"), art = "grinning", cost = C("mettle", 8, "umbra", 6), powerScale = 2.5 });
             s.upgrades.Add(new UpgradeDef { id = "nm-plainspoken", target = UpgradeTarget.Unit, of = "plainspoken", when = L("rev:fear"), n = T("upgrade.nm-plainspoken.name"), b = T("upgrade.nm-plainspoken.blurb"), art = "voices", cost = C("mettle", 15, "umbra", 8), powerScale = 2.5 });
@@ -253,6 +254,7 @@ namespace WhatLiesInTheDepths.Data
             r = Rev(s, "shut", "knot", C("lucidity", 80, "chorus", 60), false, 388f, 257.5f, Fx_(E(Fx.Power, "Sworn", 0.25), E(Fx.Gain, "rally", 1)), L("vision:wake"));
             r.withdraws = L("fear");
             r.grants = L("ending:good");
+            r = Rev(s, "carried", "mirror", C("lucidity", 60, "chorus", 40, "ward", 30), true, 306f, 35.0f, null, L("parted>=96"));
         }
 
         static VisionDef Vision(Dream s, string k, bool great, bool rep, float deg, List<Offer> of,

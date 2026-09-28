@@ -213,6 +213,8 @@ UPGRADES = [
     dict(id="whispers", target="Resource", of="echo", when=["rev:answers"], n="Whispers", art="whispers", ceiling=60),
     dict(id="converse", target="Focus", of="conjure", when=["rev:answers"], n="Converse",
          b="Ask, and wait, and write down what comes back."),
+    # What I Carried Down: Absorb brings up Silt as well, once the veils stop bringing any
+    dict(id="absorb-silt", target="Focus", of="absorb", when=["rev:carried"], gain=[("reverie", 1), ("silt", 2)]),
     # the nightmare path: every Sworn unit becomes its nightmare, keeping its count
     dict(id="nm-unflinching", target="Unit", of="unflinching", when=["rev:fear"], n="Hollow Riders", art="hollowriders",
          b="Nobody is in the saddle. Something is, and it rides beautifully.", powerScale=2.5,
@@ -403,6 +405,13 @@ REVELATIONS = [
          grants=["ending:good"], fx=[power("Sworn", 0.25), gain("rally", 1.0)],
          n="Some Doors Stay Shut", kind="a choice · the nightmares sleep",
          text="I have spent my whole life pushing fear somewhere else. I will not do it to them. These stay with me, and stay asleep."),
+    # The last veils bring nothing up (The Door Ajar), so Silt stops coming in just as the
+    # Dreamwright needs Nacre, and Nacre needs Silt. Reaching them makes Absorb bring Silt too
+    # (the "absorb-silt" upgrade), so a late army can still be raised. Listed last so every
+    # earlier sigil keeps its place in the field.
+    dict(k="carried", g="mirror", great=True, cost=[("lucidity", 60), ("chorus", 40), ("ward", 30)], requires=[L(97)],
+         n="What I Carried Down", kind="a greater realization · changes a focus",
+         text="Nothing comes up from here any more. It does not need to. Every fathom I ever sank is still in me, and if I sit still I can find it again."),
 ]
 
 # ---- Visions: k, great, rep, shown when, offers (res, n, percent), effects, name, text

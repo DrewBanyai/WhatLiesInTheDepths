@@ -1735,6 +1735,12 @@
       "He sleeps soundly. He is free of it. Down in the country beyond his dreams, something else is grazing, and it has his face."
     ],
     "construct.altar.fx": [],
-    "ui.built.save": "Save"
+    "ui.built.save": "Save",
+    "rev.carried.name": "What I Carried Down",
+    "rev.carried.kind": "a greater realization · changes a focus",
+    "rev.carried.text": "Nothing comes up from here any more. It does not need to. Every fathom I ever sank is still in me, and if I sit still I can find it again.",
+    "rev.carried.fx": [
+      "<b>Absorb</b> also gives <b>+2</b> Silt"
+    ]
   }
 }
