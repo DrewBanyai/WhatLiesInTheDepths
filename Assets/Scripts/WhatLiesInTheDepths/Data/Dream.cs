@@ -426,6 +426,7 @@ namespace WhatLiesInTheDepths.Data
                 {
                     var r = Find(up.of);
                     if (r == null) return false;
+                    if (!string.IsNullOrEmpty(up.n) && up.n != r.n) RenameInEffects(r.n, up.n, up.when);
                     if (!string.IsNullOrEmpty(up.n)) r.n = up.n;
                     if (!string.IsNullOrEmpty(up.art)) r.glyph = up.art;
                     if (up.ceiling >= 0) { r.m = up.ceiling; _baseCeiling[r.k] = up.ceiling; }
@@ -449,6 +450,30 @@ namespace WhatLiesInTheDepths.Data
         }
 
         static List<Amount> Copy(List<Amount> a) => a == null ? null : a.Select(x => new Amount(x.k, x.n)).ToList();
+
+        /// <summary>A resource renamed by an upgrade (Echo becoming Whispers) is renamed in every
+        /// effect line that names it too — a Cistern's "+3 max Echo", a place's reward, a Vision's
+        /// payoff — so no card goes on calling it by its old name. The lines were written with
+        /// the name baked in, so they are rewritten here, whole words only ("The Echoes Answer"
+        /// is left alone). The Realization that does the renaming keeps its line, which is about
+        /// the rename itself. Runs again on every load, since loading re-applies the upgrade.</summary>
+        void RenameInEffects(string from, string to, List<string> doneBy)
+        {
+            if (string.IsNullOrEmpty(from) || string.IsNullOrEmpty(to)) return;
+            var word = new System.Text.RegularExpressions.Regex(@"\b" + System.Text.RegularExpressions.Regex.Escape(from) + @"\b");
+            string One(string x) => string.IsNullOrEmpty(x) ? x : word.Replace(x, to);
+            List<string> All(List<string> l) => l?.Select(One).ToList();
+            var keep = new HashSet<string>();
+            if (doneBy != null)
+                foreach (var w in doneBy)
+                    if (w != null && w.StartsWith("rev:", StringComparison.Ordinal)) keep.Add(w.Substring(4));
+
+            foreach (var c in constructs) c.fx = All(c.fx);
+            foreach (var u in upgrades) u.fx = All(u.fx);
+            foreach (var r in revelations) if (!keep.Contains(r.k)) r.fx = All(r.fx);
+            foreach (var v in visions) v.fx = All(v.fx);
+            foreach (var l in road) l.ben = One(l.ben);
+        }
 
         // ---- effects --------------------------------------------------------------
 

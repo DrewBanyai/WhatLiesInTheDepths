@@ -349,12 +349,14 @@ namespace WhatLiesInTheDepths.UI
         }
 
         // An unbuilt plot is a dashed ring with the map form at .22 and no badge.
-        // Locked constructs are absent entirely, as everywhere.
+        // Locked constructs are absent entirely, as everywhere. A one-of-a-kind build (The
+        // Nightlight, The Waking Forge, The Beacon, The Night Kiln) has no badge built either:
+        // there is only ever one, as with the Altar.
         void PaintBuilding(Building b)
         {
             if (b?.def == null) return;
             if (b.def.landmark) { PaintLandmark(b); return; }
-            bool counted = b.def.built && b.def.owned > 0;
+            bool counted = b.def.built && b.def.owned > 0 && !b.def.once;
             if (b.badge != null) b.badge.text = Fmt.Count(b.def.owned);
             var pill = b.badgePill != null ? b.badgePill : b.badge != null ? b.badge.gameObject : null;
             if (pill != null && pill.activeSelf != counted) pill.SetActive(counted);

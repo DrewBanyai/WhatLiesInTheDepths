@@ -193,6 +193,7 @@ namespace WhatLiesInTheDepths.UI
             if (costs != null && costPillPrefab != null && !finished)
             {
                 Rebuild.Clear(costs);
+                _pills.Clear();
                 foreach (var a in _c.cost)
                 {
                     var pill = Instantiate(costPillPrefab, costs);
@@ -201,7 +202,9 @@ namespace WhatLiesInTheDepths.UI
                                : GameState.I.Short(a.k, a.n) ? Refusal.Short : Refusal.None;
                     pill.Set(res != null ? res.n : a.k, a.n, ps);
                     Art.Apply(pill.glyph, Art.Resource(a.k));
+                    _pills.Add(pill);
                 }
+                FitCosts();
             }
 
             // Short of a resource: only the failing pill goes rose; the card keeps full
@@ -229,6 +232,44 @@ namespace WhatLiesInTheDepths.UI
             // A refresh can arrive while the pointer is on the card — every second, or the
             // moment a Build spends — so the hover state is kept rather than painted away.
             Paint(_hovered);
+        }
+
+        // ---- the price row ----------------------------------------------------------
+
+        readonly List<CostPill> _pills = new List<CostPill>();
+        bool _costsWidened;
+
+        /// <summary>The prices get every pixel left of Build (8 short of it), not the 280 the
+        /// card was first drawn with. When three prices with names like Moonsilver still will
+        /// not fit, every pill drops its name and keeps its glyph and amount — all or none, as on
+        /// a unit card — so a squeezed row never runs its words into each other. The card itself
+        /// cannot widen: two of them fill the center column exactly.</summary>
+        void FitCosts()
+        {
+            if (costs == null || _pills.Count == 0) return;
+            if (!_costsWidened && build != null)
+            {
+                _costsWidened = true;
+                var b = build.transform as RectTransform;
+                while (b != null && b.parent != transform) b = b.parent as RectTransform;
+                if (b != null)
+                {
+                    float room = b.anchoredPosition.x - costs.anchoredPosition.x - 8f;
+                    if (room > costs.sizeDelta.x) costs.sizeDelta = new Vector2(room, costs.sizeDelta.y);
+                }
+            }
+
+            var row = costs.GetComponent<HorizontalOrVerticalLayoutGroup>();
+            float gap = row != null ? row.spacing : 8f;
+            float need = gap * (_pills.Count - 1);
+            foreach (var p in _pills)
+            {
+                p.ShowLabel(true);
+                LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)p.transform);
+                need += p.WidthWithLabel();
+            }
+            bool names = need <= costs.sizeDelta.x + 0.5f;
+            if (!names) foreach (var p in _pills) p.ShowLabel(false);
         }
 
         void Paint(bool hovered)

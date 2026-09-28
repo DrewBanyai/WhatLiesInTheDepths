@@ -279,6 +279,11 @@ namespace WhatLiesInTheDepths.UI
             }
             // The dream has already taken it off the field and lit its pane.
             _built = Signature();
+            // Finishing one Vision often shows the next in its chain on the same beat (The Duck
+            // on the Wall reveals Saying It Out Loud). That Vision is in the signature just
+            // recorded but has no mark yet, so nothing would ever draw it: build it now.
+            foreach (var v in s.visions)
+                if (s.Shown(v) && !_marks.Exists(x => x.Def == v)) { Rebuild(); break; }
             PaintIris();
             Close();
             PaintCaption();

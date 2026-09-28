@@ -259,7 +259,7 @@ namespace WhatLiesInTheDepths.Data
               O(F("silt", 150, 1), F("moonsilver", 24, 1), F("nacre", 8, 4)), 0, 28f, false, 0, true, false, 60f);
             W("unblink", "The Unblinking",
               "Stop closing your eyes at the part you do not like.",
-              Fx("Revelations cost <b>−4%</b>"),
+              Fx("Realizations cost <b>−4%</b>"),
               O(F("whispers", 40, 1), F("hush", 12, 1)), 1, 5f, true, 1, false, true, 120f);
             W("door", "A Door in the Floor",
               "There is a way further down that is not falling. Find where it was put.",

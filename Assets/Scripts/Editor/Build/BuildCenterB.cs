@@ -307,7 +307,9 @@ namespace WhatLiesInTheDepths.EditorTools
 
             Rule("Rule", root, 14f, 317f, 404f, Tok.Haze2);
 
-            var costs = Node("Costs", root, 14f, 326f, 280f, 26f);
+            // Every pixel left of Build, 8 short of it. ConstructCardView drops the names when
+            // even this is too narrow.
+            var costs = Node("Costs", root, 14f, 326f, 308f, 26f);
             var costRow = costs.gameObject.AddComponent<HorizontalLayoutGroup>();
             costRow.spacing = 8f;
             costRow.childControlWidth = true;
