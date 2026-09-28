@@ -320,8 +320,8 @@ namespace WhatLiesInTheDepths.UI
                     && int.TryParse(r.Substring(parted.Length), out int n))
                 {
                     // Parting every veil leaves you at the bottom, which is not a veil of its
-                    // own number: the last place on the road opens there, not at "veil 101".
-                    if (n >= s.veils.Count - 1) return Strings.T("ui.assault.opensAtBottom");
+                    // own: the last places on the road open there, not at "veil 101".
+                    if (n >= s.veils.Count) return Strings.T("ui.assault.opensAtBottom");
                     return Strings.T("ui.assault.opensAtVeil", "<b>" + Fmt.Count(n + 1) + "</b>");
                 }
                 if (r == "chose")

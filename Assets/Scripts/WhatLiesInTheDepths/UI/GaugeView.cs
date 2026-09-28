@@ -1,6 +1,11 @@
 // What Lies In The Depths — the right column. Spec section 11.
 // The entry never scrolls: a veil's story is short by design, so the whole panel,
 // including the control that parts the veil, always fits its track.
+//
+// At the bottom (the last veil parted) there is no next veil: the plate, name and story stay
+// on the last one, sounded, and the readout says the bottom has been reached instead of
+// counting fathoms. The dive carries on as "Collect the remains" (Dream.remains): endless,
+// with its own spend and haul, its own Oneiri and your attention carried across.
 using System.Collections.Generic;
 using System.Text;
 using WhatLiesInTheDepths.Core;
@@ -46,6 +51,17 @@ namespace WhatLiesInTheDepths.UI
         static readonly Color FillOn = new Color32(0x7C, 0x61, 0xAE, 0xFF);   // the lit button's fill
         bool _diveHover;
 
+        // The spent and brought-up columns have room for two lines each. When either holds more
+        // (the remains bring up four), the block grows by the difference and everything under
+        // the columns moves down with it, so nothing overlaps the rate line or the stepper.
+        const float LedgerTop = 62f;
+        readonly List<RectTransform> _below = new List<RectTransform>();
+        readonly List<float> _belowY = new List<float>();
+        float _ledgerRoom = 64f, _extra;
+        bool _measure = true;
+        RectTransform _midRule;
+        float _midRuleH;
+
         [Header("The entry")]
         public RectTransform entryColumn;
         [Tooltip("The clip the entry column sits in; its height is the part of the entry shown.")]
@@ -88,6 +104,7 @@ namespace WhatLiesInTheDepths.UI
         {
             _oneiriGlyph = Rebuild.Deep(transform, "OneiriGlyph")?.gameObject;
             _oneiriLabel = Rebuild.Deep(transform, "OneiriLabel")?.gameObject;
+            CaptureBelow();
 
             if (stepper != null)
             {
@@ -95,8 +112,8 @@ namespace WhatLiesInTheDepths.UI
                 stepper.Changed += w =>
                 {
                     // Oneiri belong to the task, not the veil. The dive task is persistent;
-                    // the assignment and the cap never change when a veil is parted.
-                    if (GameState.I?.veil != null) GameState.I.veil.w = w;
+                    // the assignment never changes when a veil is parted, the last one included.
+                    if (GameState.I?.Dive != null) GameState.I.Dive.w = w;
                     GameState.I?.Dirty();
                     Refresh();
                 };
@@ -109,7 +126,7 @@ namespace WhatLiesInTheDepths.UI
                 diveControl.Clicked += () =>
                 {
                     var s = GameState.I;
-                    if (s?.veil == null || s.veil.AtFull) return;
+                    if (s?.Dive == null || s.Dive.AtFull) return;
                     s.attendingDive = !s.attendingDive;
                     if (s.attendingDive) s.attendedTaskId = null;
                     s.Dirty();
@@ -148,10 +165,10 @@ namespace WhatLiesInTheDepths.UI
         {
             // The dive itself is done by the dream (GameState), so it carries on whatever the
             // center is showing. The control only draws where it has got to.
-            var v = GameState.I?.veil;
-            if (v == null) return;
+            var dv = GameState.I?.Dive;
+            if (dv == null) return;
             if (diveFill != null)
-                diveFill.anchorMax = new Vector2(Mathf.Clamp01(v.p), 1f);
+                diveFill.anchorMax = new Vector2(Mathf.Clamp01(dv.p), 1f);
         }
 
         VeilDef _entryFor;
@@ -210,6 +227,9 @@ namespace WhatLiesInTheDepths.UI
         {
             var v = GameState.I?.veil;
             if (v == null) return;
+            // The veil owns the plate, the name, the readout and the story; the dive (the veil
+            // itself, or the remains at the bottom) owns everything you work.
+            var dv = GameState.I.Dive ?? v;
             if (v != _entryFor || Shown(v) != _shown) BuildEntry();
 
             // The Oneiri stepper grows onto the dive with the realization that allows binding,
@@ -226,45 +246,51 @@ namespace WhatLiesInTheDepths.UI
             // The fathom readout goes teal at full — caption, both figures, the "of" at .7,
             // and the bar. Everything else on the panel keeps its color.
             bool sounded = v.AtFull;
+            bool bottom = GameState.I.AtBottom;
             if (fathomCaption != null) fathomCaption.color = Theme.Get(sounded ? Tok.TealD : Tok.Ink3);
+            // At the bottom the count gives way to a sentence, set in the "of"'s serif: there is
+            // no total left to count toward.
             if (fathomSunk != null)
             {
+                if (fathomSunk.gameObject.activeSelf == bottom) fathomSunk.gameObject.SetActive(!bottom);
                 fathomSunk.text = Fmt.Count(v.sunk);     // exact and unabbreviated at any scale
                 fathomSunk.color = Theme.Get(sounded ? Tok.TealD : Tok.Ink);
             }
             if (fathomOf != null)
             {
-                fathomOf.text = "of";
-                fathomOf.color = sounded ? Theme.Get(Tok.TealD, 0.7f) : Theme.Get(Tok.Ink3);
+                fathomOf.text = bottom ? Strings.T("ui.gauge.bottom") : "of";
+                fathomOf.color = bottom ? Theme.Get(Tok.TealD) : sounded ? Theme.Get(Tok.TealD, 0.7f) : Theme.Get(Tok.Ink3);
             }
             if (fathomNeed != null)
             {
+                if (fathomNeed.gameObject.activeSelf == bottom) fathomNeed.gameObject.SetActive(!bottom);
                 fathomNeed.text = Fmt.Count(v.need);
                 fathomNeed.color = Theme.Get(sounded ? Tok.TealD : Tok.Ink);
             }
             if (progress != null)
             {
-                progress.Set(v.Fill);
+                progress.Set(bottom ? 1f : v.Fill);
                 var fillImg = progress.fill != null ? progress.fill.GetComponent<Image>() : null;
                 if (fillImg != null) fillImg.color = Theme.Get(sounded ? Tok.Teal : Tok.Iris);
             }
 
-            FillLedgerColumn(spentColumn, v.spend, Tok.RoseD, Strings.T("ui.gauge.spent"));
+            FillLedgerColumn(spentColumn, dv.spend, Tok.RoseD, Strings.T("ui.gauge.spent"));
             // Only what a dive actually brings: a resource not yet shown is not listed.
             FillLedgerColumn(broughtColumn, GameState.I.Dream.DiveBring, Tok.TealD, Strings.T("ui.gauge.brought"));
 
-            if (stepper != null) stepper.Set(v.w, v.cap);
+            if (stepper != null) stepper.Set(dv.w, dv.cap);
 
-            bool full = v.AtFull;
+            // Full is the dive's: a sounded veil has nothing to sink, the remains never fill.
+            bool full = dv.AtFull;
 
             if (rateLine != null)
             {
                 // Period, not frequency. Replaced outright at full fathoms.
                 rateLine.gameObject.SetActive(true);
                 bool mine = GameState.I.attendingDive;
-                double period = v.Period(mine);
+                double period = dv.Period(mine);
                 string held = !full && !double.IsInfinity(period)
-                    ? FocusCardView.HoldLine(GameState.I, GameState.I.HoldOfDive, v.spend, v.bring) : null;
+                    ? FocusCardView.HoldLine(GameState.I, GameState.I.HoldOfDive, dv.spend, dv.bring) : null;
                 rateLine.text = full
                     ? Strings.T("ui.gauge.noDive")
                     : double.IsInfinity(period) ? Strings.T("ui.gauge.nothingDiving")
@@ -278,7 +304,9 @@ namespace WhatLiesInTheDepths.UI
             if (diveControl != null) diveControl.SetInteractable(!full);
             if (diveLabel != null)
             {
-                diveLabel.text = Strings.T("ui.gauge.sink");   // the control keeps its name; the line under it says why
+                // The control keeps its name at full (the line under it says why); at the bottom
+                // it is a different task.
+                diveLabel.text = Strings.T(bottom ? "ui.gauge.remains" : "ui.gauge.sink");
                 diveLabel.color = full ? Theme.Get(Tok.Ink4) : Theme.Get(lit ? Tok.Veil : Tok.IrisD);
             }
             if (diveGround != null)
@@ -289,7 +317,7 @@ namespace WhatLiesInTheDepths.UI
             if (diveBorder != null) diveBorder.color = Theme.Get(full ? Tok.Haze : lit ? Tok.Iris : Tok.IrisB);
             if (diveArrow != null) diveArrow.gameObject.SetActive(!lit && !full);
             if (diveMark != null) diveMark.gameObject.SetActive(lit);
-            if (diveFill != null) diveFill.anchorMax = new Vector2(Mathf.Clamp01(v.p), 1f);
+            if (diveFill != null) diveFill.anchorMax = new Vector2(Mathf.Clamp01(dv.p), 1f);
             if (diveSubLine != null)
             {
                 // At full the line names why the control is off, centered and italic like the
@@ -305,26 +333,13 @@ namespace WhatLiesInTheDepths.UI
             // Spec, sounded: the closing line sits 7 under the control and the block's 15 of
             // padding follows it, so the block is 15 taller than while diving, and the entry
             // moves down with it (17 below the block either way).
-            if (diveBlock != null)
-            {
-                float h = full ? DiveBlockH + 15f : DiveBlockH;
-                if (!Mathf.Approximately(diveBlock.sizeDelta.y, h))
-                    diveBlock.sizeDelta = new Vector2(diveBlock.sizeDelta.x, h);
-                if (diveSubLine != null)
-                {
-                    var sub = diveSubLine.rectTransform;
-                    sub.anchoredPosition = new Vector2(sub.anchoredPosition.x, -(full ? 247f : 242f));
-                }
-                var entryTopNode = entryClip != null ? entryClip : entryColumn;
-                if (entryTopNode != null)
-                    entryTopNode.anchoredPosition = new Vector2(entryTopNode.anchoredPosition.x,
-                        diveBlock.anchoredPosition.y - h - 16f);
-            }
+            _full = full;
+            PlaceDiveBlock();
 
             // At full fathoms a control appears beneath the last paragraph to part the
             // veil. Nothing auto-advances.
             // Nothing to part into yet means no control: the next shore is simply not written.
-            bool partable = full && GameState.I.HasNextVeil;
+            bool partable = v.AtFull && GameState.I.HasNextVeil;
             var partGo = partRoot != null ? partRoot.gameObject : partControl != null ? partControl.gameObject : null;
             if (partGo != null && partGo.activeSelf != partable)
             {
@@ -352,6 +367,7 @@ namespace WhatLiesInTheDepths.UI
             if (entryColumn == null) return;
             bool full = partRoot != null && partRoot.gameObject.activeSelf;
 
+            MeasureLedger();
             Writing();
 
             // The panel never outgrows its track. Waiting rules are only there to say the
@@ -422,6 +438,76 @@ namespace WhatLiesInTheDepths.UI
             }
         }
 
+        bool _full;
+
+        /// <summary>The dive block's height and what follows it: the closing line under the
+        /// control, and the entry 16 below the block. Grown by whatever the ledger needed.</summary>
+        void PlaceDiveBlock()
+        {
+            if (diveBlock == null) return;
+            // Spec, sounded: the closing line sits 7 under the control and the block's 15 of
+            // padding follows it, so the block is 15 taller than while diving, and the entry
+            // moves down with it (17 below the block either way).
+            float h = (_full ? DiveBlockH + 15f : DiveBlockH) + _extra;
+            if (!Mathf.Approximately(diveBlock.sizeDelta.y, h))
+                diveBlock.sizeDelta = new Vector2(diveBlock.sizeDelta.x, h);
+            if (diveSubLine != null)
+            {
+                var sub = diveSubLine.rectTransform;
+                sub.anchoredPosition = new Vector2(sub.anchoredPosition.x, -((_full ? 247f : 242f) + _extra));
+            }
+            var entryTopNode = entryClip != null ? entryClip : entryColumn;
+            if (entryTopNode != null)
+                entryTopNode.anchoredPosition = new Vector2(entryTopNode.anchoredPosition.x,
+                    diveBlock.anchoredPosition.y - h - 16f);
+        }
+
+        /// <summary>Remembers where everything under the ledger columns sits as built, so it can
+        /// be moved down from there (never from wherever it was last moved to).</summary>
+        void CaptureBelow()
+        {
+            _below.Clear(); _belowY.Clear();
+            if (diveBlock == null) return;
+            var sub = diveSubLine != null ? diveSubLine.rectTransform : null;
+            float rateTop = float.MaxValue;
+            foreach (Transform c in diveBlock)
+            {
+                var rt = c as RectTransform;
+                if (rt == null || rt == sub || rt == spentColumn || rt == broughtColumn) continue;
+                if (rt.name == "Rule" && -rt.anchoredPosition.y <= LedgerTop + 1f) { _midRule = rt; _midRuleH = rt.sizeDelta.y; continue; }
+                float top = -rt.anchoredPosition.y;
+                if (top < LedgerTop + 20f) continue;          // the readout and the bar, above the columns
+                _below.Add(rt); _belowY.Add(rt.anchoredPosition.y);
+                rateTop = Mathf.Min(rateTop, top);
+            }
+            // The columns may run to 4 short of whatever is first beneath them (the rate line).
+            if (rateTop < float.MaxValue) _ledgerRoom = rateTop - LedgerTop - 4f;
+        }
+
+        /// <summary>After the columns are rebuilt: how much taller than their room the taller one
+        /// is, and if that changed, everything under them moves by it.</summary>
+        void MeasureLedger()
+        {
+            if (!_measure) return;
+            _measure = false;
+            float need = Mathf.Max(ColumnHeight(spentColumn), ColumnHeight(broughtColumn));
+            float extra = Mathf.Max(0f, Mathf.Ceil(need - _ledgerRoom));
+            if (Mathf.Approximately(extra, _extra)) return;
+            _extra = extra;
+            for (int i = 0; i < _below.Count; i++)
+                if (_below[i] != null)
+                    _below[i].anchoredPosition = new Vector2(_below[i].anchoredPosition.x, _belowY[i] - _extra);
+            if (_midRule != null) _midRule.sizeDelta = new Vector2(_midRule.sizeDelta.x, _midRuleH + _extra);
+            PlaceDiveBlock();
+        }
+
+        static float ColumnHeight(RectTransform col)
+        {
+            if (col == null || !col.gameObject.activeInHierarchy) return 0f;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(col);
+            return LayoutUtility.GetPreferredHeight(col);
+        }
+
         /// <summary>A paragraph the dive has just written fades up rather than appearing.</summary>
         void Writing()
         {
@@ -445,16 +531,18 @@ namespace WhatLiesInTheDepths.UI
         {
             if (col == null || ledgerLinePrefab == null) return;
             // The caption stays; only the lines are rebuilt.
+            // Switched off first, so this frame's layout already stops counting them.
             foreach (Transform c in col)
-                if (c.name != "Caption") Destroy(c.gameObject);
+                if (c.name != "Caption") { c.gameObject.SetActive(false); Destroy(c.gameObject); }
+            _measure = true;
+
+            bool spent = col == spentColumn;
+            _lines.RemoveAll(l => l.spent == spent);
 
             // A column with nothing in it is absent, not empty.
             bool any = amounts != null && amounts.Count > 0;
             col.gameObject.SetActive(any);
             if (!any) return;
-
-            bool spent = col == spentColumn;
-            _lines.RemoveAll(l => l.spent == spent);
             foreach (var a in amounts)
             {
                 var go = Instantiate(ledgerLinePrefab, col);
@@ -478,7 +566,7 @@ namespace WhatLiesInTheDepths.UI
             if ((_judgeIn -= Time.unscaledDeltaTime) > 0f) return;
             _judgeIn = 0.5f;
             // Effects on the dive (cost, haul) rebuild the veil's amount lists; follow them.
-            var v = GameState.I != null ? GameState.I.veil : null;
+            var v = GameState.I != null ? GameState.I.Dive : null;
             if (v != null)
             {
                 LedgerLine.Resync(_lines, true, v.spend, "");

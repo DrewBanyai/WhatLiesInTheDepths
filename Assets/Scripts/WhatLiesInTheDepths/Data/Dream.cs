@@ -113,6 +113,17 @@ namespace WhatLiesInTheDepths.Data
         public readonly List<VeilDef> veils = new List<VeilDef>();
         public VeilDef veil;
         public int veilIndex;
+        /// <summary>The last veil has been parted. There is no veil under it: the gauge stays on
+        /// the last one, sounded, and the dive becomes <see cref="remains"/>.</summary>
+        public bool AtBottom;
+        /// <summary>The dive at the bottom, "Collect the remains": no fathoms to count toward and
+        /// no end, only what it brings up. Not a veil and not in <see cref="veils"/>.</summary>
+        public VeilDef remains;
+        /// <summary>What the dive is working right now: the current veil, or the remains once the
+        /// bottom is reached. Everything about diving (Oneiri, speed, spend, haul) reads this;
+        /// the plate, name and story read <see cref="veil"/>.</summary>
+        public VeilDef Dive => AtBottom && remains != null ? remains : veil;
+        IEnumerable<VeilDef> AllDives => remains != null ? veils.Append(remains) : veils;
 
         /// <summary>Steps on the path that are not a thing appearing: a menu opening, a column
         /// arriving, a control growing onto every card.</summary>
@@ -178,7 +189,8 @@ namespace WhatLiesInTheDepths.Data
         {
             get
             {
-                int n = veil != null ? veil.w : 0;
+                var dive = Dive;
+                int n = dive != null ? dive.w : 0;
                 foreach (var t in tasks) n += t.w;
                 return n;
             }
@@ -266,7 +278,7 @@ namespace WhatLiesInTheDepths.Data
                 case "held": return Held(id);
                 case "won": return road.Count(l => l.won);
                 case "vdone": { var v = FindVision(id); return v != null ? v.done : 0; }
-                case "parted": return veilIndex;
+                case "parted": return veilIndex + (AtBottom ? 1 : 0);
             }
             Debug.LogWarning($"[What Lies In The Depths] Unknown count '{what}'.");
             return 0;
@@ -490,7 +502,7 @@ namespace WhatLiesInTheDepths.Data
                 if (!_basePassive.ContainsKey(r.k)) _basePassive[r.k] = r.passive;
             }
             foreach (var t in tasks) if (t.baseGain == null) t.baseGain = Copy(t.gain);
-            foreach (var v in veils)
+            foreach (var v in AllDives)
             {
                 if (v.baseSpend == null) v.baseSpend = Copy(v.spend);
                 if (v.baseBring == null) v.baseBring = Copy(v.bring);
@@ -552,7 +564,7 @@ namespace WhatLiesInTheDepths.Data
             double diveCost = Math.Max(0.1, 1.0 - Sum(Fx.DiveCost, null));
             double diveGain = 1.0 + Sum(Fx.Gain, "dive");
             double diveSpeed = 1.0 + Sum(Fx.DiveSpeed, null);
-            foreach (var v in veils)
+            foreach (var v in AllDives)
             {
                 v.speed = diveSpeed;
                 v.spend = Scaled(v.baseSpend, diveCost, true);
@@ -667,20 +679,40 @@ namespace WhatLiesInTheDepths.Data
             return new Loss { before = before, after = after, pct = (int)Math.Round(gone / Math.Max(1.0, before) * 100.0) };
         }
 
-        public bool HasNextVeil => veilIndex + 1 < veils.Count;
+        /// <summary>Whether parting this veil leads anywhere: true on every veil, the last one
+        /// included (parting it reaches the bottom), and false only once the bottom is reached.</summary>
+        public bool HasNextVeil => veil != null && !AtBottom;
 
         /// <summary>One-way. The count of veils is never disclosed, so the next one is simply
-        /// the next one.</summary>
+        /// the next one. Parting the last reaches the bottom: no veil follows, and the dive
+        /// carries on as the remains, with its Oneiri and your attention carried across.</summary>
         public bool PartVeil()
         {
             if (veil == null || !veil.AtFull || !HasNextVeil) return false;
             unlocks.AddRange(veil.grants);
             unlocks.Add("parted:" + veil.ord);
+            if (veilIndex + 1 >= veils.Count)
+            {
+                int held = veil.w;
+                AtBottom = true;
+                veil.w = 0;
+                veil.p = 0f;
+                if (remains != null)
+                {
+                    remains.w = remains.cap > 0 ? Mathf.Min(held, remains.cap) : held;
+                    remains.p = 0f;
+                    if (diveResumes && attendedTaskId == null) attendingDive = true;
+                }
+                else attendingDive = false;
+                diveResumes = false;
+                Dirty();
+                return true;
+            }
             veilIndex += 1;
             int bound = veil.w;
             veil = veils[veilIndex];
             // Oneiri belong to the dive, not the veil: the binding carries across.
-            veil.w = Mathf.Min(bound, veil.cap);
+            veil.w = veil.cap > 0 ? Mathf.Min(bound, veil.cap) : bound;
             // So does your attention: sinking on the last veil is sinking on this one.
             if (diveResumes && attendedTaskId == null) attendingDive = true;
             diveResumes = false;
@@ -811,8 +843,12 @@ namespace WhatLiesInTheDepths.Data
                     int take = Mathf.Min(over, tasks[i].w);
                     tasks[i].w -= take; over -= take;
                 }
-                if (over > 0 && veil != null) veil.w = Mathf.Max(0, veil.w - over);
+                var dv = Dive;
+                if (over > 0 && dv != null) dv.w = Mathf.Max(0, dv.w - over);
             }
+            // At the bottom the last veil holds nothing; its Oneiri work the remains.
+            if (AtBottom && veil != null && veil != Dive) veil.w = 0;
+            if (AtBottom && remains == null) attendingDive = false;
 
             // What of the veil's story has been written. Read from the fathoms every time, so
             // it goes back as readily as it goes forward — a debugger that raises the shore
@@ -841,13 +877,14 @@ namespace WhatLiesInTheDepths.Data
                 AddFlow(t.gain, 1.0 / period);
                 AddFlow(t.cost, -1.0 / period);
             }
-            if (veil != null && GaugeOpen && !veil.AtFull && HoldOfDive == Hold.None)
+            var flowDive = Dive;
+            if (flowDive != null && GaugeOpen && !flowDive.AtFull && HoldOfDive == Hold.None)
             {
-                double period = veil.Period(attendingDive);
+                double period = flowDive.Period(attendingDive);
                 if (!double.IsInfinity(period))
                 {
                     AddFlow(DiveBring, 1.0 / period);
-                    AddFlow(veil.spend, -1.0 / period);
+                    AddFlow(flowDive.spend, -1.0 / period);
                 }
             }
         }
@@ -881,9 +918,10 @@ namespace WhatLiesInTheDepths.Data
         {
             get
             {
-                if (veil == null) return Hold.None;
-                bool primaryOnly = HasNextVeil && veil.bring != null && veil.bring.Count > 0;
-                return HoldOf(veil.spend, primaryOnly ? veil.bring.GetRange(0, 1) : null);
+                var dv = Dive;
+                if (dv == null) return Hold.None;
+                bool primaryOnly = !AtBottom && dv.bring != null && dv.bring.Count > 0;
+                return HoldOf(dv.spend, primaryOnly ? dv.bring.GetRange(0, 1) : null);
             }
         }
 
@@ -895,10 +933,11 @@ namespace WhatLiesInTheDepths.Data
         {
             get
             {
-                if (veil == null || veil.bring == null) return null;
-                var l = new List<Amount>(veil.bring.Count);
-                for (int i = 0; i < veil.bring.Count; i++)
-                    if (i == 0 || Shown(Find(veil.bring[i].k))) l.Add(veil.bring[i]);
+                var dv = Dive;
+                if (dv == null || dv.bring == null) return null;
+                var l = new List<Amount>(dv.bring.Count);
+                for (int i = 0; i < dv.bring.Count; i++)
+                    if (i == 0 || Shown(Find(dv.bring[i].k))) l.Add(dv.bring[i]);
                 return l;
             }
         }
@@ -980,21 +1019,23 @@ namespace WhatLiesInTheDepths.Data
                 changed = true;
             }
 
-            if (veil != null && GaugeOpen && !veil.AtFull && HoldOfDive == Hold.None)
+            var dive = Dive;
+            if (dive != null && GaugeOpen && !dive.AtFull && HoldOfDive == Hold.None)
             {
-                double period = veil.Period(attendingDive);
+                double period = dive.Period(attendingDive);
                 if (!double.IsInfinity(period))
                 {
-                    veil.p += (float)(dt / period);
-                    if (veil.p >= 1f)
+                    dive.p += (float)(dt / period);
+                    if (dive.p >= 1f)
                     {
                         // A dive is paid for when it lands, like a Focus.
-                        veil.p = 0f;
-                        Spend(veil.spend);
+                        dive.p = 0f;
+                        Spend(dive.spend);
                         Grant(DiveBring);
-                        veil.sunk = Math.Min(veil.need, veil.sunk + 1);
+                        // The remains have no total: they are counted, never filled.
+                        dive.sunk = dive.need > 0 ? Math.Min(dive.need, dive.sunk + 1) : dive.sunk + 1;
                         fathomsTotal += 1;
-                        if (veil.AtFull && attendingDive) { attendingDive = false; diveResumes = true; }
+                        if (dive.AtFull && attendingDive) { attendingDive = false; diveResumes = true; }
                         changed = true;
                     }
                 }

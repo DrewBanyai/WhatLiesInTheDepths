@@ -32,7 +32,7 @@ namespace WhatLiesInTheDepths.Data
         public List<Amount> gain;
         public double baseSeconds;    // seconds of work for one completion at one Oneiri
         public int w;                 // Oneiri bound
-        public int cap;               // maximum bindable
+        public int cap;               // most Oneiri it will take; 0 = no cap (design.py WORKER_CAPS)
         public float p;               // progress 0-100
         public string section;        // Labor, Tending, Listening
         public bool seen = true;      // a newly unlocked card wears the iris dot
@@ -244,7 +244,7 @@ namespace WhatLiesInTheDepths.Data
         public List<Amount> spend;    // per dive
         public List<Amount> bring;
         public int w;                 // Oneiri bound to diving
-        public int cap;
+        public int cap;               // most Oneiri the dive will take; 0 = no cap
         public double baseSeconds;    // seconds of work for one dive at one Oneiri
         public float p;               // progress toward the next dive, 0-1
 

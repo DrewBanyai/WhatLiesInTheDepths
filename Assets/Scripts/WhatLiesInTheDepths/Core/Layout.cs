@@ -46,7 +46,7 @@ namespace WhatLiesInTheDepths.Core
         public const float MotionRevealOut = 0.13f;
         public const float MotionFill = 0.22f;
         public const float MotionColumnsOut = 0.5f;
-        public const float MotionEndingIn = 0.6f;
+        public const float MotionEndingIn = 0.5f;
 
         // Clocks.
         public const float EconomyTick = 1f;       // everything in this game happens on the second

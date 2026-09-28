@@ -87,7 +87,8 @@ namespace WhatLiesInTheDepths.EditorTools
             var v = d.veil;
             if (v == null) { EditorGUILayout.LabelField("No veil in this dream."); return; }
 
-            EditorGUILayout.LabelField($"{v.n}  ·  veil {v.ord}  ·  {v.sunk:0} of {v.need:0} fathoms");
+            EditorGUILayout.LabelField(d.AtBottom ? $"{v.n}  ·  the bottom has been reached  ·  {d.Dive.sunk:0} remains collected"
+                                                  : $"{v.n}  ·  veil {v.ord}  ·  {v.sunk:0} of {v.need:0} fathoms");
             EditorGUILayout.LabelField($"written: {v.revealed} of {(v.entry?.Count ?? 0)} paragraphs"
                                      + (v.AtFull ? "  ·  sounded" : string.Empty));
 
@@ -113,13 +114,15 @@ namespace WhatLiesInTheDepths.EditorTools
             double want = EditorGUILayout.DoubleField("Fathoms sunk", v.sunk);
             if (!Mathf.Approximately((float)want, (float)v.sunk)) SetSunk(want);
 
+            // The dive's Oneiri and progress: the veil's, or the remains' at the bottom.
+            var dv = d.Dive;
             using (new EditorGUILayout.HorizontalScope())
             {
-                EditorGUILayout.LabelField($"Oneiri bound {v.w} of {v.cap}", GUILayout.Width(150f));
-                using (new EditorGUI.DisabledScope(v.w <= 0))
-                    if (GUILayout.Button("−")) { v.w -= 1; Changed(); }
-                using (new EditorGUI.DisabledScope(v.w >= v.cap))
-                    if (GUILayout.Button("+")) { v.w += 1; Changed(); }
+                EditorGUILayout.LabelField($"Oneiri bound {dv.w}" + (dv.cap > 0 ? $" of {dv.cap}" : ""), GUILayout.Width(150f));
+                using (new EditorGUI.DisabledScope(dv.w <= 0))
+                    if (GUILayout.Button("−")) { dv.w -= 1; Changed(); }
+                using (new EditorGUI.DisabledScope((dv.cap > 0 && dv.w >= dv.cap) || d.OneiriFree <= 0))
+                    if (GUILayout.Button("+")) { dv.w += 1; Changed(); }
                 bool attend = GUILayout.Toggle(d.attendingDive, "your attention", "Button");
                 if (attend != d.attendingDive)
                 {
@@ -129,8 +132,8 @@ namespace WhatLiesInTheDepths.EditorTools
                 }
             }
 
-            float p = EditorGUILayout.Slider("Toward the next dive", v.p, 0f, 1f);
-            if (!Mathf.Approximately(p, v.p)) { v.p = p; Changed(); }
+            float p = EditorGUILayout.Slider("Toward the next dive", dv.p, 0f, 1f);
+            if (!Mathf.Approximately(p, dv.p)) { dv.p = p; Changed(); }
         }
 
         /// <summary>A fathom, free. Everything a dive would bring or spend is left alone: this
@@ -349,7 +352,7 @@ namespace WhatLiesInTheDepths.EditorTools
             {
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    EditorGUILayout.LabelField($"{t.n}  ({t.w} of {t.cap} bound)", GUILayout.MinWidth(150f));
+                    EditorGUILayout.LabelField($"{t.n}  ({t.w}" + (t.cap > 0 ? $" of {t.cap}" : "") + " bound)", GUILayout.MinWidth(150f));
                     float p = EditorGUILayout.Slider(t.p, 0f, 100f, GUILayout.Width(110f));
                     if (!Mathf.Approximately(p, t.p)) { t.p = p; Changed(); }
                     bool mine = d.attendedTaskId == t.id;

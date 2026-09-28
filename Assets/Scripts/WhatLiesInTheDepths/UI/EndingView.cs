@@ -1,6 +1,12 @@
 // What Lies In The Depths — the ending. Spec section 12.
 // The one surface that is not a column, and the only place anything ignores the
 // three-column budget. Nothing is counted: no time played, no veils parted, no battles won.
+//
+// It comes in two parts. First the art and the story alone, with a single down arrow where the
+// answers will be. Pressing it takes the page down to the credits and the thanks, and only then
+// do Hard reset, Continue and Exit arrive, fading in together over a second. The page cannot be
+// scrolled by hand until it has been taken down once; after that it can, to read the story again.
+using System.Collections;
 using WhatLiesInTheDepths.Core;
 using WhatLiesInTheDepths.Data;
 using Ursine.Text;
@@ -19,6 +25,22 @@ namespace WhatLiesInTheDepths.UI
         public RectTransform message;
         public RectTransform credits;
 
+        [Header("The two parts")]
+        public ScrollRect scroll;
+        public UiButton more;
+        public Image moreBorder;
+        public Image moreArrow;
+        [Tooltip("The three answers, faded in as one once the page has been taken down.")]
+        public CanvasGroup choices;
+        public float scrollSeconds = 1.4f;
+        public float choicesSeconds = 1f;
+
+        [Header("Thanks")]
+        public LayoutElement thanks;
+        public RectTransform thanksPanel;
+        public TMP_Text thanksTitle;
+        public TMP_Text thanksBody;
+
         [Header("Answers")]
         public UiButton hardReset;
         public Image hardResetBorder;
@@ -34,6 +56,7 @@ namespace WhatLiesInTheDepths.UI
         /// nightmares sets ending:bad, leaving them asleep sets ending:good.</summary>
         void OnEnable()
         {
+            PartOne();
             var s = GameState.I;
             if (s == null) return;
             string key = s.unlocks.Has("ending:bad") ? "ending.bad" : "ending.good";
@@ -52,6 +75,16 @@ namespace WhatLiesInTheDepths.UI
         void Start()
         {
             if (smallCapsLine != null) smallCapsLine.text = Strings.T("ui.ending.caps").ToUpperInvariant();
+            if (credits != null)
+                foreach (var t in credits.GetComponentsInChildren<TMP_Text>(true))
+                    if (t.name.StartsWith("Name")) t.text = Strings.T("ui.ending.creditName");
+            FillThanks();
+
+            if (more != null)
+            {
+                more.Clicked += TakeDown;
+                more.Hovered += h => { if (moreBorder != null) moreBorder.color = Theme.Get(h ? Tok.Iris : Tok.IrisB); };
+            }
             if (title != null && string.IsNullOrEmpty(title.text)) title.text = Strings.T("ui.ending.title");
 
             if (hardResetLabel != null) hardResetLabel.text = Strings.T("ui.ending.hardReset");
@@ -75,6 +108,8 @@ namespace WhatLiesInTheDepths.UI
             if (exit != null) exit.Clicked += () => { Router.I?.ShowEnding(false); Router.I?.AskExit(); };
             if (hardReset != null) hardReset.Clicked += () => { Router.I?.ShowEnding(false); Router.I?.AskHardReset(); };
 
+            PartOne();
+
             if (exit != null)
                 exit.Hovered += h =>
                 {
@@ -82,6 +117,95 @@ namespace WhatLiesInTheDepths.UI
                     if (exitLabel != null) exitLabel.color = Theme.Get(h ? Tok.RoseD : Tok.Ink2);
                     if (exitBorder != null) exitBorder.color = Theme.Get(h ? Tok.RoseB : Tok.Haze);
                 };
+        }
+
+        Coroutine _going;
+
+        /// <summary>The first part: the page at the top and held there, the arrow up, the
+        /// answers away.</summary>
+        void PartOne()
+        {
+            if (_going != null) { StopCoroutine(_going); _going = null; }
+            if (scroll != null)
+            {
+                scroll.StopMovement();
+                scroll.vertical = false;
+                scroll.verticalNormalizedPosition = 1f;
+            }
+            if (more != null) more.gameObject.SetActive(true);
+            SetMore(1f);
+            SetChoices(0f);
+        }
+
+        void TakeDown()
+        {
+            if (_going != null) return;
+            _going = StartCoroutine(TakeDownRoutine());
+        }
+
+        /// <summary>The arrow goes, the page glides to the foot, then the answers fade in.</summary>
+        IEnumerator TakeDownRoutine()
+        {
+            if (more != null) more.SetInteractable(false);
+            for (float t = 0f; t < 0.25f; t += Time.unscaledDeltaTime)
+            {
+                SetMore(1f - t / 0.25f);
+                yield return null;
+            }
+            SetMore(0f);
+            if (more != null) more.gameObject.SetActive(false);
+
+            if (scroll != null)
+            {
+                Canvas.ForceUpdateCanvases();
+                float from = scroll.verticalNormalizedPosition;
+                for (float t = 0f; t < scrollSeconds; t += Time.unscaledDeltaTime)
+                {
+                    scroll.verticalNormalizedPosition = Mathf.Lerp(from, 0f, Mathf.SmoothStep(0f, 1f, t / scrollSeconds));
+                    yield return null;
+                }
+                scroll.verticalNormalizedPosition = 0f;
+                scroll.vertical = true;          // from here the story can be scrolled back to
+            }
+
+            for (float t = 0f; t < choicesSeconds; t += Time.unscaledDeltaTime)
+            {
+                SetChoices(Mathf.SmoothStep(0f, 1f, t / choicesSeconds));
+                yield return null;
+            }
+            SetChoices(1f);
+            _going = null;
+        }
+
+        void SetMore(float a)
+        {
+            if (moreBorder != null) { var c = moreBorder.color; c.a = a; moreBorder.color = c; }
+            if (moreArrow != null) { var c = moreArrow.color; c.a = a; moreArrow.color = c; }
+            if (a >= 1f && more != null) more.SetInteractable(true);
+        }
+
+        void SetChoices(float a)
+        {
+            if (choices == null) return;
+            choices.alpha = a;
+            // Pressable only once they have fully arrived.
+            choices.interactable = a >= 1f;
+            choices.blocksRaycasts = a >= 1f;
+        }
+
+        /// <summary>The thanks panel: its title and body from Strings.json, and the panel as
+        /// tall as the body needs.</summary>
+        void FillThanks()
+        {
+            if (thanksTitle != null) thanksTitle.text = Strings.T("ui.ending.thanks.title");
+            if (thanksBody == null) return;
+            thanksBody.text = Strings.T("ui.ending.thanks.body");
+            var rt = thanksBody.rectTransform;
+            float h = Mathf.Ceil(thanksBody.GetPreferredValues(thanksBody.text, rt.rect.width, 0f).y);
+            rt.sizeDelta = new Vector2(rt.sizeDelta.x, h);
+            float panelH = -rt.anchoredPosition.y + h + 24f;
+            if (thanksPanel != null) thanksPanel.sizeDelta = new Vector2(thanksPanel.sizeDelta.x, panelH);
+            if (thanks != null) thanks.preferredHeight = panelH + 20f;
         }
     }
 }

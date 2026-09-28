@@ -43,6 +43,9 @@ namespace WhatLiesInTheDepths.Data
         public List<VeilDef> veils => Dream.veils;
         public VeilDef veil => Dream.veil;
         public bool HasNextVeil => Dream.HasNextVeil;
+        public bool AtBottom => Dream.AtBottom;
+        /// <summary>What the dive is working: the current veil, or the remains at the bottom.</summary>
+        public VeilDef Dive => Dream.Dive;
 
         public string attendedTaskId { get => Dream.attendedTaskId; set => Dream.attendedTaskId = value; }
         public bool attendingDive { get => Dream.attendingDive; set => Dream.attendingDive = value; }

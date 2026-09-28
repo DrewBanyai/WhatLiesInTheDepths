@@ -30,6 +30,19 @@ def silt_per_dive(level):
 # which is what brings the simulated run from ~14h50 to ~11h30.
 NEED_CURVE = 0.045
 
+# Whether a Focus or the dive has a most-Oneiri-it-will-take. Off: any number can be bound to
+# anything, the dive included, so everything the player has can go where they want it. The
+# per-Focus caps in FOCUS and the dive's (3 + level/4) are kept, unused, so switching this back
+# on restores them. gen.py writes 0 ("no cap") for every one while it is off.
+WORKER_CAPS = False
+
+# The dive at the bottom, "Collect the remains": once the last veil is parted there is nothing
+# further to sink into, but the dive goes on for ever with no fathoms to count, bringing up
+# what the dream still has. What the old endless 101st veil brought, and 1 Ward besides, since
+# nothing else brings Ward up after level 65. Oneiri and attention carry over from the dive.
+REMAINS = dict(spend=[("reverie", 9)], bring=[("silt", silt_per_dive(101)), ("moonsilver", 2), ("echo", 4), ("ward", 1)],
+               cap=30, secs=24)
+
 # Room each Cistern adds for Silt. Twice what it was, so half as many keep the dive moving.
 CISTERN_SILT = 20
 
@@ -383,7 +396,7 @@ REVELATIONS = [
     dict(k="clockfolk", g="glass", cost=[("moonsilver", 150), ("lucidity", 60)], requires=[L(84)], fx=[divespeed(0.5)],
          n="The Clockfolk Keep Time", kind="changes the descent",
          text="The Clockfolk have set every clock in the hall to the same hour. It is not late."),
-    dict(k="hollowed", g="branch", cost=[("ward", 40), ("nacre", 50)], requires=["won:exam"], fx=[enemy(0.10)],
+    dict(k="hollowed", g="branch", cost=[("ward", 40), ("nacre", 50)], requires=["won:playground"], fx=[enemy(0.10)],
          n="The Hollowed Remember", kind="changes the road",
          text="The trees it ate from the inside are still standing, and they remember what it tasted like."),
     dict(k="everypeople", g="spiral", cost=[("chorus", 80), ("lucidity", 80)],
@@ -495,9 +508,7 @@ PLACES = [
     ("bell", "Bellcast", 80, [], [], [L(71)], "A town built around a bell nobody will ring, in case everyone turns to look."),
     ("mile", "The Sundered Mile", 120, [], [], [L(74)], "A mile of road that goes on for longer than a mile, and knows that it does."),
     ("ninth", "The Ninth Bell", 600, [power("Sworn", 0.25)], [], [L(77)], "You have heard it eight times. Each time you were called on and did not know the answer."),
-    ("playground", "The Empty Playground", 1800, [gain("*", 0.10)], [], [L(81)], "One swing still moving. Everyone else went in together."),
-    ("exam", "The Unmarked Exam", 2600, [], [], [L(81)], "Every answer written, and not one of them marked, and the bell about to go."),
-    ("stage", "The Stage With No Lines", 3500, [muster(0.10)], [], [L(81)], "A spotlight, a full house, and nothing at all to say."),
+    ("playground", "The Empty Playground", 1800, [gain("*", 0.10), muster(0.10)], [], [L(81)], "One swing still moving. Everyone else went in together."),
     ("diary", "The Locked Diary", 6000, [cappct("vellum", 1.0)], [], [L(83)], "Everything he never told anyone, and a lock a child could open."),
     ("phone", "The Unanswered Phone", 9000, [gain("*", 0.10)], [], [L(84)], "It rings and rings. He knows who it is. He knows what they will say."),
     ("waiting", "The Waiting Room", 14000, [housing("longhouse", 1)], [], [L(86)], "Chairs in rows, a door, and behind the door, news."),
@@ -505,16 +516,13 @@ PLACES = [
     ("office", "The Office That Never Closes", 28000, [power("Sworn", 0.25)], [], [L(88)], "Every window lit. Every desk full. Nobody ever goes home."),
     ("rising", "The Rising Water", 36000, [rate("dread", -0.2)], [], [L(89)], "The house he lives in now, and the water coming up the stairs."),
     ("chair", "The Empty Chair", 48000, [gain("rally", 0.25)], [], [L(90)], "A place set at the table for someone who is not coming back."),
-    ("faces", "The Hall of Faces", 120000, [cappct("chorus", 1.0)], [], [L(92)], "Portraits of everyone he ever wanted to be loved by, all looking away."),
-    ("clock", "The Clock With No Hands", 160000, [speed("*", 0.10)], [], [L(94)], "It is late. It has always been late. There is no telling how late."),
-    ("mirror", "The Mirror That Lies", 200000, [enemy(0.10)], [], [L(96)], "It shows him exactly as he fears he is, and it is very convincing."),
-    ("stairtop", "The Top of the Stair", 260000, [power("Sworn", 0.25)], [], [L(98)], "The top of the stair down to the cupboard, at night, with the light off."),
-    ("landing", "The Landing", 370000, [], [], FINAL, "The house at night. The floorboards know where he is."),
-    ("hallway", "The Hallway, Light Off", 395000, [], [], FINAL, "The walk to the bathroom, counting the doors so as not to count anything else."),
-    ("understair", "The Understair Door", 420000, [], [], FINAL, "The door to the cupboard under the stairs, where the dark goes further than the house does."),
-    ("wardrobe", "The Wardrobe", 445000, [], [], FINAL, "The coat that is not a coat. It has been hanging there for thirty years."),
-    ("underbed", "Under the Bed", 470000, [], [], FINAL, "Feet kept well away from the edge. It is right there, and it has always been right there."),
-    ("nobody", "The Nobody", 490000, [], ["gameover"], FINAL, "Every fear he ever put down, grown into one thing, behind the door he asked to be left open."),
+    ("faces", "The Hall of Faces", 100000, [cappct("chorus", 1.0)], [], [L(92)], "Portraits of everyone he ever wanted to be loved by, all looking away."),
+    ("clock", "The Clock With No Hands", 125000, [speed("*", 0.10)], [], [L(94)], "It is late. It has always been late. There is no telling how late."),
+    ("mirror", "The Mirror That Lies", 150000, [enemy(0.10)], [], [L(96)], "It shows him exactly as he fears he is, and it is very convincing."),
+    ("stairtop", "The Top of the Stair", 180000, [power("Sworn", 0.25)], [], [L(98)], "The top of the stair down to the cupboard, at night, with the light off."),
+    ("understair", "The Understair Door", 205000, [], [], FINAL, "The house at night, and the door to the cupboard under the stairs, where the dark goes further than the house does."),
+    ("underbed", "Under the Bed", 225000, [], [], FINAL, "His old room: the coat on the wardrobe door that is not a coat, and the dark under the bed. It is right there, and it has always been right there."),
+    ("nobody", "The Nobody", 250000, [], ["gameover"], FINAL, "Every fear he ever put down, grown into one thing, behind the door he asked to be left open."),
 ]
 
 # ---- the reaches and each veil's line
@@ -652,7 +660,6 @@ VEIL_LINES = {
     99: "I can hear it breathing on the other side of the door. It has been waiting a very long time.",
     100: "The bottom. Nothing further down. Only the door, and what is behind it.",
 }
-BOTTOM = ("What Lies In The Depths", "There is nothing under this. Whatever happens now happens on the road.")
 
 # ---- the Journal: id, day, chapter, source, great, shown when, name, paragraphs (None keeps the existing strings)
 JOURNAL = [
@@ -728,11 +735,8 @@ JOURNAL = [
         "I have spent my whole life putting fear somewhere else. I will not put it here. These stay with me, and they stay asleep.",
         "The Oneiri sang all night. I do not think it was for the battle.",
     ]),
-    ("landing", 390, 5, "assault", False, ["won:landing"], "The Landing", ["The house at night. Every floorboard knew where I was. We went up anyway."]),
-    ("hallway", 394, 5, "assault", False, ["won:hallway"], "The Hallway, Light Off", ["I counted the doors, the way I used to, so as not to count anything else. There were more doors than there used to be. We opened all of them."]),
-    ("understair", 398, 5, "assault", False, ["won:understair"], "The Understair Door", ["The cupboard under the stairs. The dark at the back went further than the house. We went further."]),
-    ("wardrobe", 402, 5, "assault", False, ["won:wardrobe"], "The Wardrobe", ["The coat that is not a coat. It has been hanging there for thirty years, waiting for me to open the door at night. I opened it."]),
-    ("underbed", 406, 5, "assault", False, ["won:underbed"], "Under the Bed", ["It was right there. It had always been right there. I put my feet on the floor."]),
+    ("understair", 392, 5, "assault", False, ["won:understair"], "The Understair Door", ["The house at night. Every floorboard knew where I was. The cupboard under the stairs stood open, and the dark at the back went further than the house. We went further."]),
+    ("underbed", 400, 5, "assault", False, ["won:underbed"], "Under the Bed", ["My old room. The coat on the wardrobe door that was not a coat. The dark under the bed, right there, where it had always been right there. I put my feet on the floor."]),
     ("nobody", 410, 5, "assault", True, ["won:nobody"], "The Nobody", [
         "It was smaller than I thought. It always is. It was every fear I ever put down, and when we had taken the last of them away there was only a boy's worth of dark left, and then not even that.",
         "I opened the door the rest of the way.",

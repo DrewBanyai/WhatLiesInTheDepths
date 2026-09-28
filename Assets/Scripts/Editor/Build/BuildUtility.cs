@@ -396,6 +396,11 @@ namespace WhatLiesInTheDepths.EditorTools
                       "Placeholder ending prose. Rewrite freely: nothing depends on the words except their length.",
                       17.5f, Tok.Prose, 1.74f);
 
+            // Holds the credits below the fold, so the first part of the ending is the art and
+            // the story alone. The down arrow scrolls past it (EndingView).
+            var gap = Node("Gap", content, 0, 0, Layout.ScreenW, 180f);
+            gap.gameObject.AddComponent<LayoutElement>().preferredHeight = 180f;
+
             var credits = Node("Credits", content, 0, 0, Layout.ScreenW, 120f);
             credits.gameObject.AddComponent<LayoutElement>().preferredHeight = 120f;
             string[] roles = { "DESIGN", "CODE", "ART" };
@@ -404,29 +409,41 @@ namespace WhatLiesInTheDepths.EditorTools
                 float cy = 12f + i * 34f;
                 Caps("Role" + i, credits, Layout.ScreenW * 0.5f - 180f, cy, 112f, 12f, roles[i], 9f, Tok.Ink3,
                      0.16f, TextAlignmentOptions.Right);
-                // Placeholders sit in ink3 italic, which is how you can see at a glance
-                // which are still open.
-                var n = Txt("Name" + i, credits, Layout.ScreenW * 0.5f - 52f, cy - 6f, 220f, 24f,
-                            "Placeholder", TypeRole.SerifItalic, 19f, Tok.Ink3, TextAlignmentOptions.MidlineLeft);
+                // The name is read from Strings.json (ui.ending.creditName) when the ending opens.
+                Txt("Name" + i, credits, Layout.ScreenW * 0.5f - 52f, cy - 6f, 260f, 24f,
+                    "Drew Banyai", TypeRole.Serif, 19f, Tok.Ink, TextAlignmentOptions.MidlineLeft);
             }
 
+            // The thanks: a title and a body of a few paragraphs, both from Strings.json. The
+            // panel is sized to the body when the ending opens.
             var plug = Node("Plug", content, 0, 0, 760f, 150f);
-            plug.gameObject.AddComponent<LayoutElement>().preferredHeight = 150f;
+            var plugLe = plug.gameObject.AddComponent<LayoutElement>();
+            plugLe.preferredHeight = 150f;
             var plugPanel = Node("Panel", plug, (Layout.ScreenW - 760f) * 0.5f, 0, 760f, 130f);
             Img(plugPanel, SpriteFactory.Round(12), Tok.Block);
             Img(Stretch(Node("Border", plugPanel)), SpriteFactory.Outline(12), Tok.Haze2);
-            Txt("Title", plugPanel, 24f, 20f, 700f, 30f, "Placeholder", TypeRole.Serif, 23f, Tok.Ink);
-            Prose("Body", plugPanel, 24f, 56f, 700f, 56f, "", 14f, Tok.Ink2, 1.6f, TypeRole.SerifItalic);
+            var plugTitle = Txt("Title", plugPanel, 24f, 20f, 700f, 30f, "With thanks", TypeRole.Serif, 23f, Tok.Ink);
+            var plugBody = Prose("Body", plugPanel, 24f, 58f, 700f, 56f, "", 15f, Tok.Ink2, 1.6f);
 
             // Answers pinned to the bottom over a gradient scrim — the DepthGauge plate
             // foot, reused at full width.
             var answers = Node("Answers", root, 0, Layout.ScreenH - 132f, Layout.ScreenW, 132f);
             Img(answers, SpriteFactory.Load("Scrim_Up"), Tok.Mist);
             float ax = Layout.ScreenW * 0.5f;
-            var hardReset = OutlineButton("HardReset", answers, ax - 340f, 40f, 200f, 46f, "Hard reset", 18f, 11,
+
+            // Part one: a single round control with a down arrow. It takes the page down to the
+            // credits, and only then do the three answers arrive (EndingView).
+            var more = OutlineButton("More", answers, ax - 28f, 36f, 56f, 56f, "", 18f, 28, Tok.IrisB, Tok.IrisD);
+            var moreArrow = Img(Center(Node("Arrow", more.root), 20f, 15f), SpriteFactory.Glyph("Ui", "arrow"), Tok.IrisD);
+            moreArrow.rectTransform.localEulerAngles = new Vector3(0f, 0f, -90f);
+            moreArrow.raycastTarget = false;
+
+            // Part two: the three answers, together, faded in as one.
+            var choices = Stretch(Node("Choices", answers));
+            var hardReset = OutlineButton("HardReset", choices, ax - 340f, 40f, 200f, 46f, "Hard reset", 18f, 11,
                                           Tok.RoseB, Tok.RoseD);
-            var cont = PrimaryButton("Continue", answers, ax - 126f, 40f, 252f, 46f, "Continue", 18f, 11);
-            var exit = OutlineButton("Exit", answers, ax + 140f, 40f, 200f, 46f, "Exit", 18f, 11,
+            var cont = PrimaryButton("Continue", choices, ax - 126f, 40f, 252f, 46f, "Continue", 18f, 11);
+            var exit = OutlineButton("Exit", choices, ax + 140f, 40f, 200f, 46f, "Exit", 18f, 11,
                                      Tok.Haze, Tok.Ink2);
 
             var view = root.gameObject.AddComponent<EndingView>();
@@ -435,6 +452,15 @@ namespace WhatLiesInTheDepths.EditorTools
             view.title = title;
             view.message = messageStack;
             view.credits = credits;
+            view.scroll = scroll;
+            view.thanks = plugLe;
+            view.thanksPanel = plugPanel;
+            view.thanksTitle = plugTitle;
+            view.thanksBody = plugBody;
+            view.more = more.button;
+            view.moreBorder = more.border;
+            view.moreArrow = moreArrow;
+            view.choices = choices.gameObject.AddComponent<CanvasGroup>();
             view.hardReset = hardReset.button;
             view.hardResetBorder = hardReset.border;
             view.hardResetLabel = hardReset.label;

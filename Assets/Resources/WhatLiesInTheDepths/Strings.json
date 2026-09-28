@@ -138,7 +138,9 @@
     "ui.gauge.nothingDiving": "nothing is diving",
     "ui.gauge.rate": "a dive every {0}",
     "ui.gauge.sink": "Sink a fathom",
+    "ui.gauge.remains": "Collect the remains",
     "ui.gauge.sounded": "the shore is fully sounded",
+    "ui.gauge.bottom": "the bottom has been reached",
     "ui.gauge.partSub": "the way back closes behind you",
     "ui.constructs.menu": "Constructs",
     "ui.constructs.build": "Build",
@@ -168,6 +170,9 @@
     "ui.ending.hardReset": "Hard reset",
     "ui.ending.continue": "Continue",
     "ui.ending.exit": "Exit",
+    "ui.ending.creditName": "Drew Banyai",
+    "ui.ending.thanks.title": "With thanks",
+    "ui.ending.thanks.body": "A special mention to Korbohned, for <i>You Found A Hole In The Ground</i>, the game that served as the primary inspiration for this one.\n\nThank you to the early testers, and to anyone I bounced ideas off of.\n\nThis game is about facing a fear you have been putting off. Much of it came from knowing I had to face my own: the fear of releasing something that might be imperfect. So here it is. If there is something you have been holding back because it is not perfect yet, let it out. Finished and imperfect is better than perfect and never seen.",
     "ui.question.exit.kicker": "Leaving",
     "ui.question.exit.title": "Leave the dream?",
     "ui.question.exit.body": "It will be here. It is always here.",
@@ -1461,12 +1466,6 @@
       "I have gone as far down as there is.",
       "Whatever is left to do, I do on the road, with everyone who came with me."
     ],
-    "veil.bottom.name": "What Lies In The Depths",
-    "veil.bottom.entry": [
-      "There is nothing under this. No floor to give, no next place to feel through it.",
-      "The dive goes on anyway, fathom after fathom of the same dark, and brings up what the dream still has.",
-      "Whatever happens now happens on the road."
-    ],
     "place.gate.name": "The Lamplit Gate",
     "place.gate.blurb": "The last of your own ground. The dark begins at the gate, the way it always did.",
     "place.gate.ben": "the Journal gains an entry",
@@ -1499,13 +1498,7 @@
     "place.ninth.ben": "Sworn units <b>+25%</b> strength; the realization <b>The Saltwives Keep Watch</b>",
     "place.playground.name": "The Empty Playground",
     "place.playground.blurb": "One swing still moving. Everyone else went in together.",
-    "place.playground.ben": "all Focus gains <b>+10%</b>",
-    "place.exam.name": "The Unmarked Exam",
-    "place.exam.blurb": "Every answer written, and not one of them marked, and the bell about to go.",
-    "place.exam.ben": "the realization <b>The Hollowed Remember</b>",
-    "place.stage.name": "The Stage With No Lines",
-    "place.stage.blurb": "A spotlight, a full house, and nothing at all to say.",
-    "place.stage.ben": "mustering costs <b>−10%</b>",
+    "place.playground.ben": "all Focus gains <b>+10%</b>; mustering costs <b>−10%</b>; the realization <b>The Hollowed Remember</b>",
     "place.diary.name": "The Locked Diary",
     "place.diary.blurb": "Everything he never told anyone, and a lock a child could open.",
     "place.diary.ben": "max Vellum <b>+100%</b>",
@@ -1539,20 +1532,11 @@
     "place.stairtop.name": "The Top of the Stair",
     "place.stairtop.blurb": "The top of the stair down to the cupboard, at night, with the light off.",
     "place.stairtop.ben": "Sworn units <b>+25%</b> strength",
-    "place.landing.name": "The Landing",
-    "place.landing.blurb": "The house at night. The floorboards know where he is.",
-    "place.landing.ben": "the Journal gains an entry",
-    "place.hallway.name": "The Hallway, Light Off",
-    "place.hallway.blurb": "The walk to the bathroom, counting the doors so as not to count anything else.",
-    "place.hallway.ben": "the Journal gains an entry",
     "place.understair.name": "The Understair Door",
-    "place.understair.blurb": "The door to the cupboard under the stairs, where the dark goes further than the house does.",
+    "place.understair.blurb": "The house at night, and the door to the cupboard under the stairs, where the dark goes further than the house does.",
     "place.understair.ben": "the Journal gains an entry",
-    "place.wardrobe.name": "The Wardrobe",
-    "place.wardrobe.blurb": "The coat that is not a coat. It has been hanging there for thirty years.",
-    "place.wardrobe.ben": "the Journal gains an entry",
     "place.underbed.name": "Under the Bed",
-    "place.underbed.blurb": "Feet kept well away from the edge. It is right there, and it has always been right there.",
+    "place.underbed.blurb": "His old room: the coat on the wardrobe door that is not a coat, and the dark under the bed. It is right there, and it has always been right there.",
     "place.underbed.ben": "the Journal gains an entry",
     "place.nobody.name": "The Nobody",
     "place.nobody.blurb": "Every fear he ever put down, grown into one thing, behind the door he asked to be left open.",
@@ -1678,25 +1662,13 @@
       "I have spent my whole life putting fear somewhere else. I will not put it here. These stay with me, and they stay asleep.",
       "The Oneiri sang all night. I do not think it was for the battle."
     ],
-    "journal.landing.name": "The Landing",
-    "journal.landing.p": [
-      "The house at night. Every floorboard knew where I was. We went up anyway."
-    ],
-    "journal.hallway.name": "The Hallway, Light Off",
-    "journal.hallway.p": [
-      "I counted the doors, the way I used to, so as not to count anything else. There were more doors than there used to be. We opened all of them."
-    ],
     "journal.understair.name": "The Understair Door",
     "journal.understair.p": [
-      "The cupboard under the stairs. The dark at the back went further than the house. We went further."
-    ],
-    "journal.wardrobe.name": "The Wardrobe",
-    "journal.wardrobe.p": [
-      "The coat that is not a coat. It has been hanging there for thirty years, waiting for me to open the door at night. I opened it."
+      "The house at night. Every floorboard knew where I was. The cupboard under the stairs stood open, and the dark at the back went further than the house. We went further."
     ],
     "journal.underbed.name": "Under the Bed",
     "journal.underbed.p": [
-      "It was right there. It had always been right there. I put my feet on the floor."
+      "My old room. The coat on the wardrobe door that was not a coat. The dark under the bed, right there, where it had always been right there. I put my feet on the floor."
     ],
     "journal.nobody.name": "The Nobody",
     "journal.nobody.p": [
@@ -1743,6 +1715,8 @@
     "rev.carried.text": "Nothing comes up from here any more. It does not need to. Every fathom I ever sank is still in me, and if I sit still I can find it again.",
     "rev.carried.fx": [
       "<b>Absorb</b> also gives <b>+2</b> Silt"
-    ]
+    ],
+    "ui.built.drew_banyai": "Drew Banyai",
+    "ui.built.with_thanks": "With thanks"
   }
 }

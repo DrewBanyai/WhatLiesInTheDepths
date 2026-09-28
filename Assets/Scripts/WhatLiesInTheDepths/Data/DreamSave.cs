@@ -80,7 +80,9 @@ namespace WhatLiesInTheDepths.Data
             foreach (var v in d.veils)
                 veils[v.ord.ToString(CultureInfo.InvariantCulture)] = Obj(("sunk", v.sunk), ("w", v.w), ("p", v.p));
             o["veils"] = veils;
+            if (d.remains != null) o["remains"] = Obj(("sunk", d.remains.sunk), ("w", d.remains.w), ("p", d.remains.p));
             o["veilIndex"] = (double)d.veilIndex;
+            o["atBottom"] = d.AtBottom;
 
             var done = new JsonObject();
             foreach (var kv in d.done) done[kv.Key] = (double)kv.Value;
@@ -232,7 +234,19 @@ namespace WhatLiesInTheDepths.Data
                         v.p = (float)Num(vo["p"]);
                     }
             int vi = (int)Num(o["veilIndex"]);
+            // A save made when the bottom was a veil of its own (index 100) lands on the bottom.
+            d.AtBottom = Bool(o["atBottom"], false) || (vi >= d.veils.Count && d.veils.Count > 0);
+            if (d.AtBottom) vi = d.veils.Count - 1;
             if (vi >= 0 && vi < d.veils.Count) { d.veilIndex = vi; d.veil = d.veils[vi]; }
+            if (d.AtBottom && d.veil != null) { d.veil.sunk = d.veil.need; d.veil.w = 0; }
+            // The remains; a save from when the bottom was veil 101 kept them under that number.
+            var rem = o["remains"] as JsonObject ?? (o["veils"] as JsonObject)?["101"] as JsonObject;
+            if (d.remains != null && rem != null)
+            {
+                d.remains.sunk = Num(rem["sunk"]);
+                d.remains.w = (int)Num(rem["w"]);
+                d.remains.p = (float)Num(rem["p"]);
+            }
 
             d.done.Clear();
             if (o["done"] is JsonObject done)

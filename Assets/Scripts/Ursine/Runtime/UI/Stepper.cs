@@ -1,4 +1,8 @@
 // Ursine — a minus/count/cap/plus control for assigning workers to a task.
+//
+// A capacity of 0 means no cap: the plus is limited only by the free pool, and the "/cap"
+// figure is left blank. Holding either button repeats it, faster the longer it is held
+// (PressAndHold), so a large pool can be moved without a click per worker.
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -46,20 +50,38 @@ namespace Ursine.UI
             _value = value;
             _cap = capacity;
             if (count != null) count.text = Fmt.Count(_value);
-            if (cap != null) cap.text = "/" + Fmt.Count(_cap);
+            if (cap != null) cap.text = Capped ? "/" + Fmt.Count(_cap) : string.Empty;
             Refresh();
         }
 
+        bool Capped => _cap > 0;
+
         void Awake()
         {
-            if (minus != null) minus.Clicked += () => Step(-1);
-            if (plus != null) plus.Clicked += () => Step(+1);
+            Hook(minus, -1);
+            Hook(plus, +1);
+        }
+
+        // A click steps once; a hold repeats. The click that ends a held press is not counted
+        // again on top of its repeats.
+        void Hook(UiButton b, int sign)
+        {
+            if (b == null) return;
+            var hold = b.GetComponent<PressAndHold>() ?? b.gameObject.AddComponent<PressAndHold>();
+            b.Clicked += () => { if (!hold.Repeated) Step(sign); };
+            hold.Repeat += n => { if (b.interactable) Step(sign * n); };
         }
 
         void Step(int d)
         {
-            int next = Mathf.Clamp(_value + d, 0, _cap);
-            if (d > 0 && _free != null && _free() <= 0) return;
+            if (d > 0 && _free != null)
+            {
+                int free = _free();
+                if (free <= 0) return;
+                d = Mathf.Min(d, free);
+            }
+            int next = Mathf.Max(0, _value + d);
+            if (Capped) next = Mathf.Min(next, _cap);
             if (next == _value) return;
             _value = next;
             if (count != null) count.text = Fmt.Count(_value);
@@ -70,7 +92,7 @@ namespace Ursine.UI
         void Refresh()
         {
             bool canMinus = _value > 0;
-            bool canPlus = _value < _cap && (_free == null || _free() > 0);
+            bool canPlus = (!Capped || _value < _cap) && (_free == null || _free() > 0);
             if (minus != null) minus.SetInteractable(canMinus);
             if (plus != null) plus.SetInteractable(canPlus);
             if (minusGround != null) minusGround.color = Theme.Get(canMinus ? liveGroundToken : deadGroundToken);
@@ -83,7 +105,7 @@ namespace Ursine.UI
         /// <summary>Which limit binds first, or null when neither does.</summary>
         public string BindingLimit()
         {
-            if (_value >= _cap) return Say(fullMessageKey, fullMessage);
+            if (Capped && _value >= _cap) return Say(fullMessageKey, fullMessage);
             if (_free != null && _free() <= 0) return Say(emptyPoolMessageKey, emptyPoolMessage);
             return null;
         }

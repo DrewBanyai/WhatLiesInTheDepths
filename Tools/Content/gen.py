@@ -162,10 +162,8 @@ def veil_rows():
             if name == "The Door Ajar": bring = []
             rows.append(dict(ord=lv, reach=name, need=need(lv), spend=spend, bring=bring,
                              cap=3 + lv // 4, secs=round(6 + lv * 0.2, 1)))
-    # The bottom never finishes: it is sunk for ever, and it is where silt comes from once
-    # there is nowhere further to go.
-    rows.append(dict(ord=101, reach=D.BOTTOM[0], need=999999, spend=[("reverie", 9)],
-                     bring=[("silt", D.silt_per_dive(101)), ("moonsilver", 2), ("echo", 4)], cap=30, secs=24, bottom=True))
+    # There is no veil under the hundredth: parting it reaches the bottom (Dream.AtBottom),
+    # where the dive stops for good and every Oneiri on it is released.
     return rows
 
 def slug(s): return re.sub(r"[^a-z]+", "", s.lower().replace("the ", ""))
@@ -181,8 +179,8 @@ w("//")
 w("// Every number is a first-pass placeholder, tuned only far enough that a simulated player")
 w("// walks the whole path (Tools/Content/sim). The five chapters are twenty veils each; the")
 w("// last veil of chapters two to four is sunk with a resource only that chapter's golden beat")
-w("// brings (Dread, Chorus, Mettle), which is the roadblock. The road has thirty places; the")
-w("// last six open only at the bottom, and only once the choice is made.")
+w("// brings (Dread, Chorus, Mettle), which is the roadblock. The road has twenty-five places;")
+w("// the last three open only at the bottom, and only once the choice is made.")
 w("using System.Collections.Generic;")
 w("using UnityEngine;")
 w("using Ursine.Economy;")
@@ -263,7 +261,7 @@ w("")
 w("        static void Focus(Dream s)")
 w("        {")
 for fid, sec, g, cost, gain, secs, capn, req, n, b in D.FOCUS:
-    w(f'            Task(s, "{fid}", "{sec}", "{g}", {amounts(cost)}, {amounts(gain)}, {secs}, {capn}, {strs(req)});')
+    w(f'            Task(s, "{fid}", "{sec}", "{g}", {amounts(cost)}, {amounts(gain)}, {secs}, {capn if D.WORKER_CAPS else 0}, {strs(req)});')
     if n: S[f"focus.{fid}.name"] = n
     if b: S[f"focus.{fid}.blurb"] = b
 for k, v in D.FOCUS_SECTIONS.items(): S[f"focus.section.{k}"] = v
@@ -407,10 +405,7 @@ w("        static void Veils(Dream s)")
 w("        {")
 for row in veil_rows():
     lv = row["ord"]
-    if row.get("bottom"):
-        name_key, entry_key = "veil.bottom.name", "veil.bottom.entry"
-        S[name_key] = D.BOTTOM[0]; S[entry_key] = list(VM.BOTTOM)
-    else:
+    if True:
         name_key = f"veil.{slug(row['reach'])}.name"
         S.setdefault(name_key, row["reach"])
         if lv == 1: entry_key = "veil.shallows.entry"; S[entry_key] = list(VM.SHALLOWS)
@@ -421,7 +416,12 @@ for row in veil_rows():
             entry_key = f"veil.{lv}.entry"; S[entry_key] = paras
     if lv == 1: name_key = "veil.shallows.name"
     w(f'            Veil(s, {lv}, "{name_key}", {row["need"]}, {amounts(row["spend"]) if row["spend"] else "C()"}, '
-      f'{amounts(row["bring"]) if row["bring"] else "C()"}, {row["cap"]}, {row["secs"]}, "{entry_key}");')
+      f'{amounts(row["bring"]) if row["bring"] else "C()"}, {row["cap"] if D.WORKER_CAPS else 0}, {row["secs"]}, "{entry_key}");')
+# The dive at the bottom: no total (need 0 never fills), no name or story of its own.
+R = D.REMAINS
+w(f'            s.remains = new VeilDef {{ n = "", ord = {len(veil_rows()) + 1}, sunk = 0, need = 0, '
+  f'spend = {amounts(R["spend"])}, bring = {amounts(R["bring"])}, w = 0, cap = {R["cap"] if D.WORKER_CAPS else 0}, '
+  f'baseSeconds = {R["secs"]} }};')
 w("        }")
 w("")
 

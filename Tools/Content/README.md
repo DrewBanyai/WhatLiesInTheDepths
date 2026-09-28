@@ -1,7 +1,7 @@
 # Content: the whole dream, as data
 
 `design.py` is the design source for chapters 1–5: resources, Focus tasks, constructs,
-upgrades, Realizations, Visions, the 100 veils, the 30 places on the road, units, the Journal
+upgrades, Realizations, Visions, the 100 veils, the 25 places on the road, units, the Journal
 and both endings. `gen.py` turns it into
 `Assets/Scripts/WhatLiesInTheDepths/Data/OpeningContent.cs` and the matching keys in
 `Assets/Resources/WhatLiesInTheDepths/Strings.json`.

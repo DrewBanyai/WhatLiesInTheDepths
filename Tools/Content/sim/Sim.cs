@@ -20,7 +20,7 @@ static class Sim
 
     static string Clock(double s) => $"{(int)(s / 3600)}h{(int)(s % 3600 / 60):00}m";
 
-    static void Log(string m) => Console.WriteLine($"[{Clock(t),8}] L{d.veilIndex + 1,-3} {m}");
+    static void Log(string m) => Console.WriteLine($"[{Clock(t),8}] L{d.veilIndex + 1 + (d.AtBottom ? 1 : 0),-3} {m}");
 
     static void Main(string[] args)
     {
@@ -53,7 +53,7 @@ static class Sim
             var doneBefore = d.tasks.ToDictionary(x => x.id, x => d.done.TryGetValue(x.id, out var dn) ? dn : 0);
             double fathomsBefore = d.fathomsTotal;
             d.Step((float)dt);
-            if (d.veilIndex < 100)
+            if (!d.AtBottom)
             {
                 foreach (var tk in d.tasks)
                 {
@@ -63,13 +63,13 @@ static class Sim
                 if (d.fathomsTotal > fathomsBefore && d.veil != null) SiltBy("Dive", (d.fathomsTotal - fathomsBefore) * SiltIn(d.veil.spend));
             }
             double siltAfter = d.Held("silt");
-            if (siltAfter > siltBefore && d.veilIndex < 100) siltEarned += siltAfter - siltBefore;
-            if (siltAfter < siltBefore && d.veilIndex < 100) siltFocus += siltBefore - siltAfter;
+            if (siltAfter > siltBefore && !d.AtBottom) siltEarned += siltAfter - siltBefore;
+            if (siltAfter < siltBefore && !d.AtBottom) siltFocus += siltBefore - siltAfter;
             t += dt; tickAcc += dt; thinkAcc += dt; bindAcc += dt;
             if (tickAcc >= 1)
             {
                 tickAcc -= 1;
-                if (d.veilIndex < 100)
+                if (!d.AtBottom)
                 {
                     double have = d.Held("silt");
                     foreach (var v in d.visions)
@@ -94,7 +94,7 @@ static class Sim
                 var realizedBefore = d.revelations.Where(x => !x.realized).ToDictionary(x => x, x => SiltIn(x.cost));
                 var unitsBefore = d.units.ToDictionary(x => x, x => (x.c, SiltIn(d.MusterCost(x))));
                 Think();
-                if (d.veilIndex < 100)
+                if (!d.AtBottom)
                 {
                     foreach (var kv in ownedBefore)
                     {
@@ -112,7 +112,7 @@ static class Sim
                         if (m > 0 && kv.Value.Item2 > 0) SiltBy("Muster: " + kv.Key.n, m * kv.Value.Item2);
                     }
                 }
-                if (d.veilIndex < 100)
+                if (!d.AtBottom)
                 {
                     double spent = Math.Max(0, sb - d.Held("silt"));
                     int built = (cis?.owned ?? 0) - cisBefore;
@@ -215,8 +215,8 @@ static class Sim
 
     static bool Makes(FocusTask t, string r) => t.baseGain != null && t.baseGain.Any(a => a.k == r);
     static bool Needs(List<Amount> cost, string r) => cost != null && cost.Any(a => a.k == r);
-    static bool DiveUseful => d.GaugeOpen && d.veil != null && !d.veil.AtFull && d.HoldOfDive == Hold.None
-                              && !d.veil.spend.Any(a => missing.Contains(a.k) && !d.veil.bring.Any(b => b.k == a.k));
+    static bool DiveUseful => d.GaugeOpen && d.Dive != null && !d.Dive.AtFull && d.HoldOfDive == Hold.None
+                              && !d.Dive.spend.Any(a => missing.Contains(a.k) && !d.Dive.bring.Any(b => b.k == a.k));
 
     static void Think()
     {
@@ -298,17 +298,20 @@ static class Sim
 
     // Oneiri: the dive first, then every task that can run, round-robin up to caps, and
     // weighted toward whatever is scarcest.
+    // A cap of 0 is no cap (design.py WORKER_CAPS off).
+    static int Cap(int c) => c > 0 ? c : int.MaxValue;
+
     static void Bind()
     {
         if (!d.BindingOpen) return;
         foreach (var tk in d.tasks) tk.w = 0;
-        if (d.veil != null) d.veil.w = 0;
+        if (d.Dive != null) d.Dive.w = 0;
         d.Dirty();
         int free = d.OneiriTotal;
         if (DiveUseful)
         {
-            int dive = Math.Min(d.veil.cap, (int)Math.Ceiling(free * (missing.Count == 0 ? 0.5 : 0.3)));
-            d.veil.w = dive; free -= dive;
+            int dive = Math.Min(Cap(d.Dive.cap), (int)Math.Ceiling(free * (missing.Count == 0 ? 0.5 : 0.3)));
+            d.Dive.w = dive; free -= dive;
         }
         // makers of what is missing first, then everything else that can run and does not eat
         // what is missing
@@ -316,7 +319,7 @@ static class Sim
         live = live.OrderByDescending(x => missing.Any(m => Makes(x, m)) ? 1 : 0)
                    .ThenBy(x => x.gain.Min(a => d.Ceiling(a.k) <= 0 ? 1 : d.Held(a.k) / d.Ceiling(a.k))).ToList();
         foreach (var tk in live.Where(x => missing.Any(m => Makes(x, m))))
-        { int n = Math.Min(free, tk.cap); tk.w = n; free -= n; }
+        { int n = Math.Min(free, Cap(tk.cap)); tk.w = n; free -= n; }
         bool any = true;
         while (free > 0 && any)
         {
@@ -324,11 +327,11 @@ static class Sim
             foreach (var tk in live)
             {
                 if (free <= 0) break;
-                if (tk.w >= tk.cap) continue;
+                if (tk.w >= Cap(tk.cap)) continue;
                 tk.w++; free--; any = true;
             }
         }
-        if (free > 0 && DiveUseful) { int more = Math.Min(free, d.veil.cap - d.veil.w); d.veil.w += more; }
+        if (free > 0 && DiveUseful) { int more = Math.Min(free, Cap(d.Dive.cap) - d.Dive.w); d.Dive.w += more; }
         d.Dirty();
     }
 

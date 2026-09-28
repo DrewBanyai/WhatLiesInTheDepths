@@ -9,11 +9,6 @@ SHALLOWS = [
     "The floor is thinner than it was. I can feel the next place through it, like a draft through a door.",
 ]
 
-BOTTOM = [
-    "There is nothing under this. No floor to give, no next place to feel through it.",
-    "The dive goes on anyway, fathom after fathom of the same dark, and brings up what the dream still has.",
-    "Whatever happens now happens on the road.",
-]
 
 MORE = {
     5: ("The Oneiri will not touch the bitten ones. They carry them to the edge of the Drift and let them go.",
