@@ -109,6 +109,10 @@ namespace WhatLiesInTheDepths.Data
         {
             if (I != null && I != this) { Destroy(this); return; }
             I = this;
+            // An incremental keeps going when it is not in front: losing focus no longer
+            // pauses it, and a minimized window is paced down to 10fps rather than left to
+            // draw flat out. A hidden browser tab is still stopped, by the browser.
+            BackgroundPacing.Install(10);
             Dream = new Dream(startMidGame);
             if (!startMidGame) Load();
         }
