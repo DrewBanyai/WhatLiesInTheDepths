@@ -307,7 +307,8 @@ namespace WhatLiesInTheDepths.UI
         }
 
         /// <summary>Why the next place cannot be entered yet, or null when it can. Names the first
-        /// thing it is waiting on: a depth reads as the veil it opens at.</summary>
+        /// thing it is waiting on: a depth reads as the veil it opens at (or the bottom, for the
+        /// last one), and the final stretch names the choice it is waiting for.</summary>
         static string ShutReason(GameState s, RoadLocation place)
         {
             if (place?.requires == null || s.Open(place)) return null;
@@ -317,7 +318,19 @@ namespace WhatLiesInTheDepths.UI
                 const string parted = "parted>=";
                 if (r.StartsWith(parted, System.StringComparison.Ordinal)
                     && int.TryParse(r.Substring(parted.Length), out int n))
+                {
+                    // Parting every veil leaves you at the bottom, which is not a veil of its
+                    // own number: the last place on the road opens there, not at "veil 101".
+                    if (n >= s.veils.Count - 1) return Strings.T("ui.assault.opensAtBottom");
                     return Strings.T("ui.assault.opensAtVeil", "<b>" + Fmt.Count(n + 1) + "</b>");
+                }
+                if (r == "chose")
+                {
+                    // The last stretch waits on the choice: name both sides of it.
+                    var sides = s.revelations.FindAll(x => x.Choice && !x.realized);
+                    if (sides.Count >= 2)
+                        return Strings.T("ui.assault.opensWithChoice", "<b>" + sides[0].n + "</b>", "<b>" + sides[1].n + "</b>");
+                }
                 if (r.StartsWith("rev:", System.StringComparison.Ordinal))
                 {
                     var rev = s.revelations.Find(x => x.k == r.Substring(4));

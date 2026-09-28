@@ -208,6 +208,8 @@
     "ui.assault.noChanceHere": "no chance at this strength",
     "ui.assault.toTake": "{0} to take it",
     "ui.assault.opensAtVeil": "the way here opens at veil {0}",
+    "ui.assault.opensAtBottom": "the way here opens at the bottom",
+    "ui.assault.opensWithChoice": "the way here opens when you choose: {0} or {1}",
     "ui.assault.opensWithRealization": "the way here opens with {0}",
     "ui.assault.notOpenYet": "the way here is not open yet",
     "ui.assault.next": "The next place",
