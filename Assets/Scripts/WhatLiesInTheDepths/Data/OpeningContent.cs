@@ -112,7 +112,7 @@ namespace WhatLiesInTheDepths.Data
             Task(s, "tend", "labor", "tend", C("tallow", 2), C("lucidity", 2), 12, 0, L("rev:lamps"));
             Task(s, "sit", "labor", "sit", null, C("hush", 2, "reverie", 1), 10, 0, L("rev:darkquiet"));
             Task(s, "weep", "listening", "weep", C("hush", 2), C("salt", 2), 10, 0, L("rev:salt"));
-            Task(s, "sift", "listening", "sift", C("silt", 2, "salt", 2), C("nacre", 1), 12, 0, L("vision:garden"));
+            Task(s, "sift", "listening", "sift", C("silt", 2, "salt", 2), C("nacre", 1, "echo", 1), 12, 0, L("vision:garden"));
             Task(s, "page", "listening", "page", C("hush", 2, "echo", 3), C("vellum", 1), 14, 0, L("rev:written"));
             Task(s, "watch", "muster", "watch", C("hush", 2, "salt", 2), C("ward", 1), 12, 0, L("rev:stand"));
             Task(s, "rally", "muster", "rally", C("echo", 3), C("chorus", 1), 10, 0, L("rev:mine"));

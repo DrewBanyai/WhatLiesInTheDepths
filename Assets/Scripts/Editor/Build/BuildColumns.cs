@@ -322,6 +322,7 @@ namespace WhatLiesInTheDepths.EditorTools
                                SpriteFactory.Glyph("Ui", "mark"), Tok.Veil);
             diveMark.raycastTarget = false;
             var diveBtn = diveCtl.gameObject.AddComponent<UiButton>();
+            Feel(diveCtl.gameObject, Tok.IrisD, 0.06f, row: true);
             var diveSub = Txt("SubLine", dive, 15f, 242f, 392f, 14f, "", TypeRole.Label400, 11f, Tok.Ink3,
                               TextAlignmentOptions.MidlineLeft);
 
@@ -345,6 +346,8 @@ namespace WhatLiesInTheDepths.EditorTools
             partShadow.raycastTarget = false;
             var partGround = Img(Stretch(Node("Ground", part)), SpriteFactory.Round(11), Tok.Iris, 1f, true);
             var partBtn = partGround.gameObject.AddComponent<UiButton>();
+            // The whole control moves, shadow and label with it; the button is its ground.
+            Feel(part.gameObject, null, 0.14f, row: true, button: partBtn, washShape: partGround);
             var partRow = Stretch(Node("Row", part));
             var prow = partRow.gameObject.AddComponent<HorizontalLayoutGroup>();
             prow.spacing = 10f;

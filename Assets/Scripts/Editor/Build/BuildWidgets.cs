@@ -248,11 +248,13 @@ namespace WhatLiesInTheDepths.EditorTools
             var minusGround = Img(minusRt, SpriteFactory.Round(9), Tok.IrisL, 1f, true);
             Txt("Sign", minusRt, 0, 0, 38f, 38f, "−", TypeRole.Mono500, 16f, Tok.IrisD, TextAlignmentOptions.Center);
             var minus = minusRt.gameObject.AddComponent<UiButton>();
+            Feel(minusRt.gameObject, Tok.IrisD, 0.10f);
 
             var plusRt = Node("Plus", root, 91f, 1f, 38f, 38f);
             var plusGround = Img(plusRt, SpriteFactory.Round(9), Tok.IrisL, 1f, true);
             Txt("Sign", plusRt, 0, 0, 38f, 38f, "+", TypeRole.Mono500, 16f, Tok.IrisD, TextAlignmentOptions.Center);
             var plus = plusRt.gameObject.AddComponent<UiButton>();
+            Feel(plusRt.gameObject, Tok.IrisD, 0.10f);
 
             // The count and its cap sit together, centered between the two buttons, 3 apart
             // (min-width 52, justify-content: center) — the pair moves as one, so "3/4" and

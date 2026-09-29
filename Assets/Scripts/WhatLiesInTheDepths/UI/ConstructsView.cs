@@ -68,6 +68,10 @@ namespace WhatLiesInTheDepths.UI
             public GameObject halo;
             public Image haloFill;
             public Image haloEdge;
+            /// <summary>The circle an unbuilt plot lights with, filling its dashed ring.</summary>
+            public GameObject haloRound;
+            public Image haloRoundFill;
+            public Image haloRoundEdge;
             public bool hovered;
         }
 
@@ -245,6 +249,9 @@ namespace WhatLiesInTheDepths.UI
                     halo = go.transform.Find("Halo")?.gameObject,
                     haloFill = go.transform.Find("Halo")?.GetComponent<Image>(),
                     haloEdge = go.transform.Find("Halo/Edge")?.GetComponent<Image>(),
+                    haloRound = go.transform.Find("HaloRound")?.gameObject,
+                    haloRoundFill = go.transform.Find("HaloRound")?.GetComponent<Image>(),
+                    haloRoundEdge = go.transform.Find("HaloRound/Edge")?.GetComponent<Image>(),
                     root = go
                 };
                 if (c.landmark) MakeLandmark(building, form);
@@ -364,11 +371,15 @@ namespace WhatLiesInTheDepths.UI
         void PaintBuilding(Building b)
         {
             if (b?.def == null) return;
-            if (b.halo != null)
             {
-                // Lit under the pointer, and kept lit on the building whose card is open.
+                // Lit under the pointer, and kept lit on the building whose card is open. A
+                // plot not yet built lights as a circle filling its dashed ring; a standing
+                // building as the rounded square.
                 bool lit = b.hovered || (_open != null && b.def == _open);
-                if (b.halo.activeSelf != lit) b.halo.SetActive(lit);
+                bool plot = !b.def.built && b.haloRound != null;
+                bool square = lit && !plot, round = lit && plot;
+                if (b.halo != null && b.halo.activeSelf != square) b.halo.SetActive(square);
+                if (b.haloRound != null && b.haloRound.activeSelf != round) b.haloRound.SetActive(round);
                 if (lit) PaintHalo(b);
             }
             if (b.def.landmark) { PaintLandmark(b); return; }
@@ -383,17 +394,23 @@ namespace WhatLiesInTheDepths.UI
         }
 
         /// <summary>Iris, light, when the purse covers one more; white with a haze edge when it
-        /// does not, or when there is nothing left to buy (a one-of-a-kind already standing).</summary>
+        /// does not, or when there is nothing left to buy (a one-of-a-kind already standing);
+        /// gold, the color of an unreachable figure, when some part of the price is above that
+        /// resource's ceiling, so no amount of waiting will buy it.</summary>
         static void PaintHalo(Building b)
         {
             Color A(Tok t, float a) { var c = Theme.Get(t); c.a = a; return c; }
             var s = GameState.I;
             bool finished = b.def.once && b.def.owned > 0;
             bool can = !finished && s != null && s.Judge(b.def.cost) == Refusal.None;
-            if (b.haloFill != null)
-                b.haloFill.color = can ? A(Tok.IrisL, 0.6f) : new Color(1f, 1f, 1f, 0.8f);
-            if (b.haloEdge != null)
-                b.haloEdge.color = can ? A(Tok.IrisB, 0.55f) : A(Tok.Haze, 0.9f);
+            bool beyond = !finished && !can && s != null && b.def.cost != null
+                          && b.def.cost.Any(a => s.AboveCeiling(a.k, a.n));
+            Color fill = can ? A(Tok.IrisL, 0.6f) : beyond ? A(Tok.GoldL, 0.85f) : new Color(1f, 1f, 1f, 0.8f);
+            Color edge = can ? A(Tok.IrisB, 0.55f) : beyond ? A(Tok.GoldB, 0.95f) : A(Tok.Haze, 0.9f);
+            if (b.haloFill != null) b.haloFill.color = fill;
+            if (b.haloEdge != null) b.haloEdge.color = edge;
+            if (b.haloRoundFill != null) b.haloRoundFill.color = fill;
+            if (b.haloRoundEdge != null) b.haloRoundEdge.color = edge;
         }
 
         /// <summary>The stone is always there at full ink — it is where the dreamer sits.

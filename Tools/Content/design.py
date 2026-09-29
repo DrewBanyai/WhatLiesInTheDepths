@@ -114,7 +114,7 @@ FOCUS = [
      "Sit with the Hush", "Nothing is asked of you. That is the difficulty."),
     ("weep", "listening", "weep", [("hush", 2)], [("salt", 2)], 10, 10, ["rev:salt"],
      "Let It Out", "It dries faster if you stop trying to keep it."),
-    ("sift", "listening", "sift", [("silt", 2), ("salt", 2)], [("nacre", 1)], 12, 10, ["vision:garden"],
+    ("sift", "listening", "sift", [("silt", 2), ("salt", 2)], [("nacre", 1), ("echo", 1)], 12, 10, ["vision:garden"],
      "Sift the Beds", "Something grows around every grain that would not go away."),
     ("page", "listening", "page", [("hush", 2), ("echo", 3)], [("vellum", 1)], 14, 10, ["rev:written"],
      "Copy the Vellum", "The hand remembers what the reading does not."),

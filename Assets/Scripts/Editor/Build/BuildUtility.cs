@@ -88,6 +88,7 @@ namespace WhatLiesInTheDepths.EditorTools
             var muteBox = Img(muteRt, SpriteFactory.Round(7), Tok.Track, 1f, true);
             Img(Stretch(Node("Border", muteRt)), SpriteFactory.Outline(7), Tok.Haze);
             var mute = muteRt.gameObject.AddComponent<UiButton>();
+            Feel(muteRt.gameObject, Tok.IrisD, 0.10f);
             y += 44f;
 
             // --- Display

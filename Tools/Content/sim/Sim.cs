@@ -213,6 +213,15 @@ static class Sim
     static bool Reserved(List<Amount> cost) => d.GaugeOpen && d.veil != null && !d.veil.AtFull && d.HasNextVeil
         && cost.Any(a => a.k != "reverie" && d.veil.spend.Any(v => v.k == a.k));
 
+    // The veil's own toll (Chorus, Dread, Mettle...) that the dive is short of right now.
+    static List<string> Toll()
+    {
+        var t = new List<string>();
+        if (d.veil != null && !d.veil.AtFull && d.HoldOfDive == Hold.Short && d.veil.spend != null)
+            foreach (var a in d.veil.spend) if (a.k != "reverie" && d.Held(a.k) < a.n) t.Add(a.k);
+        return t;
+    }
+
     static bool Makes(FocusTask t, string r) => t.baseGain != null && t.baseGain.Any(a => a.k == r);
     static bool Needs(List<Amount> cost, string r) => cost != null && cost.Any(a => a.k == r);
     static bool DiveUseful => d.GaugeOpen && d.Dive != null && !d.Dive.AtFull && d.HoldOfDive == Hold.None
@@ -315,10 +324,25 @@ static class Sim
         }
         // makers of what is missing first, then everything else that can run and does not eat
         // what is missing
-        var live = d.ShownTasks.Where(x => d.HoldOf(x) != Hold.Full && !missing.Any(m => Needs(x.cost, m))).ToList();
+        // A task that makes the veil's toll runs even when it eats something a savings target
+        // is short of: the veil is the whole game, and a player who sees the dive stalled on
+        // Chorus puts people on Rally rather than keep hoarding the Echo it costs.
+        var toll = Toll();
+        bool MakesToll(FocusTask x) => toll.Any(t => Makes(x, t));
+        var live = d.ShownTasks.Where(x => d.HoldOf(x) != Hold.Full && (MakesToll(x) || !missing.Any(m => Needs(x.cost, m)))).ToList();
         live = live.OrderByDescending(x => missing.Any(m => Makes(x, m)) ? 1 : 0)
                    .ThenBy(x => x.gain.Min(a => d.Ceiling(a.k) <= 0 ? 1 : d.Held(a.k) / d.Ceiling(a.k))).ToList();
-        foreach (var tk in live.Where(x => missing.Any(m => Makes(x, m))))
+        var tollMakers = live.Where(MakesToll).ToList();
+        if (tollMakers.Count > 0)
+        {
+            // Half of the free hands to the toll; the makers of what those tasks consume come
+            // first among the rest, so the toll is not starved of its own inputs.
+            int share = Math.Max(1, free / 2 / tollMakers.Count);
+            foreach (var tk in tollMakers) { int n = Math.Min(free, Math.Min(share, Cap(tk.cap))); tk.w = n; free -= n; }
+            var inputs = tollMakers.SelectMany(x => x.cost ?? new List<Amount>()).Select(a => a.k).Where(k => k != "reverie").ToList();
+            live = live.OrderByDescending(x => inputs.Any(k => Makes(x, k)) ? 1 : 0).ThenByDescending(x => missing.Any(m => Makes(x, m)) ? 1 : 0).ToList();
+        }
+        foreach (var tk in live.Where(x => !tollMakers.Contains(x) && missing.Any(m => Makes(x, m))))
         { int n = Math.Min(free, Cap(tk.cap)); tk.w = n; free -= n; }
         bool any = true;
         while (free > 0 && any)

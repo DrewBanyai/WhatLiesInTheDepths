@@ -241,6 +241,7 @@ namespace WhatLiesInTheDepths.EditorTools
                            SpriteFactory.Glyph("Ui", "mark"), Tok.Veil);
             mark.raycastTarget = false;
             var actionBtn = action.gameObject.AddComponent<UiButton>();
+            Feel(action.gameObject, Tok.IrisD, 0.06f, row: true);
 
             var limit = Txt("LimitLine", root, 15f, 270f, 402f, 14f, "", TypeRole.Label400, 11f, Tok.Ink3,
                             TextAlignmentOptions.MidlineLeft);

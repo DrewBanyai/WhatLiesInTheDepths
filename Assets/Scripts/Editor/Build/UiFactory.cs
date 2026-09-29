@@ -268,7 +268,25 @@ namespace WhatLiesInTheDepths.EditorTools
                             TextAlignmentOptions.Center);
             Stretch((RectTransform)label.transform);
             var btn = root.gameObject.AddComponent<UiButton>();
+            Feel(root.gameObject, null, 0.16f);                 // a light wash over the filled ground
             return (root, img, label, btn);
+        }
+
+        /// <summary>A button's feel (ButtonFeel): a wash under the pointer, and a shrink and regrow
+        /// about its center when pressed. <paramref name="washToken"/> null washes white;
+        /// otherwise that token, so a light button is tinted in its own ink. Rows the width of a
+        /// column press by less, so the shrink stays in proportion.</summary>
+        public static ButtonFeel Feel(GameObject go, Tok? washToken, float washAlpha, bool row = false,
+                                      UiButton button = null, Image washShape = null)
+        {
+            var f = go.GetComponent<ButtonFeel>();
+            if (f == null) f = go.AddComponent<ButtonFeel>();
+            f.button = button;
+            f.washShape = washShape;
+            f.washColor = new Color(1f, 1f, 1f, washAlpha);
+            f.washToken = washToken.HasValue ? (int)washToken.Value : -1;
+            if (row) f.pressScale = 0.975f;
+            return f;
         }
 
         public static (RectTransform root, Image border, TMP_Text label, UiButton button)
@@ -283,6 +301,7 @@ namespace WhatLiesInTheDepths.EditorTools
                             TextAlignmentOptions.Center);
             Stretch((RectTransform)label.transform);
             var btn = root.gameObject.AddComponent<UiButton>();
+            Feel(root.gameObject, ink, 0.08f);                  // tinted in its own ink
             return (root, border, label, btn);
         }
 

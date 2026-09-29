@@ -364,6 +364,12 @@ namespace WhatLiesInTheDepths.EditorTools
             haloFill.raycastTarget = false;
             Img(Stretch(Node("Edge", halo)), SpriteFactory.Outline(999), Tok.IrisB).raycastTarget = false;
             halo.gameObject.SetActive(false);
+            // An unbuilt plot lights as a circle instead, filling the dashed ring exactly.
+            var haloRound = Stretch(Node("HaloRound", root));
+            Img(haloRound, SpriteFactory.Load("Disc"), Tok.IrisL, 0.6f).raycastTarget = false;
+            Img(Stretch(Node("Edge", haloRound)), SpriteFactory.Load("Ring_Sigil"), Tok.IrisB).raycastTarget = false;
+            haloRound.gameObject.SetActive(false);
+            haloRound.SetSiblingIndex(halo.GetSiblingIndex() + 1);
             // A second asset, not the card glyph scaled up: 48x48 grid, pale fills, ground
             // line at y = 41. Artwork, so it is not tinted. The view swaps in each form.
             Artwork(Node("Form", root, 13f, 10f, 74f, 74f), SpriteFactory.Load("Map/hut"));
@@ -456,6 +462,7 @@ namespace WhatLiesInTheDepths.EditorTools
             var closeGlyph = Img(Center(Node("Glyph", close), 12f, 12f), SpriteFactory.Glyph("Ui", "cross"), Tok.Ink3);
             closeGlyph.raycastTarget = false;
             var closeBtn = close.gameObject.AddComponent<UiButton>();
+            Feel(close.gameObject, Tok.IrisD, 0.08f);
 
             // --- the list
             var listView = Node("ListView", root, 0, 36f, W, TrackH - 36f);
