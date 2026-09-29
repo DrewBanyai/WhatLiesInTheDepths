@@ -84,7 +84,7 @@ namespace WhatLiesInTheDepths.UI
                 {
                     var go = Instantiate(effectRowPrefab, effects);
                     var tx = go.GetComponentInChildren<TMP_Text>();
-                    if (tx != null) tx.text = f;
+                    if (tx != null) tx.text = Housed(c, f);
                 }
             }
             Fit(ExtraFor(c));
@@ -114,6 +114,19 @@ namespace WhatLiesInTheDepths.UI
         }
 
         // ---- height ---------------------------------------------------------------
+
+        static readonly System.Text.RegularExpressions.Regex HousesFigure =
+            new System.Text.RegularExpressions.Regex(@"^(Houses <b>)\d+(</b>)");
+
+        /// <summary>The housing line is authored with the construct's own figure ("Houses 3
+        /// Oneiri"), but Revelations, Visions and places add to it. Show what one more of it
+        /// will actually house, which is what Build gives.</summary>
+        static string Housed(ConstructDef c, string line)
+        {
+            if (c == null || string.IsNullOrEmpty(line) || c.housing <= 0 || GameState.I == null) return line;
+            int n = GameState.I.HousingOf(c);
+            return HousesFigure.Replace(line, "${1}" + n + "${2}");
+        }
 
         /// <summary>The effects panel is drawn for two lines. Each line past that adds a row's
         /// height (17, plus the stack's 4 gap) to the panel and pushes the foot of the card down
@@ -168,6 +181,22 @@ namespace WhatLiesInTheDepths.UI
             if (_c == null || GameState.I == null) return;
             // Read from the construct every time, so a visit that marked it seen clears it here too.
             if (dot != null) dot.Set(!_c.seen);
+
+            // A Revelation, Vision or place can change how many one more houses while the
+            // card is on screen; the rest of its lines never change without a rebind.
+            if (_c.housing > 0 && effects != null && _c.fx != null)
+            {
+                // Only the live rows: a row cleared this frame is switched off but not yet gone.
+                int i = 0;
+                foreach (Transform row in effects)
+                {
+                    if (!row.gameObject.activeSelf) continue;
+                    if (i >= _c.fx.Count) break;
+                    var tx = row.GetComponentInChildren<TMP_Text>();
+                    if (tx != null) tx.text = Housed(_c, _c.fx[i]);
+                    i++;
+                }
+            }
 
             // Something built once and done — The Silent Altar — has nothing left to buy: no
             // count, no price and no Build, so it never looks like something to buy more of.

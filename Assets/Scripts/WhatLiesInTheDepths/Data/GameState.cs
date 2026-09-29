@@ -68,6 +68,7 @@ namespace WhatLiesInTheDepths.Data
         public bool Short(string k, double n) => Dream.Short(k, n);
         public bool AboveCeiling(string k, double n) => Dream.AboveCeiling(k, n);
         public Refusal Judge(IEnumerable<Amount> cost) => Dream.Judge(cost);
+        public int HousingOf(ConstructDef c) => Dream.HousingOf(c);
         public string ReasonLine(IEnumerable<Amount> cost) => Dream.ReasonLine(cost);
         public bool Spend(IEnumerable<Amount> cost) => Dream.Spend(cost);
         public void Grant(IEnumerable<Amount> gain) => Dream.Grant(gain);

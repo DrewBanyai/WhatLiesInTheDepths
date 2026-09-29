@@ -497,6 +497,11 @@ namespace WhatLiesInTheDepths.Data
 
         /// <summary>The total of every active effect of a kind on a thing. <paramref name="of"/>
         /// null asks for effects that name nothing.</summary>
+        /// <summary>How many Oneiri one of this construct houses now: its own figure (an
+        /// upgrade such as the Abode can change it) plus every Housing effect aimed at it, from
+        /// Revelations, Visions and places. The card shows this figure, not the authored one.</summary>
+        public int HousingOf(ConstructDef c) => c == null ? 0 : c.housing + (int)Sum(Fx.Housing, c.g);
+
         public double Sum(Fx kind, string of)
         {
             double n;
@@ -852,7 +857,7 @@ namespace WhatLiesInTheDepths.Data
             var oneiri = Find("oneiri");
             if (oneiri != null && !_showAll)
             {
-                int housed = constructs.Sum(c => c.owned * (c.housing + (int)Sum(Fx.Housing, c.g)));
+                int housed = constructs.Sum(c => c.owned * HousingOf(c));
                 // The Night Kiln: from the moment it stands, only the Oneiri already at work stay.
                 if (Sum(Fx.Exodus, null) > 0)
                 {

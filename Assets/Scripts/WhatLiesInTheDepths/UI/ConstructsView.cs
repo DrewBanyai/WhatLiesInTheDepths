@@ -37,15 +37,18 @@ namespace WhatLiesInTheDepths.UI
         public ConstructCardView courtCardView;
         public CanvasGroup groundsGroup;
 
-        [Header("Pointer — the map and the card each report entering and leaving")]
+        [Header("Pointer — the map's empty ground, and the card's close control")]
         public UiButton mapHover;
         public UiButton cardHover;
+        public UiButton cardClose;
+        public Image cardCloseBorder;
+        public Image cardCloseGlyph;
 
-        // Closing follows the Revelations rule exactly (spec section 7): before the pointer
-        // has touched the card, it closes only when the pointer leaves the whole map — so
-        // crossing from a building to the card is free. Once it has been on the card,
-        // stepping off closes it unless a building is reached within about a sixth of a
-        // second: its own, which keeps it, or another, which swaps it.
+        // Resting on a building only lights it. Clicking it opens its card in the court, and
+        // the card stays until it is closed: by its X, by clicking the same building again,
+        // or by clicking the map's empty ground. Clicking another building swaps the card.
+        // Hovering used to open the card, and reaching for it could brush a neighbour on the
+        // way and swap it out from under the pointer.
         sealed class Building
         {
             public ConstructDef def;
@@ -60,6 +63,11 @@ namespace WhatLiesInTheDepths.UI
             public Image top;
             /// <summary>The Silent Altar's one line, under it on hover. It has no card.</summary>
             public TMP_Text line;
+            /// <summary>The halo under the form, lit while the pointer rests on it: iris when one
+            /// more can be bought, white when it cannot — so it says whether a click is worth it.</summary>
+            public GameObject halo;
+            public Image haloFill;
+            public Image haloEdge;
             public bool hovered;
         }
 
@@ -77,9 +85,6 @@ namespace WhatLiesInTheDepths.UI
 
         readonly List<Building> _buildings = new List<Building>();
         ConstructDef _open;
-        bool _touchedCard;
-        float _closeAt = -1f;
-        const float Grace = 1f / 6f;
 
         readonly List<ConstructCardView> _cards = new List<ConstructCardView>();
 
@@ -102,8 +107,16 @@ namespace WhatLiesInTheDepths.UI
             }
             if (mapView != null) mapView.SetActive(true);
             if (listView != null) listView.SetActive(false);
-            if (mapHover != null) mapHover.Hovered += h => { if (!h) Close(); };
-            if (cardHover != null) cardHover.Hovered += OnCardHover;
+            if (mapHover != null) mapHover.Clicked += Close;          // the empty ground
+            if (cardClose != null)
+            {
+                cardClose.Clicked += Close;
+                cardClose.Hovered += h =>
+                {
+                    if (cardCloseBorder != null) cardCloseBorder.color = Theme.Get(h ? Tok.IrisB : Tok.Haze);
+                    if (cardCloseGlyph != null) cardCloseGlyph.color = Theme.Get(h ? Tok.IrisD : Tok.Ink3);
+                };
+            }
             Close();
 
             if (GameState.I != null) GameState.I.Changed += RefreshAll;
@@ -229,6 +242,9 @@ namespace WhatLiesInTheDepths.UI
                     form = form,
                     ring = ring != null ? ring.gameObject : null,
                     shadow = go.transform.Find("Shadow")?.gameObject,
+                    halo = go.transform.Find("Halo")?.gameObject,
+                    haloFill = go.transform.Find("Halo")?.GetComponent<Image>(),
+                    haloEdge = go.transform.Find("Halo/Edge")?.GetComponent<Image>(),
                     root = go
                 };
                 if (c.landmark) MakeLandmark(building, form);
@@ -242,15 +258,22 @@ namespace WhatLiesInTheDepths.UI
                     var b = building;
                     if (btn != null)
                     {
-                        btn.Hovered += h => { b.hovered = h; PaintBuilding(b); };
+                        btn.Hovered += h => { b.hovered = h; PaintBuilding(b); Fade(); };
                         btn.Clicked += () =>
                         {
-                            if (_open != null || b.def.built) return;
+                            // With a card open, the court is the card's: a click there closes it.
+                            if (_open != null) { Close(); return; }
+                            if (b.def.built) return;
                             if (GameState.I != null) GameState.I.Build(b.def);
                         };
                     }
                 }
-                else if (btn != null) btn.Hovered += h => OnBuildingHover(captured, h);
+                else if (btn != null)
+                {
+                    var b = building;
+                    btn.Hovered += h => { b.hovered = h; PaintBuilding(b); Fade(); };
+                    btn.Clicked += () => { if (_open == captured) Close(); else Open(captured); };
+                }
             }
         }
 
@@ -284,30 +307,6 @@ namespace WhatLiesInTheDepths.UI
             lineGo.SetActive(false);
         }
 
-        void Update()
-        {
-            if (_closeAt >= 0f && Time.unscaledTime >= _closeAt) Close();
-        }
-
-        void OnBuildingHover(ConstructDef c, bool entering)
-        {
-            if (entering)
-            {
-                _closeAt = -1f;                 // reaching a building in time keeps or swaps
-                if (_open != c) Open(c);
-            }
-            else if (_touchedCard && _open == c)
-            {
-                _closeAt = Time.unscaledTime + Grace;
-            }
-        }
-
-        void OnCardHover(bool entering)
-        {
-            if (entering) { _touchedCard = true; _closeAt = -1f; }
-            else if (_open != null) _closeAt = Time.unscaledTime + Grace;
-        }
-
         // The card appears in the court, the grounds drop to .3 and the other buildings to .2.
         void Open(ConstructDef c)
         {
@@ -315,19 +314,29 @@ namespace WhatLiesInTheDepths.UI
             if (courtCard != null) courtCard.gameObject.SetActive(true);
             if (courtCardView != null) courtCardView.Bind(c);
             if (groundsGroup != null) groundsGroup.alpha = 0.3f;
-            foreach (var b in _buildings)
-                if (b.group != null) b.group.alpha = b.def == c ? 1f : 0.2f;
+            foreach (var b in _buildings) PaintBuilding(b);
+            Fade();
         }
 
         void Close()
         {
             _open = null;
-            _touchedCard = false;
-            _closeAt = -1f;
             if (courtCard != null) courtCard.gameObject.SetActive(false);
             if (groundsGroup != null) groundsGroup.alpha = 1f;
+            foreach (var b in _buildings) PaintBuilding(b);
+            Fade();
+        }
+
+        /// <summary>With no card open every building stands at full ink. With one open, its
+        /// own building stays at full ink and the rest drop to .2 — except the one the pointer
+        /// rests on, which comes up to .6 so a swap can be seen before it is clicked.</summary>
+        void Fade()
+        {
             foreach (var b in _buildings)
-                if (b.group != null) b.group.alpha = 1f;
+            {
+                if (b.group == null) continue;
+                b.group.alpha = _open == null || b.def == _open ? 1f : b.hovered ? 0.6f : 0.2f;
+            }
         }
 
         /// <summary>Everything the purse can change: the list's cards, the open court card —
@@ -355,6 +364,13 @@ namespace WhatLiesInTheDepths.UI
         void PaintBuilding(Building b)
         {
             if (b?.def == null) return;
+            if (b.halo != null)
+            {
+                // Lit under the pointer, and kept lit on the building whose card is open.
+                bool lit = b.hovered || (_open != null && b.def == _open);
+                if (b.halo.activeSelf != lit) b.halo.SetActive(lit);
+                if (lit) PaintHalo(b);
+            }
             if (b.def.landmark) { PaintLandmark(b); return; }
             bool counted = b.def.built && b.def.owned > 0 && !b.def.once;
             if (b.badge != null) b.badge.text = Fmt.Count(b.def.owned);
@@ -364,6 +380,20 @@ namespace WhatLiesInTheDepths.UI
             if (b.ring != null) b.ring.SetActive(!b.def.built);
             // Spec: a plot casts no shadow — there is nothing standing there yet.
             if (b.shadow != null) b.shadow.SetActive(b.def.built);
+        }
+
+        /// <summary>Iris, light, when the purse covers one more; white with a haze edge when it
+        /// does not, or when there is nothing left to buy (a one-of-a-kind already standing).</summary>
+        static void PaintHalo(Building b)
+        {
+            Color A(Tok t, float a) { var c = Theme.Get(t); c.a = a; return c; }
+            var s = GameState.I;
+            bool finished = b.def.once && b.def.owned > 0;
+            bool can = !finished && s != null && s.Judge(b.def.cost) == Refusal.None;
+            if (b.haloFill != null)
+                b.haloFill.color = can ? A(Tok.IrisL, 0.6f) : new Color(1f, 1f, 1f, 0.8f);
+            if (b.haloEdge != null)
+                b.haloEdge.color = can ? A(Tok.IrisB, 0.55f) : A(Tok.Haze, 0.9f);
         }
 
         /// <summary>The stone is always there at full ink — it is where the dreamer sits.

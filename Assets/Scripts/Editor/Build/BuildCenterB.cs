@@ -354,6 +354,16 @@ namespace WhatLiesInTheDepths.EditorTools
         {
             var root = Node("UI_PalaceBuilding", null, 0, 0, 100f, 100f);
             Img(Node("Shadow", root, 14f, 74f, 72f, 18f), SpriteFactory.Load("Disc"), Tok.Ink, 0.10f);
+            // The halo: an iris disc with an iris edge, under the form, lit while the pointer
+            // rests on the building and while its card is open. Resting only lights; the card
+            // waits for a click (ConstructsView).
+            // 90 across, centred on the form rather than the hit circle. ConstructsView paints
+            // it: iris when one more can be bought, white when it cannot.
+            var halo = Node("Halo", root, 5f, 2f, 90f, 90f);
+            var haloFill = Img(halo, SpriteFactory.Round(999), Tok.IrisL, 0.6f);
+            haloFill.raycastTarget = false;
+            Img(Stretch(Node("Edge", halo)), SpriteFactory.Outline(999), Tok.IrisB).raycastTarget = false;
+            halo.gameObject.SetActive(false);
             // A second asset, not the card glyph scaled up: 48x48 grid, pale fills, ground
             // line at y = 41. Artwork, so it is not tinted. The view swaps in each form.
             Artwork(Node("Form", root, 13f, 10f, 74f, 74f), SpriteFactory.Load("Map/hut"));
@@ -436,6 +446,17 @@ namespace WhatLiesInTheDepths.EditorTools
             var courtInstance = Nest("UI_ConstructCard", courtCard, 0, 0);
             var courtView = courtInstance.GetComponent<ConstructCardView>();
 
+            // The card stays until it is closed. Its X sits on the card's top-right corner,
+            // half off it and clear of the owned-count pill (which ends at 420), so it never lands
+            // on anything the card itself draws.
+            var close = Node("Close", courtCard, 432f - 8f, -16f, 32f, 32f);
+            Img(close, SpriteFactory.Round(999), Tok.Veil, 1f, true);
+            var closeBorder = Img(Stretch(Node("Border", close)), SpriteFactory.Outline(999), Tok.Haze);
+            closeBorder.raycastTarget = false;
+            var closeGlyph = Img(Center(Node("Glyph", close), 12f, 12f), SpriteFactory.Glyph("Ui", "cross"), Tok.Ink3);
+            closeGlyph.raycastTarget = false;
+            var closeBtn = close.gameObject.AddComponent<UiButton>();
+
             // --- the list
             var listView = Node("ListView", root, 0, 36f, W, TrackH - 36f);
             var (scroll, content) = Scroll("Scroll", listView, 0, 0, W, TrackH - 36f);
@@ -456,6 +477,9 @@ namespace WhatLiesInTheDepths.EditorTools
             view.groundsGroup = groundsGroup;
             view.mapHover = mapHover;
             view.cardHover = cardHover;
+            view.cardClose = closeBtn;
+            view.cardCloseBorder = closeBorder;
+            view.cardCloseGlyph = closeGlyph;
 
             Save(root.gameObject, "UI_Constructs");
         }
