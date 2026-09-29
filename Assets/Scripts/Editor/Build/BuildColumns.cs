@@ -231,10 +231,8 @@ namespace WhatLiesInTheDepths.EditorTools
             // Plate 448 x 266 — the panel's 450 less its 1px border. Full bleed, clipped.
             var plateHolder = Node("Plate", root, 1f, 1f, 448f, 266f);
             plateHolder.gameObject.AddComponent<RectMask2D>();
-            var plate = Img(Stretch(Node("Art", plateHolder)), SpriteFactory.Load("Plate_Veil"), Tok.Veil);
-            plate.color = Color.white;
-            var themed = plate.GetComponent<ThemedGraphic>();
-            if (themed != null) Object.DestroyImmediate(themed);   // artwork does not follow the palette
+            // Artwork, seen through the Art wash: as drawn on the light palettes, dimmed on Dusk.
+            var plate = Img(Stretch(Node("Art", plateHolder)), SpriteFactory.Load("Plate_Veil"), Tok.Art);
 
             var scrimTop = Node("ScrimTop", plateHolder, 0, 0, 448f, 70f);
             Img(scrimTop, SpriteFactory.Load("Scrim_Down"), Tok.Veil, 0.9f);
@@ -319,7 +317,7 @@ namespace WhatLiesInTheDepths.EditorTools
                                 SpriteFactory.Glyph("Ui", "arrow"), Tok.IrisD);
             diveArrow.raycastTarget = false;
             var diveMark = Img(Node("Mark", diveCtl, 392f - 14f - 14f, 15f, 14f, 14f),
-                               SpriteFactory.Glyph("Ui", "mark"), Tok.Veil);
+                               SpriteFactory.Glyph("Ui", "mark"), Tok.OnIris);
             diveMark.raycastTarget = false;
             var diveBtn = diveCtl.gameObject.AddComponent<UiButton>();
             Feel(diveCtl.gameObject, Tok.IrisD, 0.06f, row: true);
@@ -356,19 +354,14 @@ namespace WhatLiesInTheDepths.EditorTools
             prow.childControlHeight = false;
             prow.childForceExpandWidth = false;
             prow.childForceExpandHeight = false;
-            var partLabel = Txt("Label", partRow, 0, 0, 120f, 52f, "Part the veil", TypeRole.Serif, 19f, Tok.Veil,
+            var partLabel = Txt("Label", partRow, 0, 0, 120f, 52f, "Part the veil", TypeRole.Serif, 19f, Tok.OnIris,
                                 TextAlignmentOptions.Center);
-            partLabel.color = Color.white;
-            var tg = partLabel.GetComponent<ThemedGraphic>();
-            if (tg != null) Object.DestroyImmediate(tg);   // the spec's #fff, not the veil token
+            // The spec's #fff on filled iris: OnIris (near-white on Dream, white on Dusk).
             var arrowHolder = Node("Arrow", partRow, 0, 0, 12f, 18f);
             var arrowLe = arrowHolder.gameObject.AddComponent<LayoutElement>();
             arrowLe.preferredWidth = 12f;
-            var partArrow = Img(Center(Node("Glyph", arrowHolder), 16f, 12f), SpriteFactory.Glyph("Ui", "arrow"), Tok.Veil);
+            var partArrow = Img(Center(Node("Glyph", arrowHolder), 16f, 12f), SpriteFactory.Glyph("Ui", "arrow"), Tok.OnIris);
             partArrow.rectTransform.localEulerAngles = new Vector3(0f, 0f, -90f);
-            partArrow.color = Color.white;
-            var ag = partArrow.GetComponent<ThemedGraphic>();
-            if (ag != null) Object.DestroyImmediate(ag);
 
             var partSub = Txt("PartSubLine", root, 24f, 926f, 402f, 14f, "the way back closes behind you",
                               TypeRole.Label400, 11f, Tok.Ink3, TextAlignmentOptions.Center);

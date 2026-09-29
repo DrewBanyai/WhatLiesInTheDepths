@@ -43,7 +43,7 @@ namespace WhatLiesInTheDepths.UI
         static readonly Color Light = Color.white;
         // The eye art is drawn in fixed colors rather than the palette's (it is art, not UI);
         // what redraws parts of it uses the same ones.
-        static readonly Color EyeLine = new Color32(0x8A, 0x72, 0xA8, 0xFF);
+        static Color EyeLine => Theme.Mix(Tok.Iris, Tok.IrisD, 0.5f);
 
         void OnEnable() => Theme.Changed += Paint;
         void OnDisable() => Theme.Changed -= Paint;

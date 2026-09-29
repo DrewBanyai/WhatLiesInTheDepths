@@ -42,8 +42,8 @@ namespace WhatLiesInTheDepths.UI
         public float PreferredHeight { get; private set; }
 
         // The spec's raw values where it does not use a token.
-        static readonly Color FillOn = new Color32(0x7C, 0x61, 0xAE, 0xFF);     // the lit button's fill
-        static readonly Color TileOn = new Color32(0xE8, 0xE0, 0xF7, 0xFF);     // the lit card's tile
+        static Color FillOn => Theme.Get(Tok.IrisDeep);     // the lit button's fill
+        static Color TileOn => Theme.Mix(Tok.IrisL, Tok.IrisB, 0.3f);     // the lit card's tile
         bool _cardHover, _actionHover;
         public AttentionDot dot;
         public TMP_Text limitLine;
@@ -236,7 +236,7 @@ namespace WhatLiesInTheDepths.UI
             if (actionLabel != null)
             {
                 actionLabel.text = _t.n;
-                actionLabel.color = Theme.Get(mine ? Tok.Veil : Tok.IrisD);
+                actionLabel.color = Theme.Get(mine ? Tok.OnIris : Tok.IrisD);
             }
             if (actionGround != null)
                 actionGround.color = mine ? Theme.Get(Tok.Iris)
@@ -250,7 +250,7 @@ namespace WhatLiesInTheDepths.UI
             // The lit card, or one under the pointer: iris-b border, white ground, a deeper tile.
             bool lit = mine || _cardHover;
             if (cardBorder != null) cardBorder.color = Theme.Get(lit ? Tok.IrisB : Tok.Haze);
-            if (cardGround != null) cardGround.color = lit ? Color.white : Theme.Get(Tok.Veil);
+            if (cardGround != null) cardGround.color = lit ? Theme.Get(Tok.Lit) : Theme.Get(Tok.Veil);
             if (iconTile != null) iconTile.color = mine ? TileOn : Theme.Get(Tok.IrisL);
             if (tileBorder != null) tileBorder.color = Theme.Get(mine ? Tok.IrisB : Tok.Haze2);
             if (actionProgress != null)

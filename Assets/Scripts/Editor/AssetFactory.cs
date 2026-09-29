@@ -31,21 +31,31 @@ namespace WhatLiesInTheDepths.EditorTools
             "#D3849F", "#A4506C", "#FBEFF3", "#F2DCE4", "#FBF0F4",
             "#D6AC6E", "#8A6A2F", "#FAF2E6", "#EEDCBB",
             "#F8F5FC", "#EEE9F6",
-            "#7F9FD8", "#46649F", "#EEF2FB", "#C5D3EE"
+            "#7F9FD8", "#46649F", "#EEF2FB", "#C5D3EE",
+            // Lit, OnIris, IrisDeep, Art, ArtGlow: the light page draws its art as it is.
+            "#FFFFFF", "#FCFAFE", "#7C61AE", "#FFFFFF", "#FFFFFF"
         };
 
         /// <summary>The same dream at night. PLACEHOLDER VALUES — the brief's section 9 says
         /// the chooser is the mechanism and the values in it still need checking against a
         /// contrast standard. Nobody has audited these.</summary>
+        ///
+        /// Reworked: nothing on this page may be lighter than the ink. A lit card is raised by
+        /// a step of violet (Lit), not by white; filled iris carries white words (OnIris) on
+        /// a slightly deeper iris; and artwork drawn for the light page is seen through a dusk
+        /// wash — opaque plates and portraits dimmed (Art), the soft grounds and blooms dimmed
+        /// and made faint (ArtGlow, translucent) — so no picture glows like a lamp on the dark.
         static readonly string[] Dusk =
         {
-            "#191524", "#211C30", "#332B47", "#2A2439", "#2F2842",
-            "#EDE8F7", "#D9D2EA", "#AFA6C6", "#7E7596", "#544B6B",
-            "#9C86CE", "#C6B7E4", "#2E2545", "#4B3E6B",
-            "#6FB3AB", "#8FCFC7", "#1E3330", "#D3849F", "#E9A8BD", "#3A2430",
+            "#17131F", "#1F1A2C", "#342C48", "#2A2439", "#2F2842",
+            "#ECE7F6", "#D6CFE7", "#ADA4C4", "#81789A", "#574E6E",
+            "#8C74C8", "#C9BBE8", "#2D2544", "#4C3F6E",
+            "#6FB3AB", "#8FCFC7", "#1C302D", "#D3849F", "#E9A8BD", "#3A2430",
             "#5A3A48", "#2E1E28", "#D6AC6E", "#E7C894", "#33291A", "#5A4526",
-            "#241E33", "#2B2440",
-            "#86A5DC", "#AFC5EE", "#1E2538", "#374563"
+            "#241E33", "#2A2340",
+            "#86A5DC", "#AFC5EE", "#1E2538", "#374563",
+            // Lit, OnIris, IrisDeep, Art, ArtGlow
+            "#2B2540", "#FFFFFF", "#6A55A8", "#9F95BCFF", "#9C90C270"
         };
 
         /// <summary>Warm paper with more separation by default. PLACEHOLDER VALUES, as above.</summary>
@@ -57,7 +67,9 @@ namespace WhatLiesInTheDepths.EditorTools
             "#5E9E95", "#33736A", "#E4F0ED", "#C97189", "#94405C", "#F8E8EC",
             "#EED2DA", "#F9EDF0", "#C79A54", "#75561F", "#F6EDDB", "#E3CEA6",
             "#F7F2E7", "#EAE2D3",
-            "#6F90C8", "#3D5A92", "#EAEFF8", "#C0CEE7"
+            "#6F90C8", "#3D5A92", "#EAEFF8", "#C0CEE7",
+            // Lit, OnIris, IrisDeep, Art, ArtGlow
+            "#FFFDF8", "#FDFAF3", "#6F57A3", "#FFFFFF", "#FFFFFF"
         };
 
         public static Palette BuildPalette(string name, string[] hexes)

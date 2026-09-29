@@ -56,6 +56,7 @@ namespace WhatLiesInTheDepths.UI
         public Image giveBattleGround;
         public TMP_Text giveBattleLabel;
         public GameObject wonRow;
+        public Image wonBorder;
 
         [Header("Roster")]
         public RectTransform roster;
@@ -64,10 +65,10 @@ namespace WhatLiesInTheDepths.UI
         public ScrollRect scroll;
 
         // The spec's raw values where it does not use a token.
-        static readonly Color GoodEdge    = new Color32(0xBF, 0xDF, 0xDA, 0xFF);
-        static readonly Color TakenEdge   = new Color32(0xA8, 0xD2, 0xCC, 0xFF);
-        static readonly Color FightGround = new Color32(0xFB, 0xF8, 0xFE, 0xFF);
-        static readonly Color DisabledInk = new Color32(0xB6, 0xAE, 0xCB, 0xFF);
+        static Color GoodEdge => Theme.Mix(Tok.TealL, Tok.Teal, 0.33f);
+        static Color TakenEdge => Theme.Mix(Tok.TealL, Tok.Teal, 0.45f);
+        static Color FightGround => Theme.Get(Tok.Veil);
+        static Color DisabledInk => Theme.Mix(Tok.Ink3, Tok.Ink4, 0.55f);
 
         readonly List<UnitCardView> _units = new List<UnitCardView>();
         readonly List<RoadPinView> _pins = new List<RoadPinView>();
@@ -323,6 +324,7 @@ namespace WhatLiesInTheDepths.UI
             }
 
             if (wonRow != null) wonRow.SetActive(won);
+            if (wonBorder != null) wonBorder.color = GoodEdge;
             if (giveBattle != null)
             {
                 giveBattle.gameObject.SetActive(!won);
@@ -332,7 +334,7 @@ namespace WhatLiesInTheDepths.UI
                 if (giveBattleLabel != null)
                 {
                     giveBattleLabel.text = Strings.T(_battle != null && _battle.place == place ? "ui.assault.underWay" : "ui.assault.giveBattle");
-                    giveBattleLabel.color = live ? Theme.Get(Tok.Veil) : DisabledInk;
+                    giveBattleLabel.color = live ? Theme.Get(Tok.OnIris) : DisabledInk;
                 }
             }
         }

@@ -88,11 +88,15 @@ namespace WhatLiesInTheDepths.EditorTools
         public static Image Fill(string name, Transform parent, Sprite sprite, Tok token, float alpha = 1f)
             => Img(Stretch(Node(name, parent)), sprite, token, alpha);
 
-        /// <summary>Artwork does not follow the palette — a plate is a picture, not a
-        /// surface — so it is drawn white and its token binding is stripped.</summary>
-        public static Image Artwork(RectTransform rt, Sprite sprite)
+        /// <summary>Artwork is a picture, not a surface, so it never takes a surface's color.
+        /// With no <paramref name="tint"/> it is drawn white and unbound (a light whose color
+        /// its view sets, a figure that must stay as drawn). With one — Tok.Art for opaque
+        /// plates and portraits, Tok.ArtGlow for soft grounds — it is bound to that wash,
+        /// which is white on the light palettes and dims the picture on a dark one.</summary>
+        public static Image Artwork(RectTransform rt, Sprite sprite, Tok? tint = null)
         {
-            var img = Img(rt, sprite, Tok.Veil);
+            var img = Img(rt, sprite, tint ?? Tok.Veil);
+            if (tint.HasValue) return img;
             var themed = img.GetComponent<ThemedGraphic>();
             if (themed != null) Object.DestroyImmediate(themed);
             img.color = Color.white;
@@ -260,7 +264,7 @@ namespace WhatLiesInTheDepths.EditorTools
         public static (RectTransform root, Image ground, TMP_Text label, UiButton button)
             PrimaryButton(string name, Transform parent, float x, float y, float w, float h,
                           string text, float size = 15.5f, int radius = 9,
-                          Tok ground = Tok.Iris, Tok ink = Tok.Veil)
+                          Tok ground = Tok.Iris, Tok ink = Tok.OnIris)
         {
             var root = Node(name, parent, x, y, w, h);
             var img = Img(root, SpriteFactory.Round(radius), ground, 1f, true);

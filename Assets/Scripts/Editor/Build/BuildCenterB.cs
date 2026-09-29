@@ -281,10 +281,8 @@ namespace WhatLiesInTheDepths.EditorTools
 
             var plateHolder = Node("Plate", root, 1f, 1f, 430f, 150f);
             plateHolder.gameObject.AddComponent<RectMask2D>();
-            var plate = Img(Stretch(Node("Art", plateHolder)), SpriteFactory.Load("Plate_Construct_hut"), Tok.Veil);
-            plate.color = Color.white;
-            var pt = plate.GetComponent<ThemedGraphic>();
-            if (pt != null) Object.DestroyImmediate(pt);
+            // Artwork, seen through the Art wash: as drawn on the light palettes, dimmed on Dusk.
+            var plate = Img(Stretch(Node("Art", plateHolder)), SpriteFactory.Load("Plate_Construct_hut"), Tok.Art);
 
             // The owned count overlaid on the plate, top right, 10 inset.
             var pill = Node("OwnedPill", plateHolder, 340f, 10f, 80f, 22f);
@@ -425,7 +423,7 @@ namespace WhatLiesInTheDepths.EditorTools
             var grounds = Node("Grounds", mapView, 0, 0, W, 860f);
             var groundsGroup = grounds.gameObject.AddComponent<CanvasGroup>();
             // The spec's own drawing of the grounds — four soft quarters and the open court.
-            Artwork(Stretch(Node("Art", grounds)), SpriteFactory.Load("Art_Palace"));
+            Artwork(Stretch(Node("Art", grounds)), SpriteFactory.Load("Art_Palace"), Tok.ArtGlow);
             // Spec .qname: 9px caps at .18em, 34 in from the map's left or right edge, 30 from
             // its top or 818 from it — measured on the map, not on a quarter.
             string[] quarters = { "WORKS", "DWELLINGS", "RESERVOIRS", "WARDS" };
@@ -561,7 +559,7 @@ namespace WhatLiesInTheDepths.EditorTools
             eyeRt.anchorMin = eyeRt.anchorMax = new Vector2(0.5f, 0.5f);
             eyeRt.pivot = new Vector2(0.5f, 0.5f);
             eyeRt.anchoredPosition = Vector2.zero;
-            var eyeImg = Img(eyeRt, SpriteFactory.Load("Art_Eye"), Tok.Veil);
+            var eyeImg = Img(eyeRt, SpriteFactory.Load("Art_Eye"), Tok.Veil);   // a figure: kept as drawn below
             eyeImg.color = Color.white;
             var et = eyeImg.GetComponent<ThemedGraphic>();
             if (et != null) Object.DestroyImmediate(et);
@@ -953,7 +951,7 @@ namespace WhatLiesInTheDepths.EditorTools
             var pt = Node("Portrait", root, 0, 0, 96f, 164f);
             Size(pt, w: 96f);
             pt.gameObject.AddComponent<RectMask2D>();
-            var portrait = Artwork(Node("Art", pt, 0, 0, 96f, 150f), SpriteFactory.Load("Portrait_Unit_guard"));
+            var portrait = Artwork(Node("Art", pt, 0, 0, 96f, 150f), SpriteFactory.Load("Portrait_Unit_guard"), Tok.Art);
             portrait.raycastTarget = false;
             var art = portrait.rectTransform;
             art.anchorMin = art.anchorMax = new Vector2(0.5f, 0.5f);
@@ -1137,7 +1135,7 @@ namespace WhatLiesInTheDepths.EditorTools
             HRow(told, 12f, TextAnchor.MiddleLeft, pad);
             var fmark = Node("Mark", told, 0, 0, 22f, 22f);
             Size(fmark, 22f, 22f);
-            Img(Stretch(Node("Disc", fmark)), SpriteFactory.Load("Disc"), Tok.Veil).color = Color.white;
+            Img(Stretch(Node("Disc", fmark)), SpriteFactory.Load("Disc"), Tok.Lit);
             var fmarkRing = Img(Stretch(Node("Ring", fmark)), SpriteFactory.Load("Ring_Pin30"), Tok.TealL);
             var fmarkGlyph = Img(Node("Glyph", fmark, 4f, 4f, 14f, 14f), SpriteFactory.Glyph("Ui", "check"), Tok.TealD);
             var toldCaption = Line("Caption", told, "TAKEN", TypeRole.Label700, 8.5f, Tok.TealD);
@@ -1152,7 +1150,7 @@ namespace WhatLiesInTheDepths.EditorTools
             Size(map, h: 430f);
             var mapGround = Img(Stretch(Node("Ground", map)), SpriteFactory.Round(14), Tok.Block);
             mapGround.gameObject.AddComponent<Mask>().showMaskGraphic = true;
-            var terrain = Artwork(Stretch(Node("Terrain", mapGround.transform)), SpriteFactory.Load("Map_Terrain"));
+            var terrain = Artwork(Stretch(Node("Terrain", mapGround.transform)), SpriteFactory.Load("Map_Terrain"), Tok.ArtGlow);
             terrain.raycastTarget = false;
             // The road ahead: dashed 7 / 8, 3.4 wide, #B9A8D6 at .75, drawn a few places past
             // the next and fading out along its length (AssaultView). The road walked: solid
@@ -1189,7 +1187,7 @@ namespace WhatLiesInTheDepths.EditorTools
                 .raycastTarget = false;
             var slotGround = Img(Stretch(Node("Ground", slot)), SpriteFactory.Round(13), Tok.Veil);
             slotGround.gameObject.AddComponent<Mask>().showMaskGraphic = true;
-            var placeArt = Artwork(Node("Art", slotGround.transform, 0, 0, 236f, 152f), SpriteFactory.Load("Art_Place_mile"));
+            var placeArt = Artwork(Node("Art", slotGround.transform, 0, 0, 236f, 152f), SpriteFactory.Load("Art_Place_mile"), Tok.Art);
             placeArt.raycastTarget = false;
             placeArt.preserveAspect = false;
 
@@ -1233,9 +1231,9 @@ namespace WhatLiesInTheDepths.EditorTools
 
             Img(Node("Rule", slotGround.transform, W - 244f, 0, 1f, 152f), null, Tok.Haze2);
             var right = Node("Arithmetic", slotGround.transform, W - 243f, 0, 243f, 152f);
+            // The arithmetic's ground is the card's own (a hair off Veil on Dream, where the spec's
+            // #FBF9FD was); a literal here stayed daylight-white on Dusk under light numbers.
             var rightGround = Img(right, null, Tok.Veil);
-            rightGround.color = new Color32(0xFB, 0xF9, 0xFD, 0xFF);
-            Object.DestroyImmediate(rightGround.GetComponent<ThemedGraphic>());
             VCol(right, 6f, new RectOffset(16, 16, 14, 14));
             var fieldCaption = Line("Caption", right, "THEY FIELD", TypeRole.Label700, 8f, Tok.Ink3);
             Tracked(fieldCaption);
@@ -1255,9 +1253,7 @@ namespace WhatLiesInTheDepths.EditorTools
             HRow(won, 7f, TextAnchor.MiddleLeft, new RectOffset(13, 13, 0, 0));
             var wonGround = Img(Stretch(Node("Ground", won)), SpriteFactory.Round(9), Tok.TealL);
             Size(wonGround).ignoreLayout = true;
-            var wonBorder = Img(Stretch(Node("Border", won)), SpriteFactory.Outline(9), Tok.TealL);
-            wonBorder.color = new Color32(0xBF, 0xDF, 0xDA, 0xFF);
-            Object.DestroyImmediate(wonBorder.GetComponent<ThemedGraphic>());
+            var wonBorder = Img(Stretch(Node("Border", won)), SpriteFactory.Outline(9), Tok.TealL);   // AssaultView paints the edge
             Size(wonBorder).ignoreLayout = true;
             var wonCheck = Img(Node("Check", won, 0, 0, 14f, 14f), SpriteFactory.Glyph("Ui", "check"), Tok.TealD);
             Size(wonCheck, 14f, 14f);
@@ -1312,6 +1308,7 @@ namespace WhatLiesInTheDepths.EditorTools
             view.giveBattleGround = give.ground;
             view.giveBattleLabel = give.label;
             view.wonRow = wonRow.gameObject;
+            view.wonBorder = wonBorder;
             view.roster = roster;
             view.rosterHeadPrefab = Load("UI_RosterHead");
             view.unitCardPrefab = Load("UI_UnitCard").GetComponent<UnitCardView>();

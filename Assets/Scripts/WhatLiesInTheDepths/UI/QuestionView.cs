@@ -38,8 +38,8 @@ namespace WhatLiesInTheDepths.UI
         public TMP_Text yesLabel;
 
         // The spec's hover values, which are not tokens: iris and rose-d a step darker.
-        static readonly Color StayHover = new Color32(0x8E, 0x76, 0xC2, 0xFF);
-        static readonly Color WipeHover = new Color32(0x8E, 0x40, 0x58, 0xFF);
+        static Color StayHover => Theme.Mix(Tok.Iris, Tok.IrisDeep, 0.55f);
+        static Color WipeHover => Theme.Mix(Tok.RoseD, Tok.Ink, 0.2f);
 
         const float PadTop = 26f, PadSide = 28f, PadBottom = 24f, Gap = 13f;
 
@@ -135,14 +135,14 @@ namespace WhatLiesInTheDepths.UI
 
             // Stay / go back: filled iris, first.
             if (noGround != null) noGround.color = _noHover ? StayHover : Theme.Get(Tok.Iris);
-            if (noLabel != null) noLabel.color = Color.white;
+            if (noLabel != null) noLabel.color = Theme.Get(Tok.OnIris);
 
             if (grave)
             {
                 // Clear it all: filled rose-d on white — the only filled rose in the game.
                 if (yesGround != null) yesGround.color = _yesHover ? WipeHover : Theme.Get(Tok.RoseD);
                 if (yesBorder != null) yesBorder.color = Theme.Get(Tok.RoseB, 0f);
-                if (yesLabel != null) yesLabel.color = Color.white;
+                if (yesLabel != null) yesLabel.color = Theme.Get(Tok.RoseL);   // near-white on Dream, deep on Dusk's light rose
             }
             else
             {

@@ -248,7 +248,7 @@ namespace WhatLiesInTheDepths.UI
             if (buildLabel != null)
             {
                 buildLabel.text = Strings.T("ui.constructs.build");
-                buildLabel.color = state == Refusal.None ? Theme.Get(Tok.Veil) : Theme.Get(Tok.Ink4);
+                buildLabel.color = state == Refusal.None ? Theme.Get(Tok.OnIris) : Theme.Get(Tok.Ink4);
             }
 
             if (reasonLine != null)
@@ -308,7 +308,7 @@ namespace WhatLiesInTheDepths.UI
             // pressable, so it must not look it. Suppressed on both refusal states.
             bool allow = hovered && _c != null && _c.state == Refusal.None && !(_c.once && _c.owned > 0);
             if (cardBorder != null) cardBorder.color = Theme.Get(allow ? Tok.IrisB : Tok.Haze);
-            if (cardGround != null) cardGround.color = allow ? Color.white : Theme.Get(Tok.Veil);
+            if (cardGround != null) cardGround.color = allow ? Theme.Get(Tok.Lit) : Theme.Get(Tok.Veil);
             if (ring != null) ring.color = Theme.Get(Tok.Iris, allow ? 0.10f : 0f);
         }
     }

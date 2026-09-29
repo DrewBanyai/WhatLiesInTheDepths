@@ -34,8 +34,8 @@ namespace WhatLiesInTheDepths.UI
         public GameObject newDot;
 
         // The spec's raw values where it does not use a token.
-        static readonly Color PowerEdge   = new Color32(0xCF, 0xE5, 0xE1, 0xFF);
-        static readonly Color DisabledInk = new Color32(0xB6, 0xAE, 0xCB, 0xFF);
+        static Color PowerEdge => Theme.Mix(Tok.TealL, Tok.Teal, 0.22f);
+        static Color DisabledInk => Theme.Mix(Tok.Ink3, Tok.Ink4, 0.55f);
 
         UnitDef _u;
         bool _hovered;
@@ -107,7 +107,7 @@ namespace WhatLiesInTheDepths.UI
         {
             // Hover rings and lightens the card.
             if (border != null) border.color = Theme.Get(_hovered ? Tok.IrisB : Tok.Haze);
-            if (ground != null) ground.color = _hovered ? Color.white : Theme.Get(Tok.Veil);
+            if (ground != null) ground.color = _hovered ? Theme.Get(Tok.Lit) : Theme.Get(Tok.Veil);
         }
 
         public void Refresh()
@@ -131,7 +131,7 @@ namespace WhatLiesInTheDepths.UI
             bool pay = s.Judge(cost) == Refusal.None;
             if (muster != null) muster.SetInteractable(pay);
             if (musterGround != null) musterGround.color = Theme.Get(pay ? Tok.Iris : Tok.Track);
-            if (musterLabel != null) musterLabel.color = pay ? Theme.Get(Tok.Veil) : DisabledInk;
+            if (musterLabel != null) musterLabel.color = pay ? Theme.Get(Tok.OnIris) : DisabledInk;
         }
 
         // Beside Muster there is room for about 222 of pills. A late unit's three prices, with

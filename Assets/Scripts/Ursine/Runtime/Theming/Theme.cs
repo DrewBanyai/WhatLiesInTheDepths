@@ -31,6 +31,12 @@ namespace Ursine.Theming
         /// layout can move.</summary>
         public static Func<int, int, Color, Color> ContrastFilter;
 
+        /// <summary>Installed by the game. What a token reads as when the palette in use was
+        /// made before that token existed (its asset has fewer entries than the game has
+        /// tokens), so a palette that has not been rebuilt yet degrades to sensible values
+        /// instead of magenta.</summary>
+        public static Func<int, Color> MissingToken;
+
         static Palette _palette;
         static int _contrast;
 
@@ -65,15 +71,18 @@ namespace Ursine.Theming
         {
             var p = Current;
             if (p == null) return Color.magenta;
-            var c = p.Get(token);
+            var c = token >= p.Count && MissingToken != null ? MissingToken(token) : p.Get(token);
             if (_contrast == 0 || ContrastFilter == null) return c;
             return ContrastFilter(token, _contrast, c);
         }
 
+        /// <summary>The token with <paramref name="alpha"/> applied on top of its own alpha. A
+        /// palette entry is usually opaque, so this is usually just that alpha; an entry that
+        /// is itself translucent (an artwork wash on a dark palette) keeps its translucency.</summary>
         public static Color Get(int token, float alpha)
         {
             var c = Get(token);
-            c.a = alpha;
+            c.a *= alpha;
             return c;
         }
     }

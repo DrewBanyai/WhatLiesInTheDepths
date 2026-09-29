@@ -74,7 +74,7 @@ namespace WhatLiesInTheDepths.UI
         const float Grace = 1f / 6f;          // "about a sixth of a second"
         float _t;                             // the field's own clock, in seconds
 
-        static readonly Color DisabledInk = new Color32(0xB6, 0xAE, 0xCB, 0xFF);   // spec's raw
+        static Color DisabledInk => Theme.Mix(Tok.Ink3, Tok.Ink4, 0.55f);   // spec's raw
         float _judgeIn;
         readonly List<bool> _greats = new List<bool>();
         readonly List<bool> _choices = new List<bool>();
@@ -357,7 +357,7 @@ namespace WhatLiesInTheDepths.UI
             if (realizeLabel != null)
             {
                 realizeLabel.text = Strings.T("ui.revelations.realize");
-                realizeLabel.color = state == Refusal.None ? Theme.Get(Tok.Veil) : DisabledInk;
+                realizeLabel.color = state == Refusal.None ? Theme.Get(Tok.OnIris) : DisabledInk;
             }
             bool relayout = false;
             if (reasonLine != null)

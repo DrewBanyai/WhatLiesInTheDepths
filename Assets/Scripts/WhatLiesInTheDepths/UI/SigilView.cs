@@ -34,11 +34,11 @@ namespace WhatLiesInTheDepths.UI
         float _ringShow;                   // 0 hidden at .88, 1 shown at full size; .18s
 
         // The halo is light, not a surface: the spec's raw rgba, not a token.
-        static readonly Color LilacLight = new Color32(156, 134, 206, 255);
-        static readonly Color GoldLight  = new Color32(214, 172, 110, 255);
-        static readonly Color BlueLight  = new Color32(127, 159, 216, 255);
-        static readonly Color GreatHover = new Color32(0x6E, 0x53, 0x16, 255);
-        static readonly Color ShortInk   = new Color32(0x8E, 0x86, 0xA3, 255);
+        static Color LilacLight => Theme.Get(Tok.Iris);
+        static Color GoldLight => Theme.Get(Tok.Gold);
+        static Color BlueLight => Theme.Get(Tok.Blue);
+        static Color GreatHover => Theme.Mix(Tok.GoldD, Tok.Ink, 0.35f);
+        static Color ShortInk => Theme.Mix(Tok.Ink2, Tok.Ink3, 0.5f);
 
         /// <summary>Above a ceiling the whole sigil sits at .45; the field multiplies its own
         /// yielding on top of this.</summary>

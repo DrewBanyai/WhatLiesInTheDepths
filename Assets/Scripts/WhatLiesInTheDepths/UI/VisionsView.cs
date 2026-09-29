@@ -77,9 +77,9 @@ namespace WhatLiesInTheDepths.UI
         public UiButton readoutHover;
 
         // The spec's raw values where it does not use a token.
-        static readonly Color RightGround      = new Color32(0xFB, 0xF9, 0xFD, 0xFF);
-        static readonly Color RightGroundGreat = new Color32(0xFC, 0xFA, 0xF4, 0xFF);
-        static readonly Color DisabledInk      = new Color32(0xB6, 0xAE, 0xCB, 0xFF);
+        static Color RightGround => Theme.Mix(Tok.Veil, Tok.Mist, 0.15f);
+        static Color RightGroundGreat => Theme.Mix(Tok.Veil, Tok.GoldL, 0.5f);
+        static Color DisabledInk => Theme.Mix(Tok.Ink3, Tok.Ink4, 0.55f);
 
         // The iris window: which of its lit panes were golden Visions, in the order they lit.
         readonly List<bool> _greats = new List<bool>();
@@ -494,7 +494,7 @@ namespace WhatLiesInTheDepths.UI
                 else if (full || payable)
                 {
                     pourGround.color = Theme.Get(great ? Tok.GoldD : Tok.Iris);
-                    pourLabel.color = Theme.Get(Tok.Veil);
+                    pourLabel.color = Theme.Get(Tok.OnIris);
                 }
                 else
                 {
@@ -602,7 +602,7 @@ namespace WhatLiesInTheDepths.UI
             }
 
             var groundImg = row.GetComponent<Image>();
-            if (groundImg != null) groundImg.color = ground.HasValue ? Theme.Get(ground.Value) : Color.white;
+            if (groundImg != null) groundImg.color = ground.HasValue ? Theme.Get(ground.Value) : Theme.Get(Tok.Lit);
             SetColor(row, "Border", Theme.Get(border));
             SetColor(row, "Pip", Theme.Get(pip));
             var dotT = row.transform.Find("Pip/Dot");

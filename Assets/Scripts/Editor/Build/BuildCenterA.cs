@@ -238,7 +238,7 @@ namespace WhatLiesInTheDepths.EditorTools
                             SpriteFactory.Glyph("Ui", "arrow"), Tok.IrisD);
             arrow.raycastTarget = false;
             var mark = Img(Node("Mark", action, 402f - 14f - 14f, 15f, 14f, 14f),
-                           SpriteFactory.Glyph("Ui", "mark"), Tok.Veil);
+                           SpriteFactory.Glyph("Ui", "mark"), Tok.OnIris);
             mark.raycastTarget = false;
             var actionBtn = action.gameObject.AddComponent<UiButton>();
             Feel(action.gameObject, Tok.IrisD, 0.06f, row: true);

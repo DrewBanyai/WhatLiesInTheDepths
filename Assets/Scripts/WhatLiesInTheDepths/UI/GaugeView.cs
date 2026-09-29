@@ -48,7 +48,7 @@ namespace WhatLiesInTheDepths.UI
         public Image diveArrow;
         public Image diveMark;
 
-        static readonly Color FillOn = new Color32(0x7C, 0x61, 0xAE, 0xFF);   // the lit button's fill
+        static Color FillOn => Theme.Get(Tok.IrisDeep);   // the lit button's fill
         bool _diveHover;
 
         // The spent and brought-up columns have room for two lines each. When either holds more
@@ -77,7 +77,7 @@ namespace WhatLiesInTheDepths.UI
 
         // Spec .turn:hover — one step darker than iris; no token carries it.
         // Spec: the sounded dive control's ground, a gray-violet no token carries.
-        static readonly Color SoundedGround = new Color32(0xF6, 0xF3, 0xFA, 0xFF);
+        static Color SoundedGround => Theme.Mix(Tok.Veil, Tok.Mist, 0.5f);
         const float DiveBlockH = 260f;
 
         // Nothing in this panel snaps into place. A paragraph the dive has just written fades
@@ -91,7 +91,7 @@ namespace WhatLiesInTheDepths.UI
         CanvasGroup _partGroup;
         float _roomT, _arrivalT;           // the panel growing, then the control fading in
 
-        static readonly Color PartHover = new Color32(0x8E, 0x76, 0xC2, 0xFF);
+        static Color PartHover => Theme.Mix(Tok.Iris, Tok.IrisDeep, 0.55f);
         bool _partHover;
         int _shown = -1;
 
@@ -307,7 +307,7 @@ namespace WhatLiesInTheDepths.UI
                 // The control keeps its name at full (the line under it says why); at the bottom
                 // it is a different task.
                 diveLabel.text = Strings.T(bottom ? "ui.gauge.remains" : "ui.gauge.sink");
-                diveLabel.color = full ? Theme.Get(Tok.Ink4) : Theme.Get(lit ? Tok.Veil : Tok.IrisD);
+                diveLabel.color = full ? Theme.Get(Tok.Ink4) : Theme.Get(lit ? Tok.OnIris : Tok.IrisD);
             }
             if (diveGround != null)
                 diveGround.color = full ? SoundedGround

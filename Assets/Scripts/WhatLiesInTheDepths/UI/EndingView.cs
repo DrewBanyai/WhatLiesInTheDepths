@@ -92,7 +92,7 @@ namespace WhatLiesInTheDepths.UI
             if (exitLabel != null) exitLabel.text = Strings.T("ui.ending.exit");
 
             if (contGround != null) contGround.color = Theme.Get(Tok.Iris);
-            if (contLabel != null) contLabel.color = Theme.Get(Tok.Veil);
+            if (contLabel != null) contLabel.color = Theme.Get(Tok.OnIris);
             if (hardResetBorder != null) hardResetBorder.color = Theme.Get(Tok.RoseB);
             if (hardResetLabel != null) hardResetLabel.color = Theme.Get(Tok.RoseD);
             if (exitBorder != null) exitBorder.color = Theme.Get(Tok.Haze);

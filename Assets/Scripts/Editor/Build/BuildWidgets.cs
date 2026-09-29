@@ -240,8 +240,8 @@ namespace WhatLiesInTheDepths.EditorTools
         static void BuildStepper()
         {
             var root = Node("UI_Stepper", null, 0, 0, 130f, 40f);
-            // The spec's #fff between iris-l buttons: artwork-white, not the veil token.
-            Artwork(root, SpriteFactory.Round(10));
+            // The spec's #fff between iris-l buttons: a raised surface (Lit), white on Dream.
+            Img(root, SpriteFactory.Round(10), Tok.Lit);
             Img(Stretch(Node("Border", root)), SpriteFactory.Outline(10), Tok.Haze);
 
             var minusRt = Node("Minus", root, 1f, 1f, 38f, 38f);

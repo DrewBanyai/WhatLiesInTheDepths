@@ -405,7 +405,7 @@ namespace WhatLiesInTheDepths.UI
             bool can = !finished && s != null && s.Judge(b.def.cost) == Refusal.None;
             bool beyond = !finished && !can && s != null && b.def.cost != null
                           && b.def.cost.Any(a => s.AboveCeiling(a.k, a.n));
-            Color fill = can ? A(Tok.IrisL, 0.6f) : beyond ? A(Tok.GoldL, 0.85f) : new Color(1f, 1f, 1f, 0.8f);
+            Color fill = can ? A(Tok.IrisL, 0.6f) : beyond ? A(Tok.GoldL, 0.85f) : A(Tok.Lit, 0.8f);
             Color edge = can ? A(Tok.IrisB, 0.55f) : beyond ? A(Tok.GoldB, 0.95f) : A(Tok.Haze, 0.9f);
             if (b.haloFill != null) b.haloFill.color = fill;
             if (b.haloEdge != null) b.haloEdge.color = edge;

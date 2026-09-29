@@ -389,10 +389,8 @@ namespace WhatLiesInTheDepths.EditorTools
             // Art 1920 x 460, full bleed at the top, its last 150 dissolving into the ground.
             var artHolder = Node("Art", content, 0, 0, Layout.ScreenW, 460f);
             artHolder.gameObject.AddComponent<LayoutElement>().preferredHeight = 460f;
-            var art = Img(Stretch(Node("Image", artHolder)), SpriteFactory.Load("Plate_Ending"), Tok.Veil);
-            art.color = Color.white;
-            var at = art.GetComponent<ThemedGraphic>();
-            if (at != null) Object.DestroyImmediate(at);
+            // Artwork, seen through the Art wash: as drawn on the light palettes, dimmed on Dusk.
+            var art = Img(Stretch(Node("Image", artHolder)), SpriteFactory.Load("Plate_Ending"), Tok.Art);
             var dissolve = Node("Dissolve", artHolder, 0, 310f, Layout.ScreenW, 150f);
             Img(dissolve, SpriteFactory.Load("Scrim_Up"), Tok.Mist);
 

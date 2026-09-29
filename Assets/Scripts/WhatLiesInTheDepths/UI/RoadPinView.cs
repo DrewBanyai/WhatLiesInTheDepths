@@ -23,7 +23,7 @@ namespace WhatLiesInTheDepths.UI
         const float LabelW = 128f;
 
         // The spec's raw values where it does not use a token.
-        static readonly Color TakenRing = new Color32(0xA8, 0xD2, 0xCC, 0xFF);
+        static Color TakenRing => Theme.Mix(Tok.TealL, Tok.Teal, 0.45f);
 
         bool _hover, _on, _fighting;
 
@@ -75,7 +75,7 @@ namespace WhatLiesInTheDepths.UI
             if (dot != null)
             {
                 dot.rectTransform.sizeDelta = Vector2.one * size;
-                dot.color = won ? Theme.Get(Tok.TealL) : Color.white;
+                dot.color = won ? Theme.Get(Tok.TealL) : Theme.Get(Tok.Lit);
             }
             if (ring != null)
             {
