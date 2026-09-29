@@ -266,6 +266,7 @@ namespace WhatLiesInTheDepths.UI
                 {
                     var pill = Instantiate(costPillPrefab, costs);
                     pill.ShowGlyph(false);   // the readout names a cost in words alone
+                    ResourceHover.On(pill.gameObject, a.k);   // lights its row in the ledger
                     _pills.Add(pill);
                 }
             }

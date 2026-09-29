@@ -6,9 +6,12 @@
 // the previous save is kept beside it as .bak, so a crash or a power cut in the middle of a
 // save leaves the last good one behind rather than half a file.
 //
-// Web: a browser page has no file system of its own that survives a reload, so the save goes
-// into PlayerPrefs, which a WebGL build keeps in the browser's IndexedDB. PlayerPrefs.Save()
-// is what actually commits it there.
+// Web: the save goes into the browser's localStorage under a fixed key, <WebPrefix><slot>, with
+// the previous save beside it as <key>.bak (WebBridge / UrsineWeb.jslib). Not PlayerPrefs:
+// a WebGL build keeps PlayerPrefs in IndexedDB under a folder named for the page's address, and
+// hosts such as itch.io give every upload a new address, so every new upload started from
+// nothing. A save still sitting in PlayerPrefs from an older build is read once and carried
+// over. If the browser refuses localStorage (storage switched off), PlayerPrefs is used instead.
 //
 // Ursine does not know what is in a save; it stores and returns text under a slot name.
 using System;
@@ -22,8 +25,13 @@ namespace Ursine
         /// <summary>Raised with a message when a save could not be written or read.</summary>
         public static Action<string> Warn = m => Debug.LogWarning(m);
 
-        static bool UsePrefs => Application.platform == RuntimePlatform.WebGLPlayer;
+        static bool UseWeb => Application.platform == RuntimePlatform.WebGLPlayer;
 
+        /// <summary>What every web save key starts with. The product name by default, so two
+        /// games on the same site never share a key.</summary>
+        public static string WebPrefix = Application.productName + ".";
+
+        static string WebKey(string slot) => WebPrefix + slot;
         static string PrefsKey(string slot) => "save." + slot;
         static string FilePath(string slot) => Path.Combine(Application.persistentDataPath, slot + ".json");
 
@@ -31,8 +39,13 @@ namespace Ursine
         {
             try
             {
-                if (UsePrefs)
+                if (UseWeb)
                 {
+                    string key = WebKey(slot);
+                    string old = WebBridge.Get(key);
+                    if (!string.IsNullOrEmpty(old) && old != text) WebBridge.Set(key + ".bak", old);
+                    if (WebBridge.Set(key, text)) return true;
+                    // No localStorage: the old way is better than none.
                     PlayerPrefs.SetString(PrefsKey(slot), text);
                     PlayerPrefs.Save();
                     return true;
@@ -64,8 +77,20 @@ namespace Ursine
         {
             try
             {
-                if (UsePrefs)
-                    return PlayerPrefs.HasKey(PrefsKey(slot)) ? PlayerPrefs.GetString(PrefsKey(slot)) : null;
+                if (UseWeb)
+                {
+                    string key = WebKey(slot);
+                    string v = WebBridge.Get(key);
+                    if (!string.IsNullOrEmpty(v)) return v;
+                    // A save made by an older build, in PlayerPrefs: carry it across.
+                    if (PlayerPrefs.HasKey(PrefsKey(slot)))
+                    {
+                        v = PlayerPrefs.GetString(PrefsKey(slot));
+                        if (!string.IsNullOrEmpty(v)) WebBridge.Set(key, v);
+                        return v;
+                    }
+                    return WebBridge.Get(key + ".bak");
+                }
 
                 string path = FilePath(slot);
                 if (File.Exists(path)) return File.ReadAllText(path);
@@ -82,7 +107,7 @@ namespace Ursine
         /// <summary>The previous save, for when the current one will not load.</summary>
         public static string ReadBackup(string slot)
         {
-            if (UsePrefs) return null;
+            if (UseWeb) return WebBridge.Get(WebKey(slot) + ".bak");
             try
             {
                 string bak = FilePath(slot) + ".bak";
@@ -92,14 +117,21 @@ namespace Ursine
         }
 
         public static bool Exists(string slot)
-            => UsePrefs ? PlayerPrefs.HasKey(PrefsKey(slot))
-                        : File.Exists(FilePath(slot)) || File.Exists(FilePath(slot) + ".bak");
+            => UseWeb ? !string.IsNullOrEmpty(WebBridge.Get(WebKey(slot))) || PlayerPrefs.HasKey(PrefsKey(slot))
+                      : File.Exists(FilePath(slot)) || File.Exists(FilePath(slot) + ".bak");
 
         public static void Delete(string slot)
         {
             try
             {
-                if (UsePrefs) { PlayerPrefs.DeleteKey(PrefsKey(slot)); PlayerPrefs.Save(); return; }
+                if (UseWeb)
+                {
+                    WebBridge.Remove(WebKey(slot));
+                    WebBridge.Remove(WebKey(slot) + ".bak");
+                    PlayerPrefs.DeleteKey(PrefsKey(slot));
+                    PlayerPrefs.Save();
+                    return;
+                }
                 foreach (var p in new[] { FilePath(slot), FilePath(slot) + ".bak", FilePath(slot) + ".tmp" })
                     if (File.Exists(p)) File.Delete(p);
             }
@@ -108,6 +140,6 @@ namespace Ursine
 
         /// <summary>Where the save is, for a log line.</summary>
         public static string Describe(string slot)
-            => UsePrefs ? "browser storage (PlayerPrefs '" + PrefsKey(slot) + "')" : FilePath(slot);
+            => UseWeb ? "browser storage (localStorage '" + WebKey(slot) + "')" : FilePath(slot);
     }
 }

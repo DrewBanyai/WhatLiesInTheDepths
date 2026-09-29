@@ -202,6 +202,7 @@ namespace WhatLiesInTheDepths.UI
                                : GameState.I.Short(a.k, a.n) ? Refusal.Short : Refusal.None;
                     pill.Set(res != null ? res.n : a.k, a.n, ps);
                     Art.Apply(pill.glyph, Art.Resource(a.k));
+                    ResourceHover.On(pill.gameObject, a.k);   // lights its row in the ledger
                     _pills.Add(pill);
                 }
                 FitCosts();

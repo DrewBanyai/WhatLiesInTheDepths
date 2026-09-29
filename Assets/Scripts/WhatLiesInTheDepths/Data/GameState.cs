@@ -164,6 +164,52 @@ namespace WhatLiesInTheDepths.Data
                 UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
         }
 
+        // ---- a save the player can hold -------------------------------------------------
+
+        /// <summary>What every exported save's file name starts with. Import on a desktop build
+        /// looks for the newest file starting with this.</summary>
+        public const string ExportPrefix = "WhatLiesInTheDepths-save";
+
+        /// <summary>Saves, then hands the player a copy of the save as a file.</summary>
+        public SaveTransfer.Outcome ExportSave(out string where)
+        {
+            where = null;
+            if (Dream == null || startMidGame) return SaveTransfer.Outcome.Failed;
+            SaveNow();
+            string name = ExportPrefix + "-" + System.DateTime.Now.ToString("yyyy-MM-dd-HHmm",
+                System.Globalization.CultureInfo.InvariantCulture) + ".json";
+            return SaveTransfer.Export(name, DreamSave.Write(Dream), out where);
+        }
+
+        public enum ImportResult { Loaded, Cancelled, NoneFound, NotASave }
+
+        /// <summary>Asks for a save file. If it reads as a dream it becomes the save — the one it
+        /// replaces is kept as the backup — and the game starts again from it. A file that does
+        /// not read changes nothing.</summary>
+        public void ImportSave(System.Action<ImportResult> done)
+        {
+            if (startMidGame) { done?.Invoke(ImportResult.NotASave); return; }
+            SaveTransfer.Import(ExportPrefix, (outcome, text, from) =>
+            {
+                if (outcome == SaveTransfer.Outcome.Cancelled) { done?.Invoke(ImportResult.Cancelled); return; }
+                if (outcome == SaveTransfer.Outcome.NoneFound) { done?.Invoke(ImportResult.NoneFound); return; }
+                if (outcome != SaveTransfer.Outcome.Done || string.IsNullOrEmpty(text)) { done?.Invoke(ImportResult.NotASave); return; }
+
+                bool ok;
+                try { ok = DreamSave.Read(new Dream(false), text, out _); }
+                catch { ok = false; }
+                if (!ok) { done?.Invoke(ImportResult.NotASave); return; }
+
+                // Nothing may save the old dream over this one on the way out.
+                SaveNow();
+                _resetting = true;
+                SaveStore.Write(SaveSlot, text);
+                done?.Invoke(ImportResult.Loaded);
+                UnityEngine.SceneManagement.SceneManager.LoadScene(
+                    UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+            });
+        }
+
         /// <summary>Saves, then leaves. A web page cannot close itself, so there it only saves.</summary>
         public void SaveAndQuit()
         {

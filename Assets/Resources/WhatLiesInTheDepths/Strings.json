@@ -189,6 +189,13 @@
     "ui.options.saved": "The dream was last saved {0} ago.",
     "ui.options.save": "Save",
     "ui.options.savedNow": "Saved",
+    "ui.options.transfer": "Keep a copy of the dream, or bring one back.",
+    "ui.options.exportedWeb": "A copy is in your downloads.",
+    "ui.options.exported": "A copy is in your {0} folder.",
+    "ui.options.exportFailed": "The copy could not be made.",
+    "ui.options.imported": "Bringing the dream back…",
+    "ui.options.importNone": "No exported save in your {0} folder.",
+    "ui.options.importBad": "That file is not a save this game can read.",
     "ui.visions.caption": "{0} visions",
     "ui.visions.channelling": ", {0} channelling",
     "ui.visions.kind.golden": "A golden Vision",
@@ -1723,6 +1730,9 @@
     "rev.weight.text": "You stop kicking against the water. The weight does the work, and it is quicker than you ever were.",
     "rev.weight.fx": [
       "dives <b>+33%</b> faster"
-    ]
+    ],
+    "ui.built.keep_a_copy_of_the_dream_or_bring_one_back": "Keep a copy of the dream, or bring one back.",
+    "ui.built.export": "Export",
+    "ui.built.import": "Import"
   }
 }

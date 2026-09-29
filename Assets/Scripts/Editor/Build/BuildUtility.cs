@@ -161,7 +161,19 @@ namespace WhatLiesInTheDepths.EditorTools
             // Saving by hand, beside the line that says when it last happened.
             var saveButton = OutlineButton("Save", saveNote, PageW - 8f - 110f, 8f, 110f, 32f, "Save", 15f, 9,
                                            Tok.IrisB, Tok.IrisD);
-            y += 66f;
+            y += 58f;
+
+            // A copy the player can hold: Export beside Import, and one line saying what happened.
+            var transfer = Node("Transfer", page, 0, y, PageW, 40f);
+            var transferLine = Txt("Line", transfer, 14f, 0, PageW - 28f - 236f, 40f,
+                                   "Keep a copy of the dream, or bring one back.", TypeRole.Label400, 11.5f, Tok.Ink3,
+                                   TextAlignmentOptions.MidlineLeft);
+            transferLine.fontStyle = FontStyles.Italic;
+            var exportButton = OutlineButton("Export", transfer, PageW - 8f - 110f - 8f - 110f, 4f, 110f, 32f, "Export", 15f, 9,
+                                             Tok.IrisB, Tok.IrisD);
+            var importButton = OutlineButton("Import", transfer, PageW - 8f - 110f, 4f, 110f, 32f, "Import", 15f, 9,
+                                             Tok.IrisB, Tok.IrisD);
+            y += 58f;
 
             // --- Beginning again. The only rose ground in any menu, with the consequence
             // written beside the button rather than hidden behind it.
@@ -199,6 +211,11 @@ namespace WhatLiesInTheDepths.EditorTools
             view.save = saveButton.button;
             view.saveBorder = saveButton.border;
             view.saveLabel = saveButton.label;
+            view.exportSave = exportButton.button;
+            view.exportBorder = exportButton.border;
+            view.importSave = importButton.button;
+            view.importBorder = importButton.border;
+            view.transferLine = transferLine;
             view.hardReset = reset.button;
             view.hardResetBlock = blockImg;
 

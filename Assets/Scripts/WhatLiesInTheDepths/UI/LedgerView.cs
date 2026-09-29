@@ -1,7 +1,8 @@
 // What Lies In The Depths — the left column. Spec section 2.
 // The ledger is not interactive: no hover state, no tooltip, no focus ring, nothing to
 // click. It is a readout and behaves like one — the only column on the screen the pointer
-// has no business in.
+// has no business in. It does answer a pointer elsewhere, though: resting on a cost anywhere
+// (a price pill, a spend line, a Vision's offer) lights that resource's row (ResourceHint).
 using System.Collections.Generic;
 using WhatLiesInTheDepths.Core;
 using WhatLiesInTheDepths.Data;
@@ -53,6 +54,7 @@ namespace WhatLiesInTheDepths.UI
 
             Rebuild.Clear(content);
             _rows.Clear();
+            _hinted = null;                      // new rows start unlit; Update lights them again
             _built = Signature();
 
             // Order within a group is authored and never re-sorts by amount, rate or
@@ -99,6 +101,16 @@ namespace WhatLiesInTheDepths.UI
             float h = Mathf.Clamp(Mathf.Ceil(rows + padding), minHeight, most);
             if (!Mathf.Approximately(panel.sizeDelta.y, h))
                 panel.sizeDelta = new Vector2(panel.sizeDelta.x, h);
+        }
+
+        string _hinted;
+
+        void Update()
+        {
+            var k = ResourceHint.Current;
+            if (k == _hinted) return;
+            _hinted = k;
+            foreach (var r in _rows) r.SetHint(k != null && r.Key == k);
         }
 
         void RefreshAll()

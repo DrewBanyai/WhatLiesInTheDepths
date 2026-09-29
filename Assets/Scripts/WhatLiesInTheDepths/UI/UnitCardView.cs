@@ -98,6 +98,7 @@ namespace WhatLiesInTheDepths.UI
                 var pill = Instantiate(costPillPrefab, costs);
                 Art.Apply(pill.glyph, Art.Resource(a.k));
                 pill.ShowGlyph(true);
+                ResourceHover.On(pill.gameObject, a.k);   // lights its row in the ledger
                 _pills.Add(pill);
             }
         }

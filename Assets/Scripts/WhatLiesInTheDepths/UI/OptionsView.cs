@@ -40,6 +40,13 @@ namespace WhatLiesInTheDepths.UI
         public TMP_Text saveLabel;
         float _savedFor;
 
+        [Tooltip("Export a copy of the save to a file; Import one back. The line says what happened.")]
+        public UiButton exportSave;
+        public Image exportBorder;
+        public UiButton importSave;
+        public Image importBorder;
+        public TMP_Text transferLine;
+
         [Header("Beginning again")]
         public UiButton hardReset;
         public Image hardResetBlock;
@@ -113,6 +120,18 @@ namespace WhatLiesInTheDepths.UI
 
             if (hardReset != null) hardReset.Clicked += () => Router.I?.AskHardReset();
 
+            if (transferLine != null) transferLine.text = Strings.T("ui.options.transfer");
+            if (exportSave != null)
+            {
+                exportSave.Clicked += Export;
+                exportSave.Hovered += h => { if (exportBorder != null) exportBorder.color = Theme.Get(h ? Tok.Iris : Tok.IrisB); };
+            }
+            if (importSave != null)
+            {
+                importSave.Clicked += Import;
+                importSave.Hovered += h => { if (importBorder != null) importBorder.color = Theme.Get(h ? Tok.Iris : Tok.IrisB); };
+            }
+
             if (fullScreen != null)
                 fullScreen.Changed += on => Screen.fullScreen = on;
 
@@ -163,6 +182,49 @@ namespace WhatLiesInTheDepths.UI
                 saveLine.text = Strings.T("ui.options.saved", Fmt.Seconds(SaveClock.I.Staleness));
 
             if (_savedFor > 0f && (_savedFor -= Time.unscaledDeltaTime) <= 0f) PaintSave();
+        }
+
+        // ---- a save the player can hold ----------------------------------------------------
+
+        void Export()
+        {
+            var s = Data.GameState.I;
+            if (s == null) return;
+            var outcome = s.ExportSave(out string where);
+            switch (outcome)
+            {
+                case SaveTransfer.Outcome.Done:
+                    // The web hands the browser a download; everywhere else it is a file we wrote.
+                    Say(where == null ? Strings.T("ui.options.exportedWeb")
+                                      : Strings.T("ui.options.exported", System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(where))),
+                        Tok.TealD);
+                    break;
+                case SaveTransfer.Outcome.Cancelled: Say(Strings.T("ui.options.transfer"), Tok.Ink3); break;
+                default: Say(Strings.T("ui.options.exportFailed"), Tok.RoseD); break;
+            }
+        }
+
+        void Import()
+        {
+            var s = Data.GameState.I;
+            if (s == null) return;
+            s.ImportSave(result =>
+            {
+                switch (result)
+                {
+                    case Data.GameState.ImportResult.Loaded: Say(Strings.T("ui.options.imported"), Tok.TealD); break;
+                    case Data.GameState.ImportResult.NoneFound: Say(Strings.T("ui.options.importNone", SaveTransfer.FolderName), Tok.RoseD); break;
+                    case Data.GameState.ImportResult.NotASave: Say(Strings.T("ui.options.importBad"), Tok.RoseD); break;
+                    default: Say(Strings.T("ui.options.transfer"), Tok.Ink3); break;
+                }
+            });
+        }
+
+        void Say(string text, Tok tone)
+        {
+            if (transferLine == null) return;
+            transferLine.text = text;
+            transferLine.color = Theme.Get(tone);
         }
 
         void PaintSave()

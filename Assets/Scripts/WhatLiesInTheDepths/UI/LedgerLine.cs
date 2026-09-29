@@ -22,11 +22,13 @@ namespace WhatLiesInTheDepths.UI
         public Image ground, border, glyph;
         public TMP_Text figure, name;
         Refusal _shown = (Refusal)(-1);
+        Ursine.UI.ResourceHover _hover;
 
         /// <summary>Wraps an instance of the UI_LedgerLine prefab.</summary>
         public static LedgerLine On(GameObject go, Amount a, bool spent, Tok tone, bool showGlyph)
         {
             var l = new LedgerLine { amount = a, spent = spent, tone = tone };
+            l._hover = Ursine.UI.ResourceHover.On(go, a.k);   // lights its row in the ledger
             var g = go.transform.Find("Glyph");
             if (g != null)
             {
@@ -66,6 +68,7 @@ namespace WhatLiesInTheDepths.UI
                     if (l.figure != null) l.figure.text = sign + Fmt.Amount(a.n);
                 }
                 l.amount = a;
+                if (l._hover != null) l._hover.key = a.k;
             }
             return changed;
         }

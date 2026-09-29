@@ -573,6 +573,7 @@ namespace WhatLiesInTheDepths.UI
             {
                 int captured = i;
                 var go = Instantiate(offerRowPrefab, offers);
+                ResourceHover.On(go, d.of[i].r);            // lights its row in the ledger
                 var btn = go.GetComponent<UiButton>();
                 if (btn != null) btn.Clicked += () => { if (_open?.Def == d) { d.sel = captured; Paint(); } };
                 _offerRows.Add(go);
