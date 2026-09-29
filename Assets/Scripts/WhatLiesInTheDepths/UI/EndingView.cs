@@ -4,7 +4,7 @@
 //
 // It comes in two parts. First the art and the story alone, with a single down arrow where the
 // answers will be. Pressing it takes the page down to the credits and the thanks, and only then
-// do Hard reset, Continue and Exit arrive, fading in together over a second. The page cannot be
+// do Hard reset, Continue and Exit arrive (Exit not on the web), fading in together over a second. The page cannot be
 // scrolled by hand until it has been taken down once; after that it can, to read the story again.
 using System.Collections;
 using WhatLiesInTheDepths.Core;
@@ -109,6 +109,7 @@ namespace WhatLiesInTheDepths.UI
             if (hardReset != null) hardReset.Clicked += () => { Router.I?.ShowEnding(false); Router.I?.AskHardReset(); };
 
             PartOne();
+            if (Application.platform == RuntimePlatform.WebGLPlayer) DropExit();
 
             if (exit != null)
                 exit.Hovered += h =>
@@ -117,6 +118,22 @@ namespace WhatLiesInTheDepths.UI
                     if (exitLabel != null) exitLabel.color = Theme.Get(h ? Tok.RoseD : Tok.Ink2);
                     if (exitBorder != null) exitBorder.color = Theme.Get(h ? Tok.RoseB : Tok.Haze);
                 };
+        }
+
+        /// <summary>A web page cannot close itself, so on the web the ending offers only Hard
+        /// reset and Continue. The pair is recentred: the row loses Exit's 200 and the 14 gap
+        /// before it, so everything left of it moves right by half of that.</summary>
+        void DropExit()
+        {
+            if (exit == null || !exit.gameObject.activeSelf) return;
+            var gone = (RectTransform)exit.transform;
+            float shift = 0f;
+            var cr = cont != null ? (RectTransform)cont.transform : null;
+            if (cr != null)
+                shift = (gone.anchoredPosition.x + gone.sizeDelta.x - (cr.anchoredPosition.x + cr.sizeDelta.x)) * 0.5f;
+            exit.gameObject.SetActive(false);
+            if (cr != null) cr.anchoredPosition += new Vector2(shift, 0f);
+            if (hardReset != null) ((RectTransform)hardReset.transform).anchoredPosition += new Vector2(shift, 0f);
         }
 
         Coroutine _going;

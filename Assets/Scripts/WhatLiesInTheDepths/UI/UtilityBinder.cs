@@ -60,6 +60,14 @@ namespace WhatLiesInTheDepths.UI
                     SyncAchievements();
                     break;
                 case Which.Exit:
+                    // A web page cannot close itself, so on the web there is no Exit at all.
+                    // The bar's layout is right-aligned, so Achievements and Options slide
+                    // right into the corner it leaves.
+                    if (Application.platform == RuntimePlatform.WebGLPlayer)
+                    {
+                        item.gameObject.SetActive(false);
+                        return;
+                    }
                     // The one control on the screen that does not simply act.
                     item.Configure(() => false, () => false, () => Router.I?.AskExit());
                     break;
