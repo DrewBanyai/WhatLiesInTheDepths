@@ -1,6 +1,5 @@
 # What Lies In The Depths
 
-[![Dev version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FDrewBanyai%2FWhatLiesInTheDepths%2Fdevelop%2Fversion.json&query=%24.version&label=dev%20version&prefix=v)](https://github.com/DrewBanyai/WhatLiesInTheDepths/tree/develop)<br/>
 [![Live version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FDrewBanyai%2FWhatLiesInTheDepths%2Fmain%2Fversion.json&query=%24.version&label=live%20version&prefix=v)](https://github.com/DrewBanyai/WhatLiesInTheDepths/releases)<br/>
 [![Build status](https://img.shields.io/github/actions/workflow/status/DrewBanyai/WhatLiesInTheDepths/build.yml?branch=main&label=build&logo=github)](https://github.com/DrewBanyai/WhatLiesInTheDepths/actions/workflows/build.yml)<br/>
 [![Discord](https://img.shields.io/discord/1550284623790088302?color=7289DA&label=Discord&logo=discord)](https://discord.gg/PRSR6RxjU)
