@@ -16,23 +16,38 @@ namespace WhatLiesInTheDepths.UI
         public Sprite ring30, ring38;
 
         public RoadLocation Place { get; private set; }
-        public System.Action<RoadPinView> Rested;
+        /// <summary>The pointer came onto the pin (true) or left it (false).</summary>
+        public System.Action<RoadPinView, bool> Rested;
+
+        /// <summary>Names wrap inside this width, so two neighbours on a row of five never meet.</summary>
+        const float LabelW = 128f;
 
         // The spec's raw values where it does not use a token.
         static readonly Color TakenRing = new Color32(0xA8, 0xD2, 0xCC, 0xFF);
 
         bool _hover, _on, _fighting;
 
-        public void Bind(RoadLocation place)
+        /// <summary>Puts the pin at its place in the road's grid (<paramref name="index"/> is its
+        /// order on the road).</summary>
+        public void Bind(RoadLocation place, int index)
         {
             Place = place;
-            ((RectTransform)transform).anchoredPosition = Road.Anchored(place.t);
-            if (label != null) label.text = place.n.ToUpperInvariant();
+            ((RectTransform)transform).anchoredPosition = Road.AnchoredPlace(index);
+            if (label != null)
+            {
+                label.text = place.n.ToUpperInvariant();
+                label.textWrappingMode = TextWrappingModes.Normal;
+                var lr = label.rectTransform;
+                // Centered on the pin as before (the pin is 38 wide), only narrower and two lines tall.
+                lr.sizeDelta = new Vector2(LabelW, 24f);
+                lr.anchoredPosition = new Vector2(19f - LabelW * 0.5f, lr.anchoredPosition.y);
+            }
             if (button != null)
                 button.Hovered += h =>
                 {
                     _hover = h;
-                    if (h) Rested?.Invoke(this);    // resting on a pin reads it; leaving keeps it
+                    // Resting on a pin reads it; leaving hands the reading back (AssaultView).
+                    Rested?.Invoke(this, h);
                     Paint();
                 };
             Paint();

@@ -1019,9 +1019,11 @@ namespace WhatLiesInTheDepths.EditorTools
             Centered(Img(Node("Dot", root, 0, 0, 38f, 38f), SpriteFactory.Load("Disc"), Tok.Veil).rectTransform);
             Centered(Img(Node("Ring", root, 0, 0, 38f, 38f), SpriteFactory.Load("Ring_Pin38"), Tok.Iris).rectTransform);
             Centered(Img(Node("Glyph", root, 0, 0, 18f, 18f), SpriteFactory.Glyph("Place", "mile"), Tok.IrisD).rectTransform);
-            var label = Caps("Label", root, -81f, 43f, 200f, 12f, "PLACE", 8.5f, Tok.Ink, 0.12f,
+            // 128 wide and wrapping, centered under the pin, so neighbours on a row of five
+            // (135 apart) never meet; a long name takes two lines.
+            var label = Caps("Label", root, 19f - 64f, 43f, 128f, 24f, "PLACE", 8.5f, Tok.Ink, 0.12f,
                              TextAlignmentOptions.Top);
-            label.textWrappingMode = TextWrappingModes.NoWrap;
+            label.textWrappingMode = TextWrappingModes.Normal;
             label.raycastTarget = false;
             var hit = Button(Stretch(Node("Hit", root)));
             var view = root.gameObject.AddComponent<RoadPinView>();
@@ -1121,8 +1123,9 @@ namespace WhatLiesInTheDepths.EditorTools
             mapGround.gameObject.AddComponent<Mask>().showMaskGraphic = true;
             var terrain = Artwork(Stretch(Node("Terrain", mapGround.transform)), SpriteFactory.Load("Map_Terrain"));
             terrain.raycastTarget = false;
-            // The road ahead: dashed 7 / 8, 3.4 wide, #B9A8D6 at .75, fading out to the top
-            // right. The road walked: solid #8A72A8, as far as the place being faced.
+            // The road ahead: dashed 7 / 8, 3.4 wide, #B9A8D6 at .75, drawn a few places past
+            // the next and fading out along its length (AssaultView). The road walked: solid
+            // #8A72A8, as far as the place being faced. The road itself snakes (Core/Road).
             var roadAhead = Stretch(Node("RoadAhead", mapGround.transform)).gameObject.AddComponent<PathLine>();
             roadAhead.color = new Color32(0xB9, 0xA8, 0xD6, 0xBF);
             roadAhead.thickness = 3.4f; roadAhead.dash = 7f; roadAhead.gap = 8f;
@@ -1130,8 +1133,6 @@ namespace WhatLiesInTheDepths.EditorTools
             var walked = Stretch(Node("RoadWalked", mapGround.transform)).gameObject.AddComponent<PathLine>();
             walked.color = new Color32(0x8A, 0x72, 0xA8, 0xFF);
             walked.thickness = 3.4f; walked.raycastTarget = false;
-            var mist = Artwork(Stretch(Node("Mist", mapGround.transform)), SpriteFactory.Load("Map_Mist"));
-            mist.raycastTarget = false;
 
             // The Mind Palace, where the march starts: 34, radius 9, iris-l on iris-b.
             var home = Node("Home", mapGround.transform, 0, 0, 34f, 34f);

@@ -37,6 +37,10 @@ namespace Ursine.Geometry
             return this;
         }
 
+        /// <summary>SVG "L p": a straight run to <paramref name="p"/>.</summary>
+        public CubicPath Line(Vector2 p, int samples = 8)
+            => Curve(_last + (p - _last) / 3f, _last + (p - _last) * (2f / 3f), p, samples);
+
         /// <summary>SVG "S c2, p": the first control is the previous one reflected.</summary>
         public CubicPath Smooth(Vector2 c2, Vector2 p, int samples = 48)
             => Curve(2f * _last - _lastControl, c2, p, samples);

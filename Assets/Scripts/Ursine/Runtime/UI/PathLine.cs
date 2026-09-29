@@ -24,6 +24,10 @@ namespace Ursine.UI
         public Vector2 fadeStart = new Vector2(0f, 1f);   // bounding-box units, y-down
         public Vector2 fadeEnd = new Vector2(1f, 0f);
         [Range(0f, 1f)] public float fadeHold = 0.72f;    // full until here, gone at 1
+        [Tooltip("Path units over which the stroke fades to nothing at the far end of its range, "
+               + "measured along the path. 0 for none. Unlike the box fade it follows a path that doubles back.")]
+        public float fadeTail = 0f;
+        float _rangeEnd;
 
         CubicPath _path;
         Vector2 _size;                                    // the space the path is in, y-down
@@ -55,6 +59,7 @@ namespace Ursine.UI
 
             float a = from * _path.Length, b = to * _path.Length;
             if (b <= a) return;
+            _rangeEnd = b;
 
             if (dash <= 0f) Stroke(vh, a, b);
             else
@@ -76,8 +81,10 @@ namespace Ursine.UI
             int n = _run.Count;
             int start = vh.currentVertCount;
             Vector2 firstDir = Vector2.right, lastDir = Vector2.right;
+            float along = a;
             for (int i = 0; i < n; i++)
             {
+                if (i > 0) along += Vector2.Distance(_run[i - 1], _run[i]);
                 var p = Local(_run[i]);
                 var prev = Local(_run[Mathf.Max(0, i - 1)]);
                 var next = Local(_run[Mathf.Min(n - 1, i + 1)]);
@@ -87,7 +94,7 @@ namespace Ursine.UI
                 if (i == 0) firstDir = dir;
                 if (i == n - 1) lastDir = dir;
                 var nrm = new Vector2(-dir.y, dir.x);
-                var c = Tint(_run[i]);
+                var c = Tint(_run[i], along);
                 var clear = c; clear.a = 0;
                 vh.AddVert(p + nrm * outer, clear, Vector2.zero);   // 0
                 vh.AddVert(p + nrm * inner, c, Vector2.zero);       // 1
@@ -103,8 +110,8 @@ namespace Ursine.UI
                     vh.AddTriangle(m + e + 1, k + e + 1, k + e);
                 }
             }
-            Cap(vh, Local(_run[0]), -firstDir, inner, outer, Tint(_run[0]));
-            Cap(vh, Local(_run[n - 1]), lastDir, inner, outer, Tint(_run[n - 1]));
+            Cap(vh, Local(_run[0]), -firstDir, inner, outer, Tint(_run[0], a));
+            Cap(vh, Local(_run[n - 1]), lastDir, inner, outer, Tint(_run[n - 1], along));
         }
 
         // How many canvas units one screen pixel is, so the feather is a pixel whatever the
@@ -124,9 +131,10 @@ namespace Ursine.UI
                                rect.yMax - p.y / _size.y * rect.height);
         }
 
-        Color32 Tint(Vector2 p)
+        Color32 Tint(Vector2 p, float along)
         {
             Color c = color;
+            if (fadeTail > 0f) c.a *= Mathf.Clamp01((_rangeEnd - along) / fadeTail);
             if (!fade) return c;
             var box = _max - _min;
             var u = new Vector2(box.x > 0 ? (p.x - _min.x) / box.x : 0f, box.y > 0 ? (p.y - _min.y) / box.y : 0f);

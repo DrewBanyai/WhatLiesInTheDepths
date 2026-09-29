@@ -86,7 +86,13 @@ namespace WhatLiesInTheDepths.UI
 
         void Start()
         {
+            // The road is laid out for however many places the dream has (five to a row).
+            if (GameState.I != null) Road.Configure(GameState.I.road.Count);
             if (roadAhead != null) roadAhead.SetPath(Road.Path, Road.Space);
+            // The old corner mist belonged to a road that ran off to the top right. This road
+            // fades by itself, and the mist would only haze the end of the first row.
+            var mist = roadAhead != null ? roadAhead.transform.parent.Find("Mist") : null;
+            if (mist != null) mist.gameObject.SetActive(false);
             if (roadWalked != null) roadWalked.SetPath(Road.Path, Road.Space);
             if (home != null) home.anchoredPosition = Road.Anchored(0f);
             if (giveBattle != null) giveBattle.Clicked += () => Fight(_reading);
@@ -197,6 +203,9 @@ namespace WhatLiesInTheDepths.UI
 
         // ---- the map -----------------------------------------------------------
 
+        /// <summary>How many places past the next one the road ahead is drawn before it is gone.</summary>
+        const int AheadPlaces = 3;
+
         void DrawMap()
         {
             var s = GameState.I;
@@ -209,17 +218,39 @@ namespace WhatLiesInTheDepths.UI
             for (int i = 0; i < s.road.Count; i++) if (s.road[i].won) shown = i + 1;
             shown = Mathf.Min(s.road.Count, shown + 1);
 
+            // Walked as far as the place being faced. Ahead, the road is drawn a few places
+            // further and fades out along its length, so the map never says how far it goes.
             var next = Next();
-            float cut = next != null ? next.t : 1f;
+            int nextIndex = next != null ? s.road.IndexOf(next) : -1;
+            float cut = nextIndex >= 0 ? Road.Fraction(nextIndex) : 1f;
             if (roadWalked != null) roadWalked.SetRange(0f, cut);
+            if (roadAhead != null)
+            {
+                if (nextIndex < 0) roadAhead.SetRange(0f, 0f);
+                else
+                {
+                    int reach = Mathf.Min(s.road.Count - 1, nextIndex + AheadPlaces);
+                    float end = Road.Fraction(reach);
+                    roadAhead.fade = false;
+                    roadAhead.fadeTail = Mathf.Max(1f, (end - cut) * Road.Path.Length * 0.85f);
+                    roadAhead.SetRange(cut, end);
+                }
+            }
 
             if (pinLayer != null && pinPrefab != null)
                 for (int i = 0; i < shown; i++)
                 {
                     var pin = Instantiate(pinPrefab, pinLayer);
                     pin.name = "Pin " + s.road[i].k;
-                    pin.Bind(s.road[i]);
-                    pin.Rested += p => Read(p.Place);
+                    pin.Bind(s.road[i], i);
+                    // Resting on any place reads it; leaving it goes back to the place you face,
+                    // so a place looked at in passing never keeps the reading band (and Give
+                    // battle) away from the one that can be fought.
+                    pin.Rested += (p, on) =>
+                    {
+                        if (on) Read(p.Place);
+                        else if (_reading == p.Place) Read(null);
+                    };
                     _pins.Add(pin);
                 }
             MarkPins();
