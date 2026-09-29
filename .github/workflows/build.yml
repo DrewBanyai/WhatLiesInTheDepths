@@ -1,0 +1,112 @@
+# What Lies In The Depths — builds all three Build Profiles on GitHub's Linux runners.
+#
+#  - Every push to main or develop (and every pull request) builds Windows, Web and Android.
+#    This is what the "build" badge in the README reports (it watches main).
+#  - Pushing a tag that starts with "v" (e.g. v0.2.0) also publishes a GitHub Release with
+#    the three builds attached.
+#  - It can also be started by hand from the Actions tab (Run workflow).
+#
+# Secrets required (Settings > Secrets and variables > Actions):
+#   UNITY_LICENSE   contents of Unity_lic.ulf (Windows: C:\ProgramData\Unity\Unity_lic.ulf)
+#   UNITY_EMAIL     Unity account email
+#   UNITY_PASSWORD  Unity account password
+# Optional, for a release-signed Android build (otherwise it is debug-signed):
+#   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASS, ANDROID_KEYALIAS_NAME, ANDROID_KEYALIAS_PASS
+
+name: Build
+
+on:
+  push:
+    branches: [main, develop]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows
+            targetPlatform: StandaloneWindows64
+            buildProfile: Assets/Settings/Build Profiles/Windows.asset
+          - name: Web
+            targetPlatform: WebGL
+            buildProfile: Assets/Settings/Build Profiles/Web - Desktop - Release.asset
+          - name: Android
+            targetPlatform: Android
+            buildProfile: Assets/Settings/Build Profiles/Android™.asset
+    steps:
+      # The Android editor image is large; the runner needs room for it.
+      - name: Free disk space
+        if: matrix.targetPlatform == 'Android'
+        uses: jlumbroso/free-disk-space@v1.3.1
+
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      # Unity's Library folder, cached per platform so later builds skip most of the import.
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-${{ matrix.name }}-${{ hashFiles('Packages/packages-lock.json', 'ProjectSettings/ProjectVersion.txt') }}
+          restore-keys: Library-${{ matrix.name }}-
+
+      - uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildProfile: ${{ matrix.buildProfile }}
+          buildName: WhatLiesInTheDepths
+          # The version comes from version.json via Tools > Sync Version, not from git tags.
+          versioning: None
+          androidKeystoreName: whatliesinthedepths.keystore
+          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
+          androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: WhatLiesInTheDepths-${{ matrix.name }}
+          path: build/${{ matrix.targetPlatform }}
+          retention-days: 14
+
+  release:
+    name: Publish release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+
+      # Windows and Web go up as zips; Android goes up as the .apk itself.
+      - name: Package
+        run: |
+          cd dist
+          mv WhatLiesInTheDepths-Android/*.apk "WhatLiesInTheDepths-Android-${GITHUB_REF_NAME}.apk"
+          (cd WhatLiesInTheDepths-Windows && zip -qr "../WhatLiesInTheDepths-Windows-${GITHUB_REF_NAME}.zip" .)
+          (cd WhatLiesInTheDepths-Web && zip -qr "../WhatLiesInTheDepths-Web-${GITHUB_REF_NAME}.zip" .)
+          ls -la
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.zip
+            dist/*.apk
+          generate_release_notes: true
