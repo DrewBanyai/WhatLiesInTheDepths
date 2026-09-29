@@ -39,10 +39,10 @@ jobs:
             buildProfile: Assets/Settings/Build Profiles/Windows.asset
           - name: Web
             targetPlatform: WebGL
-            buildProfile: Assets/Settings/Build Profiles/Web - Desktop - Release.asset
+            buildProfile: Assets/Settings/Build Profiles/Web.asset
           - name: Android
             targetPlatform: Android
-            buildProfile: Assets/Settings/Build Profiles/Android™.asset
+            buildProfile: Assets/Settings/Build Profiles/Android.asset
     steps:
       # The Android editor image is large; the runner needs room for it.
       - name: Free disk space
