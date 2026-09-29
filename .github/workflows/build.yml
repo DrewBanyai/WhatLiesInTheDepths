@@ -53,8 +53,11 @@ jobs:
         with:
           lfs: true
 
-      # Unity's Library folder, cached per platform so later builds skip most of the import.
+      # Unity's Library folder, cached so later builds skip most of the import — Windows only.
+      # A restored Library killed the Web and Android editors within two seconds of opening
+      # the project (exit 137, run 36607038677); both build cleanly from a fresh import.
       - uses: actions/cache@v4
+        if: matrix.name == 'Windows'
         with:
           path: Library
           key: Library-${{ matrix.name }}-${{ hashFiles('Packages/packages-lock.json', 'ProjectSettings/ProjectVersion.txt') }}
