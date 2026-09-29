@@ -55,9 +55,17 @@ namespace WhatLiesInTheDepths.Core
             if (I != null && I != this) { Destroy(this); return; }
             I = this;
             _surface = CenterSurface.Destination;
+            // The bars paint on Changed; a palette switch has to reach them too.
+            Theme.Changed += Repaint;
         }
 
-        void OnDestroy() { if (I == this) I = null; }
+        void Repaint() => Changed?.Invoke();
+
+        void OnDestroy()
+        {
+            Theme.Changed -= Repaint;
+            if (I == this) I = null;
+        }
 
         /// <summary>Pressing a center destination. It leaves either utility page at once,
         /// with no question asked — Exit is a question about leaving the game, not the panel.</summary>

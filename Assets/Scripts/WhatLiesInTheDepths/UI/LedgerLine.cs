@@ -22,6 +22,13 @@ namespace WhatLiesInTheDepths.UI
         public Image ground, border, glyph;
         public TMP_Text figure, name;
         Refusal _shown = (Refusal)(-1);
+        int _paintedFor = -1;
+
+        // Bumped on every palette or contrast change, so a line whose verdict has not moved still
+        // repaints once in the new colors. Without it, a line first painted on Dusk kept Dusk's
+        // gold (or rose) after switching to Dream, until a reload.
+        static int _theme;
+        static LedgerLine() { Theme.Changed += () => _theme++; }
         Ursine.UI.ResourceHover _hover;
 
         /// <summary>Wraps an instance of the UI_LedgerLine prefab.</summary>
@@ -81,7 +88,7 @@ namespace WhatLiesInTheDepths.UI
             return n;
         }
 
-        /// <summary>Repaints only when the verdict has changed.</summary>
+        /// <summary>Repaints only when the verdict or the palette has changed.</summary>
         public void Paint()
         {
             var s = GameState.I;
@@ -93,8 +100,9 @@ namespace WhatLiesInTheDepths.UI
             // not gold; the work runs and the store tops off.
             else if (!spent && s.Ceiling(amount.k) > 0
                      && s.Held(amount.k) >= s.Ceiling(amount.k)) state = Refusal.AboveCeiling;
-            if (state == _shown) return;
+            if (state == _shown && _paintedFor == _theme) return;
             _shown = state;
+            _paintedFor = _theme;
 
             Tok groundTok = state == Refusal.Short ? Tok.RoseL : Tok.GoldL;
             Tok edge = state == Refusal.Short ? Tok.RoseB : Tok.GoldB;

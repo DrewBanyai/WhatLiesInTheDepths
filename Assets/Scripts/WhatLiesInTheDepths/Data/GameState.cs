@@ -127,6 +127,10 @@ namespace WhatLiesInTheDepths.Data
             // Subscribed here rather than in OnEnable so the clocks' Awakes have certainly run.
             if (GameClock.I != null) GameClock.I.Tick += OnTick;
             if (SaveClock.I != null) SaveClock.I.Saved += Save;
+            // A palette or contrast change repaints everything that paints itself from the
+            // dream's Changed: most views pick their colors at runtime (a lit card, a short
+            // price), and without this they kept the last palette's until something else moved.
+            WhatLiesInTheDepths.Core.Theme.Changed += Dirty;
             // The Options page's choices are in effect from the first frame, not only once
             // the page has been opened.
             WhatLiesInTheDepths.Core.GameSettings.Load();
@@ -136,6 +140,7 @@ namespace WhatLiesInTheDepths.Data
         {
             if (GameClock.I != null) GameClock.I.Tick -= OnTick;
             if (SaveClock.I != null) SaveClock.I.Saved -= Save;
+            WhatLiesInTheDepths.Core.Theme.Changed -= Dirty;
             if (I == this) I = null;
         }
 
