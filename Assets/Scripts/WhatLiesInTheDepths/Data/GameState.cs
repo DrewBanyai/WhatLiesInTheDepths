@@ -43,6 +43,8 @@ namespace WhatLiesInTheDepths.Data
         public List<VeilDef> veils => Dream.veils;
         public VeilDef veil => Dream.veil;
         public bool HasNextVeil => Dream.HasNextVeil;
+        public bool Fork(out RevelationDef a, out RevelationDef b) => Dream.Fork(out a, out b);
+        public RevelationDef Partner(RevelationDef r) => Dream.Partner(r);
         public bool AtBottom => Dream.AtBottom;
         /// <summary>What the dive is working: the current veil, or the remains at the bottom.</summary>
         public VeilDef Dive => Dream.Dive;

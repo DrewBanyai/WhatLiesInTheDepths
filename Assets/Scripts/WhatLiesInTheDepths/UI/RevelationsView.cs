@@ -24,6 +24,13 @@ namespace WhatLiesInTheDepths.UI
         /// <summary>How far above the field's middle the footprint nothing drifts through is
         /// centered — and the lantern with it, and the readout over it.</summary>
         public const float FootprintLift = 80f;
+        /// <summary>How far below the field's middle the fork stands: its top edge is 139 above
+        /// the foot of the 720 field, so its middle is 252 below the middle. The drift reads it
+        /// too — nothing passes through the one still object in the field.</summary>
+        public const float ForkDrop = 252f;
+        /// <summary>Half the footprint kept clear around the fork, its line included.</summary>
+        public const float ForkClearW = 120f, ForkClearH = 78f;
+
         /// <summary>Where a lit pane's readout hangs: its top, this far below the field's middle,
         /// in the band under the lantern.</summary>
         const float KeptTop = 92f;
@@ -60,6 +67,19 @@ namespace WhatLiesInTheDepths.UI
         public TMP_Text reasonLine;
         public CanvasGroup readoutContents;
 
+        [Header("The fork — one object, two halves, and it does not drift")]
+        [Tooltip("168 x 62, centred, 139 above the foot of the field. Everything else in the "
+               + "field drifts; this does not, and that is the whole of its announcement.")]
+        public GameObject forkRoot;
+        public CanvasGroup forkGroup;
+        public UiButton forkHover;
+        public Image forkGlyphA, forkGlyphB;
+        public Image forkHaloA, forkHaloB;
+        public Image forkRingA, forkRingB;
+        public TMP_Text forkWord;
+        public TMP_Text forkCaption;
+        public ChoicePanelView choice;
+
         [Header("Pointer — the field and the readout each report entering and leaving")]
         [Tooltip("On the field itself. uGUI sends a container its exit only when the pointer "
                + "leaves its whole subtree, so this means 'left the field', not 'left a sigil'.")]
@@ -67,7 +87,12 @@ namespace WhatLiesInTheDepths.UI
         [Tooltip("On the readout itself. Likewise, moving onto Realize is not leaving the readout.")]
         public UiButton readoutHover;
 
+        /// <summary>Which face the fork's panel is wearing, if it is open at all.</summary>
+        enum Fork { Shut, Offer, Past }
+
         readonly List<SigilView> _sigils = new List<SigilView>();
+        RevelationDef _forkA, _forkB;
+        Fork _fork = Fork.Shut;
         SigilView _open;
         bool _touchedReadout;
         float _closeAt = -1f;                 // when a pending close fires; -1 is none
@@ -97,6 +122,16 @@ namespace WhatLiesInTheDepths.UI
                     if (d == null || GameState.I == null) return;
                     if (GameState.I.Realize(d)) { Close(); Build(); }
                 };
+            if (forkHover != null) forkHover.Hovered += OnForkHover;
+            if (choice != null)
+            {
+                choice.Hovered += OnChoiceHover;
+                choice.Finished += () => { Close(); Build(); };
+                if (choice.left != null && choice.left.realize != null)
+                    choice.left.realize.Clicked += () => choice.Press(choice.left);
+                if (choice.right != null && choice.right.realize != null)
+                    choice.right.realize.Clicked += () => choice.Press(choice.right);
+            }
             if (GameState.I != null) GameState.I.Changed += OnChanged;
             Close();
         }
@@ -109,10 +144,14 @@ namespace WhatLiesInTheDepths.UI
         /// <summary>A realization arriving while the field is open joins it at once.</summary>
         void OnChanged()
         {
-            if (Signature() != _built && _open == null) Build();
+            // Never while the fork is being spent: the player is watching something be given
+            // up, and rebuilding the field would take the whole panel out from under them.
+            bool busy = choice != null && choice.Spending;
+            if (Signature() != _built && _open == null && !busy) Build();
             // The purse moved: an open readout's pills, button and reason line follow it, so a
             // cost that becomes payable while you are reading it turns payable in front of you.
             if (_open != null && _open.Def != null) PaintCost(_open.Def);
+            if (_fork == Fork.Offer && choice != null) choice.PaintCosts();
         }
 
         static string Signature()
@@ -156,15 +195,52 @@ namespace WhatLiesInTheDepths.UI
                 lantern.Show(s.kept.Count, _greats, _choices);
             }
 
+            // The fork comes out of the drift. No side of a choice drifts any more, so those
+            // two glyphs appear in this field only on the one still object in it.
+            s.Fork(out _forkA, out _forkB);
+            PaintFork();
+
             int index = 0;
             foreach (var r in s.ShownRevelations)
             {
+                if (r == _forkA || r == _forkB) continue;
                 var v = Instantiate(sigilPrefab, sigilLayer);
                 r.state = s.Judge(r.cost);
                 v.Bind(r, index++);
+                v.avoidFork = _forkA != null && _forkB != null;
                 v.HoverChanged += OnSigilHover;
                 _sigils.Add(v);
             }
+        }
+
+        /// <summary>The fork, drawn or not drawn. Both sides have to be on offer: half a fork
+        /// is a worse object than no fork.</summary>
+        void PaintFork()
+        {
+            bool on = _forkA != null && _forkB != null;
+            if (forkRoot != null) forkRoot.SetActive(on);
+            if (!on) return;
+
+            Art.Apply(forkGlyphA, Art.Sigil(string.IsNullOrEmpty(_forkA.g) ? _forkA.k : _forkA.g));
+            Art.Apply(forkGlyphB, Art.Sigil(string.IsNullOrEmpty(_forkB.g) ? _forkB.k : _forkB.g));
+            if (forkWord != null) forkWord.text = Strings.T("ui.choice.or").ToUpperInvariant();
+            if (forkCaption != null) forkCaption.text = Strings.T("ui.revelations.fork");
+            PaintForkInk(false);
+        }
+
+        void PaintForkInk(bool hover)
+        {
+            var ink = hover ? Theme.Mix(Tok.BlueD, Tok.Ink, 0.35f) : Theme.Get(Tok.BlueD);
+            if (forkGlyphA != null) forkGlyphA.color = ink;
+            if (forkGlyphB != null) forkGlyphB.color = ink;
+            var halo = Theme.Get(Tok.Blue, hover ? 0.40f : 0.22f);
+            if (forkHaloA != null) forkHaloA.color = halo;
+            if (forkHaloB != null) forkHaloB.color = halo;
+            var ring = Theme.Get(hover ? Tok.Blue : Tok.BlueB, hover ? 1f : 0.55f);
+            if (forkRingA != null) forkRingA.color = ring;
+            if (forkRingB != null) forkRingB.color = ring;
+            if (forkWord != null) forkWord.color = Theme.Get(Tok.BlueD);
+            if (forkCaption != null) forkCaption.color = Theme.Get(Tok.Ink3);
         }
 
         void Update()
@@ -248,10 +324,89 @@ namespace WhatLiesInTheDepths.UI
             if (!entering) Close();
         }
 
+        /// <summary>The fork behaves like any other realization: the player comes into the menu,
+        /// rests on it, and the panel comes up. It never opens itself.</summary>
+        void OnForkHover(bool entering)
+        {
+            PaintForkInk(entering);
+            if (entering)
+            {
+                _closeAt = -1f;
+                if (_fork != Fork.Offer) OpenChoice();
+            }
+            else if (_touchedReadout && _fork == Fork.Offer)
+            {
+                ScheduleClose();
+            }
+        }
+
+        void OnChoiceHover(bool entering)
+        {
+            if (entering)
+            {
+                _touchedReadout = true;
+                _closeAt = -1f;
+            }
+            else if (_fork != Fork.Shut)
+            {
+                ScheduleClose();
+            }
+        }
+
+        /// <summary>The fork on offer. The field yields as it does for a sigil, and the fork
+        /// does not: it stays at full strength beneath the panel, so the panel reads as
+        /// belonging to the thing being pointed at rather than as a window over the menu.</summary>
+        /// <summary>Puts the fork's panel away without touching anything else, so a sigil or a
+        /// pane can take the field's attention from it.</summary>
+        void ShutChoice()
+        {
+            if (_fork == Fork.Shut) return;
+            _fork = Fork.Shut;
+            if (choice != null) choice.gameObject.SetActive(false);
+        }
+
+        void OpenChoice()
+        {
+            if (choice == null || _forkA == null || _forkB == null) return;
+            if (_open != null || _keptOpen >= 0) Close();
+            if (readout != null) readout.SetActive(false);
+            _fork = Fork.Offer;
+            _forkA.seen = true;
+            _forkB.seen = true;
+            choice.gameObject.SetActive(true);
+            choice.ShowOffer(_forkA, _forkB);
+            Yield(forkLit: true);
+        }
+
+        /// <summary>The pair read back from its lit pane, for the rest of the run.</summary>
+        void OpenChoicePast(RevelationDef taken, RevelationDef givenUp)
+        {
+            if (choice == null || taken == null || givenUp == null) return;
+            if (_open != null) Close();
+            _fork = Fork.Past;
+            _touchedReadout = false;
+            if (readout != null) readout.SetActive(false);
+            choice.gameObject.SetActive(true);
+            choice.ShowPast(taken, givenUp);
+            Yield(forkLit: false);
+        }
+
+        /// <summary>The field, attending to one thing. The lantern drops behind the panel and
+        /// the drift drops around it; the caption goes.</summary>
+        void Yield(bool forkLit)
+        {
+            if (lanternGroup != null) lanternGroup.alpha = 0.25f;
+            _captionWant = 0f;
+            foreach (var v in _sigils)
+                if (v.group != null) v.group.alpha = 0.18f * v.BaseAlpha;
+            if (forkGroup != null) forkGroup.alpha = forkLit ? 1f : 0.18f;
+        }
+
         void ScheduleClose() => _closeAt = Time.unscaledTime + Grace;
 
         void Open(SigilView v)
         {
+            ShutChoice();
             _open = v;
             var d = v.Def;
             d.seen = true;
@@ -279,6 +434,9 @@ namespace WhatLiesInTheDepths.UI
             _captionWant = 0f;
             foreach (var s in _sigils)
                 if (s.group != null) s.group.alpha = (s == v ? 1f : 0.18f) * s.BaseAlpha;
+            // The fork yields with the drift: it is not more important than the thing the
+            // player actually asked to read.
+            if (forkGroup != null) forkGroup.alpha = 0.18f;
         }
 
         /// <summary>The part of the readout that says what a realization is: its mark, kind,
@@ -390,8 +548,13 @@ namespace WhatLiesInTheDepths.UI
 
         void Close()
         {
+            // Never mid-beat. The hold after a press is the one moment in this menu the
+            // pointer does not govern.
+            if (choice != null && choice.Spending) return;
             _open = null;
             _keptOpen = -1;
+            _fork = Fork.Shut;
+            if (choice != null) choice.gameObject.SetActive(false);
             Purchasable(true);
             _laidOut = null;
             _touchedReadout = false;
@@ -401,6 +564,8 @@ namespace WhatLiesInTheDepths.UI
             _captionWant = 1f;
             foreach (var s in _sigils)
                 if (s.group != null) s.group.alpha = s.BaseAlpha;
+            if (forkGroup != null) forkGroup.alpha = 1f;
+            PaintForkInk(false);
         }
 
 
@@ -430,6 +595,14 @@ namespace WhatLiesInTheDepths.UI
             if (s == null || i < 0 || i >= s.kept.Count) return;
             var d = s.revelations.Find(r => r.k == s.kept[i]);
             if (d == null) return;
+            // A pane lit by one side of a choice reads the whole fork back, not the single
+            // realization that was taken: it records what the player chose BETWEEN.
+            if (d.Choice)
+            {
+                var other = s.Partner(d);
+                if (other != null) { OpenChoicePast(d, other); _keptOpen = i; return; }
+            }
+            ShutChoice();
             if (_open != null) Close();
             _keptOpen = i;
             _touchedReadout = false;
@@ -450,6 +623,7 @@ namespace WhatLiesInTheDepths.UI
             _captionWant = 0f;
             foreach (var v in _sigils)
                 if (v.group != null) v.group.alpha = 0.18f * v.BaseAlpha;
+            if (forkGroup != null) forkGroup.alpha = 0.18f;
         }
 
         /// <summary>Where the readout sits, and how tall it is. Over the lantern for a sigil in the

@@ -10,7 +10,7 @@ namespace WhatLiesInTheDepths.UI
 {
     /// <summary>Where the outward links in the left bar go. The bar's items are named
     /// "Utility Discord", "Utility Reddit" and "Utility Twitter"; a link with no address
-    /// here stays inert.</summary>
+    /// here is hidden.</summary>
     public static class Links
     {
         public const string Discord = "https://discord.com/channels/1550284623790088302/1552731091490574487";
@@ -72,6 +72,14 @@ namespace WhatLiesInTheDepths.UI
                     item.Configure(() => false, () => false, () => Router.I?.AskExit());
                     break;
                 default:
+                    // A link with nowhere to go is not shown at all (Reddit and Twitter, for
+                    // now). The left bar is left-aligned, so the rest close up behind it; giving
+                    // the link an address in Links brings it back.
+                    if (string.IsNullOrEmpty(url))
+                    {
+                        item.gameObject.SetActive(false);
+                        return;
+                    }
                     // Outward links open in the browser; they never take the underline and
                     // never carry a dot. No dot ever appears on a utility.
                     item.Configure(() => false, () => false,

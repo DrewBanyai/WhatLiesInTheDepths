@@ -231,6 +231,40 @@ namespace WhatLiesInTheDepths.Data
         /// <summary>Taken off the field by another Realization. It never comes back.</summary>
         public bool Withdrawn(RevelationDef r) => r != null && unlocks.Has("withdrawn:" + r.k);
 
+        /// <summary>The other side of a choice, whatever has become of it — still on offer,
+        /// realized, or withdrawn. Null for everything that is not one side of a pair.</summary>
+        public RevelationDef Partner(RevelationDef r)
+        {
+            if (r?.withdraws == null) return null;
+            foreach (var k in r.withdraws)
+            {
+                if (string.IsNullOrEmpty(k) || k == r.k) continue;
+                var other = revelations.FirstOrDefault(x => x.k == k);
+                if (other != null) return other;
+            }
+            return null;
+        }
+
+        /// <summary>The fork: two Realizations within reach that name each other, so taking
+        /// either gives up the other. There is one in the game and the interface draws it as a
+        /// single object, so it is asked for as a pair rather than found twice in a list.
+        ///
+        /// Both sides have to be on offer. Half a fork is a worse object than no fork, so until
+        /// the second side is reachable the first is not drawn at all.</summary>
+        public bool Fork(out RevelationDef a, out RevelationDef b)
+        {
+            a = null; b = null;
+            foreach (var r in ShownRevelations)
+            {
+                if (!r.Choice) continue;
+                var other = Partner(r);
+                if (other == null || other.realized || Withdrawn(other) || !Shown(other)) continue;
+                a = r; b = other;
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>Battle can be given here: it is the next place and what it waits on holds.</summary>
         public bool Open(RoadLocation l) => l != null && !l.won && l == NextPlace && AllHold(l.requires);
         public RoadLocation NextPlace => road.FirstOrDefault(l => !l.won);

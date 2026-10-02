@@ -74,6 +74,267 @@ namespace WhatLiesInTheDepths.EditorTools
             Save(root.gameObject, "UI_Sigil");
         }
 
+        // ---- the fork, and the panel it opens -----------------------------------
+        // RevelationsChoice spec. The pair stops being two sigils that happen to be blue and
+        // becomes one object with two halves; resting on it opens one panel with two cards and
+        // the word between them. Blue stays, but it stops carrying the meaning on its own.
+
+        const float ForkW = 168f, ForkH = 62f, BridgeW = 44f;
+        const float CardW = 376f, DividerW = 72f;
+
+        static (Image halo, Image ring, Image glyph) ForkHalf(RectTransform parent, float x)
+        {
+            var root = Node("Half", parent, x, 0f, 62f, 62f);
+            var halo = Artwork(Stretch(Node("Halo", root)), SpriteFactory.Load("Halo_Sigil"));
+            halo.raycastTarget = false;
+            var ring = Img(Stretch(Node("Ring", root), 6f, 6f, 6f, 6f), SpriteFactory.Load("Ring_Sigil"), Tok.BlueB);
+            ring.raycastTarget = false;
+            var glyphRt = Node("Glyph", root, 0, 0, 36f, 36f);
+            glyphRt.anchorMin = glyphRt.anchorMax = new Vector2(0.5f, 0.5f);
+            glyphRt.pivot = new Vector2(0.5f, 0.5f);
+            glyphRt.anchoredPosition = Vector2.zero;
+            var glyph = Img(glyphRt, SpriteFactory.Glyph("Sigil", "lantern") ?? SpriteFactory.Load("Disc"), Tok.BlueD);
+            glyph.raycastTarget = false;
+            return (halo, ring, glyph);
+        }
+
+        /// <summary>One side of the fork. The sigil panel that runs the full height of the single
+        /// readout becomes a 56px plate in the corner, and the foot stacks: pills, a reason, then
+        /// a button the whole width of the card.</summary>
+        static ChoiceCard ChoiceCardFor(RectTransform row, string name)
+        {
+            var card = Node(name, row, 0, 0, CardW, 400f);
+            var size = card.gameObject.AddComponent<LayoutElement>();
+            size.preferredWidth = CardW;
+            size.flexibleWidth = 0f;
+            var group = card.gameObject.AddComponent<CanvasGroup>();
+            var stack = card.gameObject.AddComponent<VerticalLayoutGroup>();
+            stack.padding = new RectOffset(20, 20, 18, 18);
+            stack.spacing = 10f;
+            stack.childControlWidth = stack.childControlHeight = true;
+            stack.childForceExpandWidth = true;
+            stack.childForceExpandHeight = false;
+
+            const float Inner = CardW - 40f;
+
+            var top = Node("Top", card, 0, 0, Inner, 56f);
+            var topRow = top.gameObject.AddComponent<HorizontalLayoutGroup>();
+            topRow.spacing = 12f;
+            topRow.childAlignment = TextAnchor.UpperLeft;
+            topRow.childControlWidth = topRow.childControlHeight = true;
+            topRow.childForceExpandWidth = false;
+            topRow.childForceExpandHeight = false;
+
+            var plateRt = Node("Plate", top, 0, 0, 56f, 56f);
+            var plate = Img(plateRt, SpriteFactory.Round(12), Tok.BlueL);
+            var plateBorder = Img(Stretch(Node("Border", plateRt)), SpriteFactory.Outline(12), Tok.BlueB);
+            var plateSize = plateRt.gameObject.AddComponent<LayoutElement>();
+            plateSize.preferredWidth = 56f;
+            plateSize.preferredHeight = 56f;
+            plateSize.flexibleWidth = 0f;
+            var glyphRt = Node("Glyph", plateRt, 0, 0, 30f, 30f);
+            glyphRt.anchorMin = glyphRt.anchorMax = new Vector2(0.5f, 0.5f);
+            glyphRt.pivot = new Vector2(0.5f, 0.5f);
+            glyphRt.anchoredPosition = Vector2.zero;
+            var glyph = Img(glyphRt, SpriteFactory.Glyph("Sigil", "lantern") ?? SpriteFactory.Load("Disc"), Tok.BlueD);
+
+            var head = Node("Head", top, 0, 0, Inner - 68f, 56f);
+            var headStack = head.gameObject.AddComponent<VerticalLayoutGroup>();
+            headStack.padding = new RectOffset(0, 0, 2, 0);
+            headStack.spacing = 3f;
+            headStack.childControlWidth = headStack.childControlHeight = true;
+            headStack.childForceExpandWidth = true;
+            headStack.childForceExpandHeight = false;
+            head.gameObject.AddComponent<LayoutElement>().flexibleWidth = 1f;
+            var kind = Caps("Kind", head, 0, 0, Inner - 68f, 10f, "KIND", 8.5f, Tok.BlueD);
+            var nm = Txt("Name", head, 0, 0, Inner - 68f, 25f, "Revelation", TypeRole.Serif, 23f, Tok.Ink);
+            nm.lineSpacing = 0f;
+
+            var blurb = Prose("Realization", card, 0, 0, Inner, 40f, "", 14f, Tok.Ink2, 1.5f,
+                              TypeRole.SerifItalic);
+
+            // Eight rows on one side and four on the other: the panel levels the two cards and
+            // this takes the slack, so the two feet sit on one line.
+            var effects = Node("Effects", card, 0, 0, Inner, 60f);
+            Img(effects, SpriteFactory.Round(9), Tok.Block);
+            var fx = effects.gameObject.AddComponent<VerticalLayoutGroup>();
+            fx.padding = new RectOffset(12, 12, 10, 10);
+            fx.spacing = 4f;
+            fx.childAlignment = TextAnchor.UpperLeft;
+            fx.childControlWidth = fx.childControlHeight = true;
+            fx.childForceExpandWidth = true;
+            fx.childForceExpandHeight = false;
+            effects.gameObject.AddComponent<LayoutElement>().flexibleHeight = 1f;
+
+            var foot = Node("Foot", card, 0, 0, Inner, 80f);
+            var footStack = foot.gameObject.AddComponent<VerticalLayoutGroup>();
+            footStack.padding = new RectOffset(0, 0, 11, 0);
+            footStack.spacing = 9f;
+            footStack.childControlWidth = footStack.childControlHeight = true;
+            footStack.childForceExpandWidth = true;
+            footStack.childForceExpandHeight = false;
+            var footRule = Img(Node("Rule", foot, 0, 0, Inner, 1f), null, Tok.Haze2);
+            var frRt = footRule.rectTransform;
+            frRt.anchorMin = new Vector2(0f, 1f); frRt.anchorMax = new Vector2(1f, 1f);
+            frRt.pivot = new Vector2(0.5f, 1f);
+            frRt.offsetMin = new Vector2(0f, -1f); frRt.offsetMax = Vector2.zero;
+            footRule.gameObject.AddComponent<LayoutElement>().ignoreLayout = true;
+
+            var costs = Node("Costs", foot, 0, 0, Inner, 22f);
+            var costRow = costs.gameObject.AddComponent<HorizontalLayoutGroup>();
+            costRow.spacing = 6f;
+            costRow.childControlWidth = costRow.childControlHeight = true;
+            costRow.childForceExpandWidth = false;
+            costRow.childForceExpandHeight = false;
+
+            var reason = Txt("ReasonLine", foot, 0, 0, Inner, 15f, "", TypeRole.Label400, 11f, Tok.Ink3);
+            reason.fontStyle = FontStyles.Italic;
+
+            // The foot's three faces, one at a time, all the width of the card.
+            var action = Node("Action", foot, 0, 0, Inner, 36f);
+            action.gameObject.AddComponent<LayoutElement>().preferredHeight = 36f;
+            var realize = PrimaryButton("Realize", action, 0, 0, Inner, 36f, "Realize", 16f, 9,
+                                        Tok.BlueD, Tok.OnIris);
+            Stretch(realize.root);
+
+            var takenRt = Stretch(Node("Taken", action));
+            Img(takenRt, SpriteFactory.Round(9), Tok.BlueL);
+            Img(Stretch(Node("Border", takenRt)), SpriteFactory.Outline(9), Tok.BlueB);
+            var takenLabel = Txt("Label", takenRt, 0, 0, Inner, 36f, "Realized", TypeRole.Serif, 16f,
+                                 Tok.BlueD, TextAlignmentOptions.Center);
+            Stretch((RectTransform)takenLabel.transform);
+
+            var goneRt = Stretch(Node("GivenUp", action));
+            var goneLabel = Caps("Label", goneRt, 0, 0, Inner, 36f, "GIVEN UP", 11f, Tok.Ink4, 0.18f,
+                                 TextAlignmentOptions.Center);
+            Stretch((RectTransform)goneLabel.transform);
+
+            var c = card.gameObject.AddComponent<ChoiceCard>();
+            c.group = group;
+            c.plate = plate;
+            c.plateBorder = plateBorder;
+            c.glyph = glyph;
+            c.kindCaption = kind;
+            c.revelationName = nm;
+            c.realization = blurb;
+            c.effects = effects;
+            c.costs = costs;
+            c.reasonLine = reason;
+            c.realizeRoot = realize.root.gameObject;
+            c.realize = realize.button;
+            c.realizeGround = realize.ground;
+            c.realizeLabel = realize.label;
+            c.takenRoot = takenRt.gameObject;
+            c.takenLabel = takenLabel;
+            c.givenUpRoot = goneRt.gameObject;
+            c.givenUpLabel = goneLabel;
+            return c;
+        }
+
+        /// <summary>824 of the field's 880, centred, top 56. Header over both cards, two cards,
+        /// and a hairline between them broken at its middle by the word.</summary>
+        static ChoicePanelView ChoicePanel(RectTransform center)
+        {
+            const float W824 = ChoicePanelView.Width;
+
+            var panel = Node("ChoicePanel", center, 0, 0, W824, 480f);
+            panel.anchorMin = panel.anchorMax = new Vector2(0.5f, 0.5f);
+            panel.pivot = new Vector2(0.5f, 1f);
+            // Top 56 of the 720 field: 304 above its middle.
+            panel.anchoredPosition = new Vector2(0f, 304f);
+            Img(panel, null, Tok.Veil, 0f, true);
+            var hover = panel.gameObject.AddComponent<UiButton>();
+            var group = panel.gameObject.AddComponent<CanvasGroup>();
+
+            var shadow = Img(Stretch(Node("Shadow", panel), -22f, 2f, -22f, -46f),
+                             SpriteFactory.Load("Shadow_Readout"), Tok.BlueD, 0.40f);
+            shadow.raycastTarget = false;
+            var ground = Img(Stretch(Node("Ground", panel)), SpriteFactory.Round(14), Tok.Veil);
+            ground.gameObject.AddComponent<Mask>().showMaskGraphic = true;
+            var border = Img(Stretch(Node("Border", panel)), SpriteFactory.Outline(14), Tok.BlueB);
+            border.raycastTarget = false;
+
+            var column = Node("Column", ground.transform, 0, 0, W824, 480f);
+            var colStack = column.gameObject.AddComponent<VerticalLayoutGroup>();
+            colStack.childControlWidth = colStack.childControlHeight = true;
+            colStack.childForceExpandWidth = true;
+            colStack.childForceExpandHeight = false;
+
+            // Read first, before either card, because it governs both.
+            var header = Node("Header", column, 0, 0, W824, 62f);
+            var headerGround = Img(header, null, Tok.BlueL, 0.55f);
+            var hStack = header.gameObject.AddComponent<VerticalLayoutGroup>();
+            hStack.padding = new RectOffset(22, 22, 15, 14);
+            hStack.spacing = 5f;
+            hStack.childAlignment = TextAnchor.UpperCenter;
+            hStack.childControlWidth = hStack.childControlHeight = true;
+            hStack.childForceExpandWidth = true;
+            hStack.childForceExpandHeight = false;
+            var hCap = Caps("Caption", header, 0, 0, W824 - 44f, 11f, "ONE OF THESE", 9f, Tok.BlueD,
+                            0.2f, TextAlignmentOptions.Center);
+            var hLine = Txt("Line", header, 0, 0, W824 - 44f, 20f,
+                            "Whichever you realize, the other goes, and does not come back.",
+                            TypeRole.SerifItalic, 14.5f, Tok.Ink2, TextAlignmentOptions.Center);
+            var hRule = Img(Node("Rule", header, 0, 0, W824, 1f), null, Tok.Haze2);
+            var hrRt = hRule.rectTransform;
+            hrRt.anchorMin = new Vector2(0f, 0f); hrRt.anchorMax = new Vector2(1f, 0f);
+            hrRt.pivot = new Vector2(0.5f, 0f);
+            hrRt.offsetMin = Vector2.zero; hrRt.offsetMax = new Vector2(0f, 1f);
+            hRule.gameObject.AddComponent<LayoutElement>().ignoreLayout = true;
+
+            // Both cards are the height of the taller: the row stretches them, and each card's
+            // effects panel takes the slack.
+            var row = Node("Cards", column, 0, 0, W824, 400f);
+            var cards = row.gameObject.AddComponent<HorizontalLayoutGroup>();
+            cards.childControlWidth = cards.childControlHeight = true;
+            cards.childForceExpandWidth = false;
+            cards.childForceExpandHeight = true;
+
+            var left = ChoiceCardFor(row, "CardLeft");
+
+            var div = Node("Divider", row, 0, 0, DividerW, 400f);
+            div.gameObject.AddComponent<LayoutElement>().preferredWidth = DividerW;
+            var rule = Img(Node("Rule", div, 0, 0, 1f, 100f), null, Tok.Haze);
+            var ruleRt = rule.rectTransform;
+            ruleRt.anchorMin = new Vector2(0.5f, 0f); ruleRt.anchorMax = new Vector2(0.5f, 1f);
+            ruleRt.pivot = new Vector2(0.5f, 0.5f);
+            ruleRt.sizeDelta = new Vector2(1f, -36f);
+            ruleRt.anchoredPosition = Vector2.zero;
+            rule.raycastTarget = false;
+            var lozenge = Node("Lozenge", div, 0, 0, DividerW, 34f);
+            lozenge.anchorMin = lozenge.anchorMax = new Vector2(0.5f, 0.5f);
+            lozenge.pivot = new Vector2(0.5f, 0.5f);
+            lozenge.anchoredPosition = Vector2.zero;
+            var lozengeGround = Img(lozenge, null, Tok.Veil);
+            lozengeGround.raycastTarget = false;
+            var word = Caps("Word", lozenge, 0, 0, DividerW, 34f, "OR", 11f, Tok.BlueD, 0.22f,
+                            TextAlignmentOptions.Center);
+            Stretch((RectTransform)word.transform);
+
+            var right = ChoiceCardFor(row, "CardRight");
+
+            var view = panel.gameObject.AddComponent<ChoicePanelView>();
+            view.group = group;
+            view.hover = hover;
+            view.column = column;
+            view.ground = ground;
+            view.border = border;
+            view.shadow = shadow;
+            view.headerCaption = hCap;
+            view.headerLine = hLine;
+            view.headerGround = headerGround;
+            view.headerRule = hRule;
+            view.left = left;
+            view.right = right;
+            view.divider = rule;
+            view.word = word;
+            view.lozengeGround = lozengeGround;
+            view.effectRowPrefab = Load("UI_EffectRow");
+            view.costPillPrefab = Load("UI_CostPill").GetComponent<CostPill>();
+            panel.gameObject.SetActive(false);
+            return view;
+        }
+
         // Field 880 x 720, radius 16, 1px haze2, on a soft radial bloom. Sits 16 below the
         // bar, leaving 249 of the column's track spare. It does not scroll; its field is fixed.
         static void Revelations()
@@ -232,7 +493,60 @@ namespace WhatLiesInTheDepths.EditorTools
             realizeSize.preferredWidth = 88f;
             realizeSize.preferredHeight = 36f;
 
+            // ---- the fork ------------------------------------------------------
+            // One object, two halves, joined by a bridge carrying the word. 168 x 62, centred,
+            // standing still 139 above the foot of the field while everything else drifts. It
+            // is one pointer target: there is no half of it you can hover alone, because there
+            // is no half of it you can have alone.
+            var forkRt = Node("Fork", center, 0, 0, ForkW, ForkH);
+            forkRt.anchorMin = forkRt.anchorMax = new Vector2(0.5f, 0.5f);
+            forkRt.pivot = new Vector2(0.5f, 0.5f);
+            forkRt.anchoredPosition = new Vector2(0f, -RevelationsView.ForkDrop);
+            var forkGroup = forkRt.gameObject.AddComponent<CanvasGroup>();
+            var forkHit = Img(forkRt, null, Tok.Veil, 0f, true);
+            var forkBtn = forkRt.gameObject.AddComponent<UiButton>();
+
+            var halfA = ForkHalf(forkRt, 0f);
+            var halfB = ForkHalf(forkRt, ForkW - 62f);
+
+            var bridge = Node("Bridge", forkRt, 62f, 0f, BridgeW, ForkH);
+            var bridgeLine = Img(Node("Line", bridge, 0f, ForkH * 0.5f - 0.5f, BridgeW, 1f), null, Tok.BlueB);
+            bridgeLine.raycastTarget = false;
+            var forkWord = Caps("Word", bridge, 0f, 0f, BridgeW, ForkH, "OR", 8.5f, Tok.BlueD, 0.18f,
+                                TextAlignmentOptions.Center);
+            Stretch((RectTransform)forkWord.transform);
+            // The word sits on the field's own ground so the rule reads as broken, not crossed.
+            var wordPad = Img(Node("Pad", bridge, BridgeW * 0.5f - 11f, ForkH * 0.5f - 7f, 22f, 14f),
+                              null, Tok.Veil, 0.2f);
+            wordPad.raycastTarget = false;
+            wordPad.transform.SetSiblingIndex(forkWord.transform.GetSiblingIndex());
+
+            // The only standing text in the field, and it is not part of the hit area.
+            var forkCaption = Txt("Caption", forkRt, 0f, 0f, 320f, 16f, "the dream forks here",
+                                  TypeRole.Label400, 11f, Tok.Ink3, TextAlignmentOptions.Center);
+            forkCaption.fontStyle = FontStyles.Italic;
+            forkCaption.raycastTarget = false;
+            var fcRt = (RectTransform)forkCaption.transform;
+            fcRt.anchorMin = fcRt.anchorMax = new Vector2(0.5f, 0.5f);
+            fcRt.pivot = new Vector2(0.5f, 0.5f);
+            fcRt.anchoredPosition = new Vector2(0f, -47f);
+
+            // ---- the fork's panel ----------------------------------------------
+            var choice = ChoicePanel(center);
+
             var view = root.gameObject.AddComponent<RevelationsView>();
+            view.forkRoot = forkRt.gameObject;
+            view.forkGroup = forkGroup;
+            view.forkHover = forkBtn;
+            view.forkGlyphA = halfA.glyph;
+            view.forkGlyphB = halfB.glyph;
+            view.forkHaloA = halfA.halo;
+            view.forkHaloB = halfB.halo;
+            view.forkRingA = halfA.ring;
+            view.forkRingB = halfB.ring;
+            view.forkWord = forkWord;
+            view.forkCaption = forkCaption;
+            view.choice = choice;
             view.field = field;
             view.lantern = lantern;
             view.lanternGroup = lanternGroup;

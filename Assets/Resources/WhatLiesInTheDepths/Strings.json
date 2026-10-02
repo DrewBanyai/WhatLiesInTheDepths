@@ -147,6 +147,14 @@
     "ui.revelations.realize": "Realize",
     "ui.revelations.within.one": "{0} realization within reach",
     "ui.revelations.within.many": "{0} realizations within reach",
+    "ui.revelations.fork": "the dream forks here",
+    "ui.choice.header": "One of these",
+    "ui.choice.line": "Whichever you realize, the other goes, and does not come back.",
+    "ui.choice.header.past": "The way it went",
+    "ui.choice.line.past": "You realized one. The other was given up for good.",
+    "ui.choice.or": "or",
+    "ui.choice.taken": "Realized",
+    "ui.choice.givenUp": "given up",
     "ui.journal.source.revelation": "A realization",
     "ui.journal.source.vision": "A Vision",
     "ui.journal.source.assault": "A battle",
@@ -841,7 +849,7 @@
       "the Journal gains an entry"
     ],
     "rev.fear.name": "Fear Is Also Strength",
-    "rev.fear.kind": "a choice · the nightmares wake",
+    "rev.fear.kind": "the nightmares wake",
     "rev.fear.text": "It made itself out of my fear. I can make something out of it too, and mine will be bigger.",
     "rev.fear.fx": [
       "<b>Sing Together</b> falls silent",
@@ -851,18 +859,16 @@
       "unlocks the <b>Dredge the Nightmares</b> focus",
       "unlocks <b>The Night Kiln</b>",
       "every Sworn unit becomes its nightmare, <b>×2.5</b>",
-      "the Journal gains an entry",
-      "the other choice is gone for good"
+      "the Journal gains an entry"
     ],
     "rev.shut.name": "Some Doors Stay Shut",
-    "rev.shut.kind": "a choice · the nightmares sleep",
+    "rev.shut.kind": "the nightmares sleep",
     "rev.shut.text": "I have spent my whole life pushing fear somewhere else. I will not do it to them. These stay with me, and stay asleep.",
     "rev.shut.fx": [
       "Sworn units <b>+25%</b> strength",
       "<b>Rally</b> gives <b>+100%</b>",
       "unlocks the <b>Let It Go</b> focus",
-      "the Journal gains an entry",
-      "the other choice is gone for good"
+      "the Journal gains an entry"
     ],
     "vision.door.name": "The Door Left Ajar",
     "vision.door.text": "A bedroom, a door open a hand's width, a voice down the hall saying there is nobody there. You watch the boy decide to believe it. You watch what he decided not to feel slip out through the gap.",
@@ -1733,6 +1739,12 @@
     ],
     "ui.built.keep_a_copy_of_the_dream_or_bring_one_back": "Keep a copy of the dream, or bring one back.",
     "ui.built.export": "Export",
-    "ui.built.import": "Import"
+    "ui.built.import": "Import",
+    "ui.built.or.caps": "OR",
+    "ui.built.the_dream_forks_here": "the dream forks here",
+    "ui.built.one_of_these.caps": "ONE OF THESE",
+    "ui.built.whichever_you_realize_the_other_goes_and_does_no": "Whichever you realize, the other goes, and does not come back.",
+    "ui.built.realized": "Realized",
+    "ui.built.given_up.caps": "GIVEN UP"
   }
 }

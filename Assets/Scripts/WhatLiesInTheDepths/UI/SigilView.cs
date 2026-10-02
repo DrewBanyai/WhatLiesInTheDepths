@@ -30,6 +30,10 @@ namespace WhatLiesInTheDepths.UI
 
         public System.Action<SigilView, bool> HoverChanged;
 
+        /// <summary>Set while a fork stands at the foot of the field. Nothing drifts through it:
+        /// a sigil crossing the one still object in the field would read as part of it.</summary>
+        public bool avoidFork;
+
         bool _hover;
         float _ringShow;                   // 0 hidden at .88, 1 shown at full size; .18s
 
@@ -144,6 +148,20 @@ namespace WhatLiesInTheDepths.UI
                                        EH / Mathf.Max(Mathf.Abs(fy), 0.001f));
                 x *= push; fy *= push;
                 y = fy - RevelationsView.FootprintLift;
+            }
+
+            // And nothing drifts through the fork, by the same rule: it stands still at the
+            // foot of the field with a line under it, and that whole footprint stays clear.
+            if (avoidFork)
+            {
+                float gy = y - RevelationsView.ForkDrop;
+                if (Mathf.Abs(x) < RevelationsView.ForkClearW && Mathf.Abs(gy) < RevelationsView.ForkClearH)
+                {
+                    float push = Mathf.Min(RevelationsView.ForkClearW / Mathf.Max(Mathf.Abs(x), 0.001f),
+                                           RevelationsView.ForkClearH / Mathf.Max(Mathf.Abs(gy), 0.001f));
+                    x *= push; gy *= push;
+                    y = gy + RevelationsView.ForkDrop;
+                }
             }
 
             // The spec measures y downward; a RectTransform measures it up.
