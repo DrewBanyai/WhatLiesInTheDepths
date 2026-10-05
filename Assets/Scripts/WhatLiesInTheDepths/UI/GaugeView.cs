@@ -19,7 +19,7 @@ using Ursine;
 
 namespace WhatLiesInTheDepths.UI
 {
-    public sealed class GaugeView : MonoBehaviour
+    public sealed class GaugeView : MonoBehaviour, IStageFit
     {
         [Header("Plate")]
         public Image plate;
@@ -66,6 +66,9 @@ namespace WhatLiesInTheDepths.UI
         public RectTransform entryColumn;
         [Tooltip("The clip the entry column sits in; its height is the part of the entry shown.")]
         public RectTransform entryClip;
+        [Tooltip("The painted plate's window. Shortened in the short stage; what is in it "
+               + "hangs off its foot, so the painting loses sky rather than being squashed.")]
+        public RectTransform plateHolder;
         public GameObject paragraphPrefab;
         public GameObject ruledBlockPrefab;
         public UiButton partControl;
@@ -359,6 +362,33 @@ namespace WhatLiesInTheDepths.UI
             if (partGround != null) partGround.color = _partHover ? PartHover : Theme.Get(Tok.Iris);
         }
 
+        // ---- the two shapes ----------------------------------------------------------
+
+        /// <summary>The plate is the only thing in this column that is purely a picture, so it
+        /// is the only thing asked to give ground when the stage is short. Everything under it
+        /// moves up by exactly what it gave, and LateUpdate — which already crops this panel to
+        /// its track every frame — takes care of the rest without being told.</summary>
+        const float PlateFullH = 266f, PlateShortH = 170f;
+
+        public void Fit(StageProfile profile)
+        {
+            if (plateHolder == null) return;
+            float want = profile.IsShort ? PlateShortH : PlateFullH;
+            float had = plateHolder.sizeDelta.y;
+            if (Mathf.Approximately(had, want)) return;
+
+            float lift = had - want;
+            plateHolder.sizeDelta = new Vector2(plateHolder.sizeDelta.x, want);
+            Lift(diveBlock, lift);
+            Lift(entryClip, lift);
+        }
+
+        static void Lift(RectTransform rt, float by)
+        {
+            if (rt == null) return;
+            rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, rt.anchoredPosition.y + by);
+        }
+
         /// <summary>Spec .body is a column with a 17 gap and 18 of padding under it: the part
         /// control follows the last paragraph, and the panel ends under whatever came last.
         /// Placed after layout so the entry's height is this frame's.</summary>
@@ -373,7 +403,7 @@ namespace WhatLiesInTheDepths.UI
             // The panel never outgrows its track. Waiting rules are only there to say the
             // page has room left, so when there are more of them than the track can hold,
             // the last blocks go rather than the panel running off the screen.
-            float limit = Layout.PanelTrackH - 18f;
+            float limit = StageProfile.Current.TrackH - 18f;
             if (full)
             {
                 limit -= 17f + (partRoot != null ? partRoot.rect.height : 0f);

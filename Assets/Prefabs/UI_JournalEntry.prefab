@@ -205,6 +205,7 @@ GameObject:
   - component: {fileID: 1289656659781006224}
   - component: {fileID: 4485835626297831349}
   - component: {fileID: 982634557650820347}
+  - component: {fileID: 3337816368183260536}
   - component: {fileID: 6153221496420247808}
   m_Layer: 0
   m_Name: Name
@@ -348,6 +349,21 @@ MonoBehaviour:
   alpha: 1
   _applied: {r: 0.22352941, g: 0.19607843, b: 0.3019608, a: 1}
   _hasApplied: 1
+--- !u!114 &3337816368183260536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3946192860010165390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b789c9c35888f384d8b10972dfcc5ff3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ursine.Runtime::Ursine.Text.ScaledText
+  authored: 25
+  wraps: 1
+  leading: 1.1
 --- !u!114 &6153221496420247808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -549,6 +565,7 @@ GameObject:
   - component: {fileID: 4056358804046188679}
   - component: {fileID: 7973757620569541728}
   - component: {fileID: 4832865394048257589}
+  - component: {fileID: 8822734530799196566}
   m_Layer: 0
   m_Name: DayNumber
   m_TagString: Untagged
@@ -691,6 +708,21 @@ MonoBehaviour:
   alpha: 1
   _applied: {r: 0.22352941, g: 0.19607843, b: 0.3019608, a: 1}
   _hasApplied: 1
+--- !u!114 &8822734530799196566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6088584764057542582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b789c9c35888f384d8b10972dfcc5ff3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ursine.Runtime::Ursine.Text.ScaledText
+  authored: 25
+  wraps: 0
+  leading: 1.05
 --- !u!1 &6166833814359024838
 GameObject:
   m_ObjectHideFlags: 0
@@ -971,6 +1003,7 @@ GameObject:
   - component: {fileID: 1278530815027578334}
   - component: {fileID: 252212413969042637}
   - component: {fileID: 5603725187260260557}
+  - component: {fileID: 1961701783116957921}
   - component: {fileID: 8678783444468243125}
   m_Layer: 0
   m_Name: Word
@@ -1114,6 +1147,21 @@ MonoBehaviour:
   alpha: 1
   _applied: {r: 0.6156863, g: 0.58431375, b: 0.69803923, a: 1}
   _hasApplied: 1
+--- !u!114 &1961701783116957921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8063873089194642820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b789c9c35888f384d8b10972dfcc5ff3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ursine.Runtime::Ursine.Text.ScaledText
+  authored: 8.5
+  wraps: 0
+  leading: 0
 --- !u!114 &8678783444468243125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1141,6 +1189,7 @@ GameObject:
   - component: {fileID: 6754118460051362804}
   - component: {fileID: 6151319960050763699}
   - component: {fileID: 1779601655639969815}
+  - component: {fileID: 5109704268467661420}
   - component: {fileID: 1344519269845267254}
   m_Layer: 0
   m_Name: DayLabel
@@ -1284,6 +1333,21 @@ MonoBehaviour:
   alpha: 1
   _applied: {r: 0.76862746, g: 0.7372549, b: 0.83137256, a: 1}
   _hasApplied: 1
+--- !u!114 &5109704268467661420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8978966985274591152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b789c9c35888f384d8b10972dfcc5ff3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ursine.Runtime::Ursine.Text.ScaledText
+  authored: 8.5
+  wraps: 0
+  leading: 0
 --- !u!114 &1344519269845267254
 MonoBehaviour:
   m_ObjectHideFlags: 0

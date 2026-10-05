@@ -18,6 +18,10 @@ namespace WhatLiesInTheDepths.EditorTools
         const float W = Layout.CenterColumnW;
         const float TrackH = Layout.PanelTrackH;
         const float PageW = 560f;                 // a settings page that fills the width
+        /// <summary>What the Options page is inset from the top of its track in the tall stage.
+        /// The short one takes most of it back: the page is a fixed column of rows roughly 730
+        /// tall, so it fits either track, but only if it is not also holding 60 of air.</summary>
+        const float PageInset = 60f;
         const float PageX = (W - PageW) * 0.5f;   // reads as an argument, not a set of preferences
 
         public static void All()
@@ -38,7 +42,9 @@ namespace WhatLiesInTheDepths.EditorTools
             return y + 30f;
         }
 
-        static (VolumeBar bar, TMP_Text percent) Volume(RectTransform page, string label, float y, float value)
+        /// <summary>A labelled bar that is set rather than filled, with its value in figures
+        /// beside it. Sound uses three; the stage's own size uses a fourth.</summary>
+        static (VolumeBar bar, TMP_Text percent) Bar(RectTransform page, string label, float y, float value)
         {
             Txt("Label_" + label, page, 0, y, 200f, 22f, label, TypeRole.Label500, 12.5f, Tok.Ink2,
                 TextAlignmentOptions.MidlineLeft);
@@ -64,11 +70,34 @@ namespace WhatLiesInTheDepths.EditorTools
             return (v, pct);
         }
 
+        /// <summary>Three words on a pill, one of them lit. 240 wide on the page's right edge,
+        /// 26 tall, each segment 78 — the shape Contrast established and Layout now shares.</summary>
+        static SegmentedToggle Segmented(string name, RectTransform page, float y, string[] steps,
+                                         float width = 240f)
+        {
+            float step = (width - 4f) / steps.Length;
+            var seg = Node(name, page, PageW - width, y, width, 26f);
+            Img(seg, SpriteFactory.Round(999), Tok.Block);
+            var toggle = seg.gameObject.AddComponent<SegmentedToggle>();
+            Dress(toggle);
+            for (int i = 0; i < steps.Length; i++)
+            {
+                var segRt = Node(steps[i], seg, 2f + i * step, 2f, step, 22f);
+                var segImg = Img(segRt, SpriteFactory.Round(999), Tok.IrisL, i == 0 ? 1f : 0f, true);
+                var segLabel = Caps("Label", segRt, 0, 0, step, 22f, steps[i], 9f,
+                                    i == 0 ? Tok.IrisD : Tok.Ink3, 0.16f, TextAlignmentOptions.Center);
+                toggle.segments.Add(segRt.gameObject.AddComponent<UiButton>());
+                toggle.grounds.Add(segImg);
+                toggle.labels.Add(segLabel);
+            }
+            return toggle;
+        }
+
         static void Options()
         {
             var root = Node("UI_Options", null, 0, 0, W, TrackH);
             // Vertically centered in the center column's height.
-            var page = Node("Page", root, PageX, 60f, PageW, 860f);
+            var page = Node("Page", root, PageX, PageInset, PageW, 860f);
 
             float y = 0f;
 
@@ -76,9 +105,9 @@ namespace WhatLiesInTheDepths.EditorTools
             y = GroupHead(page, "SOUND", y);
             var rows = Node("SoundRows", page, 0, y, PageW, 96f);
             var soundGroup = rows.gameObject.AddComponent<CanvasGroup>();
-            var master = Volume(rows, "Master", 0f, Layout.VolumeMaster);
-            var music = Volume(rows, "Music", 32f, Layout.VolumeMusic);
-            var effects = Volume(rows, "Effects", 64f, Layout.VolumeEffects);
+            var master = Bar(rows, "Master", 0f, Layout.VolumeMaster);
+            var music = Bar(rows, "Music", 32f, Layout.VolumeMusic);
+            var effects = Bar(rows, "Effects", 64f, Layout.VolumeEffects);
             y += 100f;
 
             // A 22px checkbox inside the Sound group: a checkbox modifies what is above it.
@@ -106,6 +135,37 @@ namespace WhatLiesInTheDepths.EditorTools
             fullScreen.track = swTrack;
             fullScreen.knob = knob;
             y += 40f;
+
+            // Down from the fit and no further. On a large monitor the stage is drawn very
+            // large indeed, and this is the one number on the page that is purely a comfort.
+            var uiScale = Bar(page, "Interface size", y, 1f);
+            y += 40f;
+
+            // Not the same question as the one above it, which is why it is its own row: that
+            // one takes the whole stage down and keeps every proportion, this one changes a
+            // proportion deliberately. The smallest labels in this design were set for a page
+            // and are read on a screen two feet away. Starts at nothing, so a player who never
+            // touches it sees the design exactly as drawn.
+            var textSize = Bar(page, "Small text", y, 0f);
+            y += 40f;
+
+            // What shape the screen is in, directly under the size of it, because the two of
+            // them are one question and Palette is a different one. Auto is the answer for
+            // almost everyone — it reads the window — and the other two are here because a
+            // player who wants the whole three-column tableau on a small screen, or the larger
+            // type on a big one, should not have to resize their window to argue with us.
+            Txt("LayoutLabel", page, 0, y, 200f, 22f, "Layout", TypeRole.Label500, 12.5f, Tok.Ink2,
+                TextAlignmentOptions.MidlineLeft);
+            // Four, so it is wider than Contrast's three and its segments are the same size.
+            // Auto answers Full or Compact 1; Compact 2 is only ever chosen on purpose, because
+            // which panel you would rather keep in front of you is not something a window size
+            // can tell us.
+            // 380 rather than Contrast's 240: four segments instead of three, and the longest
+            // word in it is nine characters of tracked capitals, which at the top of the Small
+            // text bar is 80 of a segment's width. At 320 they ran into each other there.
+            var layout = Segmented("Layout", page, y,
+                                   new[] { "Auto", "Full", "Compact 1", "Compact 2" }, 380f);
+            y += 46f;
 
             // A palette is shown rather than named, because nobody knows what "Parchment"
             // looks like and everybody can read a stripe.
@@ -136,21 +196,7 @@ namespace WhatLiesInTheDepths.EditorTools
             // three rules, and at Hard the four semantic text colors as well.
             Txt("ContrastLabel", page, 0, y, 200f, 22f, "Contrast", TypeRole.Label500, 12.5f, Tok.Ink2,
                 TextAlignmentOptions.MidlineLeft);
-            var seg = Node("Contrast", page, PageW - 240f, y, 240f, 26f);
-            Img(seg, SpriteFactory.Round(999), Tok.Block);
-            var contrast = seg.gameObject.AddComponent<SegmentedToggle>();
-            Dress(contrast);
-            string[] steps = { "Soft", "Firm", "Hard" };
-            for (int i = 0; i < 3; i++)
-            {
-                var segRt = Node(steps[i], seg, 2f + i * 78f, 2f, 78f, 22f);
-                var segImg = Img(segRt, SpriteFactory.Round(999), Tok.IrisL, i == 0 ? 1f : 0f, true);
-                var segLabel = Caps("Label", segRt, 0, 0, 78f, 22f, steps[i], 9f,
-                                    i == 0 ? Tok.IrisD : Tok.Ink3, 0.16f, TextAlignmentOptions.Center);
-                contrast.segments.Add(segRt.gameObject.AddComponent<UiButton>());
-                contrast.grounds.Add(segImg);
-                contrast.labels.Add(segLabel);
-            }
+            var contrast = Segmented("Contrast", page, y, new[] { "Soft", "Firm", "Hard" });
             y += 46f;
 
             // --- The save
@@ -170,6 +216,9 @@ namespace WhatLiesInTheDepths.EditorTools
                                    "Keep a copy of the dream, or bring one back.", TypeRole.Label400, 11.5f, Tok.Ink3,
                                    TextAlignmentOptions.MidlineLeft);
             transferLine.fontStyle = FontStyles.Italic;
+            // A sentence rather than a label, so it is allowed to wrap — which also puts it on
+            // the quieter of the two text rates. At the loud one it grew into the Export button.
+            Typeset.Wrap(transferLine, 1.25f);
             var exportButton = OutlineButton("Export", transfer, PageW - 8f - 110f - 8f - 110f, 4f, 110f, 32f, "Export", 15f, 9,
                                              Tok.IrisB, Tok.IrisD);
             var importButton = OutlineButton("Import", transfer, PageW - 8f - 110f, 4f, 110f, 32f, "Import", 15f, 9,
@@ -189,6 +238,11 @@ namespace WhatLiesInTheDepths.EditorTools
                                       Tok.RoseB, Tok.RoseD);
 
             var view = root.gameObject.AddComponent<OptionsView>();
+            view.page = page;
+            view.textSize = textSize.bar;
+            view.textSizeValue = textSize.percent;
+            view.uiScale = uiScale.bar;
+            view.uiScaleValue = uiScale.percent;
             view.master = master.bar;
             view.music = music.bar;
             view.effects = effects.bar;
@@ -202,6 +256,7 @@ namespace WhatLiesInTheDepths.EditorTools
             view.paletteCards = swatches;
             view.paletteBorders = borders;
             view.contrast = contrast;
+            view.layout = layout;
             foreach (var n in paletteNames)
             {
                 var p = UnityEditor.AssetDatabase.LoadAssetAtPath<Palette>(
@@ -279,6 +334,7 @@ namespace WhatLiesInTheDepths.EditorTools
 
             // The marks scroll beneath the band; the band stays.
             var (scroll, content) = Scroll("Marks", root, 0, MarksY, W, TrackH - MarksY);
+            Stretch((RectTransform)scroll.transform, 0f, MarksY, 0f, 0f);
             var stack = content.GetComponent<VerticalLayoutGroup>();
             if (stack != null) Object.DestroyImmediate(stack);
             var fitter = content.GetComponent<ContentSizeFitter>();
@@ -384,6 +440,7 @@ namespace WhatLiesInTheDepths.EditorTools
             Img(Stretch(Node("Bloom", root)), SpriteFactory.Load("Bloom_Page"), Tok.Veil, 0.8f);
 
             var (scroll, content) = Scroll("Scroll", root, 0, 0, Layout.ScreenW, Layout.ScreenH);
+            Stretch((RectTransform)scroll.transform);
             Stack(content, 0f, new RectOffset(0, 0, 0, 132));   // the scroll reserves 132
 
             // Art 1920 x 460, full bleed at the top, its last 150 dissolving into the ground.

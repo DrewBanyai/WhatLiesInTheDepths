@@ -777,8 +777,9 @@ namespace WhatLiesInTheDepths.EditorTools
             Feel(close.gameObject, Tok.IrisD, 0.08f);
 
             // --- the list
-            var listView = Node("ListView", root, 0, 36f, W, TrackH - 36f);
+            var listView = Stretch(Node("ListView", root, 0, 36f, W, TrackH - 36f), 0f, 36f, 0f, 0f);
             var (scroll, content) = Scroll("Scroll", listView, 0, 0, W, TrackH - 36f);
+            Stretch((RectTransform)scroll.transform);
             Stack(content, 0f, new RectOffset(0, 0, 0, 40));
 
             var view = root.gameObject.AddComponent<ConstructsView>();
@@ -1407,6 +1408,7 @@ namespace WhatLiesInTheDepths.EditorTools
             RosterHead();
             var root = Node("UI_Assault", null, 0, 0, W, TrackH);
             var (scroll, content) = Scroll("Scroll", root, 0, 0, W, TrackH);
+            Stretch((RectTransform)scroll.transform);
             var stack = content.GetComponent<VerticalLayoutGroup>();
             stack.spacing = 12f;
             stack.padding = new RectOffset(0, 0, 0, 40);

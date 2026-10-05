@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8195352873993605626}
   - component: {fileID: 2955872798557732852}
   - component: {fileID: 1378714491096906841}
+  - component: {fileID: 4393519311461744407}
   m_Layer: 0
   m_Name: UI_JournalParagraph
   m_TagString: Untagged
@@ -154,3 +155,18 @@ MonoBehaviour:
   alpha: 1
   _applied: {r: 0.27058825, g: 0.23921569, b: 0.36862746, a: 1}
   _hasApplied: 1
+--- !u!114 &4393519311461744407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6981157187720788336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b789c9c35888f384d8b10972dfcc5ff3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ursine.Runtime::Ursine.Text.ScaledText
+  authored: 16.5
+  wraps: 1
+  leading: 1.74

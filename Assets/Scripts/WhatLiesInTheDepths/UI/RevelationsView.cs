@@ -481,7 +481,7 @@ namespace WhatLiesInTheDepths.UI
                         string teal = "#" + ColorUtility.ToHtmlStringRGB(Theme.Get(Tok.TealD));
                         t.text = f.Replace("<b>", "<b><color=" + teal + ">").Replace("</b>", "</color></b>");
                         t.color = Theme.Get(Tok.Prose);
-                        t.fontSize = 12.5f;
+                        Ursine.Text.Typeset.Resize(t, 12.5f);
                     }
                 }
             }

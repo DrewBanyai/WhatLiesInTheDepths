@@ -128,6 +128,7 @@ GameObject:
   - component: {fileID: 1816346452842224159}
   - component: {fileID: 6728668397184179205}
   - component: {fileID: 7471161102360373496}
+  - component: {fileID: 277189794219950080}
   m_Layer: 0
   m_Name: Gain
   m_TagString: Untagged
@@ -270,6 +271,21 @@ MonoBehaviour:
   alpha: 1
   _applied: {r: 0.24705882, g: 0.49803922, b: 0.46666667, a: 1}
   _hasApplied: 1
+--- !u!114 &277189794219950080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1330021783482950660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b789c9c35888f384d8b10972dfcc5ff3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ursine.Runtime::Ursine.Text.ScaledText
+  authored: 12
+  wraps: 0
+  leading: 0
 --- !u!1 &2149626498639177901
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,6 +413,7 @@ GameObject:
   - component: {fileID: 7897498562493147414}
   - component: {fileID: 5137649238875765274}
   - component: {fileID: 463389939868488755}
+  - component: {fileID: 9035031631689264683}
   m_Layer: 0
   m_Name: Amount
   m_TagString: Untagged
@@ -539,6 +556,21 @@ MonoBehaviour:
   alpha: 1
   _applied: {r: 0.27058825, g: 0.23921569, b: 0.36862746, a: 1}
   _hasApplied: 1
+--- !u!114 &9035031631689264683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2577590072607606193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b789c9c35888f384d8b10972dfcc5ff3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ursine.Runtime::Ursine.Text.ScaledText
+  authored: 12.5
+  wraps: 0
+  leading: 0
 --- !u!1 &3284626119041479025
 GameObject:
   m_ObjectHideFlags: 0
@@ -758,6 +790,7 @@ GameObject:
   - component: {fileID: 1938721762894783476}
   - component: {fileID: 1291723241907747873}
   - component: {fileID: 8146775517058532093}
+  - component: {fileID: 6893258877896979242}
   - component: {fileID: 7416272270491476234}
   - component: {fileID: 883105487230929026}
   m_Layer: 0
@@ -902,6 +935,21 @@ MonoBehaviour:
   alpha: 1
   _applied: {r: 0.27058825, g: 0.23921569, b: 0.36862746, a: 1}
   _hasApplied: 1
+--- !u!114 &6893258877896979242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6156632602251791909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b789c9c35888f384d8b10972dfcc5ff3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ursine.Runtime::Ursine.Text.ScaledText
+  authored: 12.5
+  wraps: 0
+  leading: 0
 --- !u!114 &7416272270491476234
 MonoBehaviour:
   m_ObjectHideFlags: 0

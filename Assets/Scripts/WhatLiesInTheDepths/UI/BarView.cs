@@ -23,6 +23,16 @@ namespace WhatLiesInTheDepths.UI
         public Image rule;
         public List<BarItem> items = new List<BarItem>();
 
+        /// <summary>Which end of the bar its items pin to. A bar is pinned to the far corner
+        /// of the screen it sits in, and in the short stages a bar can change which corner that
+        /// is — see ScreenRoot.Bars.</summary>
+        public void Align(TextAnchor anchor)
+        {
+            if (itemsRow == null) return;
+            var row = itemsRow.GetComponent<HorizontalLayoutGroup>();
+            if (row != null && row.childAlignment != anchor) row.childAlignment = anchor;
+        }
+
         public void Refresh()
         {
             foreach (var i in items)

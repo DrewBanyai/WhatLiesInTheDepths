@@ -112,6 +112,17 @@ namespace WhatLiesInTheDepths.EditorTools
             // Right — 450. The system, pinned to the far right, which is the top-right
             // corner of the screen, where Exit belongs. The rule still runs the full 450.
             var right = BarShell("UI_Bar_Right", Layout.SideColumnW, TextAnchor.LowerRight);
+            // The two drawers' handles, left-most of the group so that in a shape which has
+            // no drawer they simply are not there and the rest keep the corner they always had.
+            // Never both at once: Compact 1 folds the ledger and Compact 2 folds the gauge.
+            foreach (var n in new[] { "Resources", "Depths" })
+            {
+                var handle = AddItem(right, "UI_BarItem_Utility", n);
+                if (handle == null) continue;
+                if (handle.outwardArrow != null) handle.outwardArrow.gameObject.SetActive(false);
+                handle.GetComponent<LayoutElement>().preferredWidth = 120f;
+                FitUtility(handle, 120f);
+            }
             // Achievements first: it is absent until the first mark is earned, and arriving
             // on the left of the pair leaves Options and Exit exactly where they always were.
             var achievements = AddItem(right, "UI_BarItem_Utility", "Achievements");
@@ -223,25 +234,43 @@ namespace WhatLiesInTheDepths.EditorTools
 
         // ---- the right column --------------------------------------------------
         // 450 wide, radius 16, height varies with how much of the entry is written.
+        /// <summary>Hangs a node off the bottom edge of its parent, stretched across it, so
+        /// that shortening the parent crops or moves what is above rather than what is below.
+        /// Left and right are insets; y is how far clear of the floor it sits.</summary>
+        static RectTransform Foot(RectTransform rt, float y, float h, float left = 0f, float right = 0f)
+        {
+            rt.anchorMin = new Vector2(0f, 0f);
+            rt.anchorMax = new Vector2(1f, 0f);
+            rt.pivot = new Vector2(0.5f, 0f);
+            rt.offsetMin = new Vector2(left, y);
+            rt.offsetMax = new Vector2(-right, y + h);
+            return rt;
+        }
+
         static void Gauge()
         {
             const float W = Layout.SideColumnW;
             var root = Panel("UI_DepthGauge", null, 0, 0, W, Layout.PanelTrackH, 16);
 
             // Plate 448 x 266 — the panel's 450 less its 1px border. Full bleed, clipped.
+            // In the short stage the holder is taken down to PlateShortH; what is inside it is
+            // hung off the plate's FOOT rather than its head, so the painting loses sky off the
+            // top to the mask it already has, and the veil's name and its wash stay where the
+            // eye expects them. Squashing the holder instead would stretch the painting.
             var plateHolder = Node("Plate", root, 1f, 1f, 448f, 266f);
             plateHolder.gameObject.AddComponent<RectMask2D>();
             // Artwork, seen through the Art wash: as drawn on the light palettes, dimmed on Dusk.
-            var plate = Img(Stretch(Node("Art", plateHolder)), SpriteFactory.Load("Plate_Veil"), Tok.Art);
+            var plate = Img(Foot(Node("Art", plateHolder), 0f, 266f), SpriteFactory.Load("Plate_Veil"), Tok.Art);
 
             var scrimTop = Node("ScrimTop", plateHolder, 0, 0, 448f, 70f);
             Img(scrimTop, SpriteFactory.Load("Scrim_Down"), Tok.Veil, 0.9f);
             var ordinal = Caps("Ordinal", plateHolder, 18f, 14f, 200f, 12f, "SECOND VEIL", 9f, Tok.IrisD);
 
-            var scrimFoot = Node("ScrimFoot", plateHolder, 0, 176f, 448f, 90f);
+            var scrimFoot = Foot(Node("ScrimFoot", plateHolder, 0, 176f, 448f, 90f), 0f, 90f);
             Img(scrimFoot, SpriteFactory.Load("Scrim_Up"), Tok.Veil);
             var veilName = Txt("VeilName", plateHolder, 18f, 222f, 412f, 34f, "The Silt Shore",
                                TypeRole.Serif, 26f, Tok.Ink, TextAlignmentOptions.BottomLeft);
+            Foot((RectTransform)veilName.transform, 10f, 34f, 18f, 18f);
 
             // Dive block: ground block, border haze2, radius 12, padding 15, gap 12.
             var dive = Block("DiveBlock", root, 14f, 282f, 422f, 260f, 12);
@@ -368,6 +397,7 @@ namespace WhatLiesInTheDepths.EditorTools
             partSub.fontStyle = FontStyles.Italic;
 
             var view = root.gameObject.AddComponent<GaugeView>();
+            view.plateHolder = plateHolder;
             view.plate = plate;
             view.ordinal = ordinal;
             view.veilName = veilName;

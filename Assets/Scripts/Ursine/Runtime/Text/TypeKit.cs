@@ -100,6 +100,27 @@ namespace Ursine.Text
             var themed = t.GetComponent<ThemedGraphic>();
             if (themed == null) themed = t.gameObject.AddComponent<ThemedGraphic>();
             themed.Bind(token);
+
+            // The size as authored is recorded here and nowhere else, so that what is drawn can
+            // be larger than what the design says without the design being lost. Bind draws it.
+            var scaled = t.GetComponent<ScaledText>();
+            if (scaled == null) scaled = t.gameObject.AddComponent<ScaledText>();
+            scaled.wraps = false;               // Set leaves every text unwrapped; Wrap says otherwise
+            scaled.leading = 0f;
+            scaled.Bind(sizePx);
+            return t;
+        }
+
+        /// <summary>Gives a text a different authored size after the builder has set one, for
+        /// a view that styles a row it did not draw. Goes through the record rather than over
+        /// it, so the reader's own size still reaches these — written straight to fontSize they
+        /// would be the only text on the screen that never grew.</summary>
+        public static TMP_Text Resize(TMP_Text t, float sizePx)
+        {
+            if (t == null) return null;
+            var scaled = t.GetComponent<ScaledText>();
+            if (scaled == null) t.fontSize = sizePx;
+            else scaled.Bind(sizePx);
             return t;
         }
 
@@ -142,6 +163,11 @@ namespace Ursine.Text
             t.textWrappingMode = TextWrappingModes.Normal;
             t.overflowMode = TextOverflowModes.Overflow;
             if (lineHeightMultiple > 0f) t.lineSpacing = (lineHeightMultiple - 1f) * 100f;
+            // A block that wraps is budgeted for height in a way a single line is not, so it
+            // takes the quieter of the two rates. Said here because this is where it becomes
+            // a block; Set cannot know, it runs first.
+            var scaled = t.GetComponent<ScaledText>();
+            if (scaled != null) { scaled.wraps = true; scaled.Apply(); }
             return t;
         }
 
@@ -163,6 +189,10 @@ namespace Ursine.Text
             m.y = half;
             m.w = half;
             t.margin = m;
+            // Remembered so it can be worked out again if the size moves. Written straight to
+            // the field rather than through Apply, which would call back into here.
+            var scaled = t.GetComponent<ScaledText>();
+            if (scaled != null) scaled.leading = lineHeightMultiple;
             return t;
         }
 

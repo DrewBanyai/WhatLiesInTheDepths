@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4934185571488312840}
   - component: {fileID: 7667355969489812972}
   - component: {fileID: 8530971205075886774}
+  - component: {fileID: 4050054419193657310}
   - component: {fileID: 8867206590289887642}
   m_Layer: 0
   m_Name: Label
@@ -155,6 +156,21 @@ MonoBehaviour:
   alpha: 1
   _applied: {r: 0.6156863, g: 0.58431375, b: 0.69803923, a: 1}
   _hasApplied: 1
+--- !u!114 &4050054419193657310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1973719575519112190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b789c9c35888f384d8b10972dfcc5ff3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ursine.Runtime::Ursine.Text.ScaledText
+  authored: 11
+  wraps: 0
+  leading: 0
 --- !u!114 &8867206590289887642
 MonoBehaviour:
   m_ObjectHideFlags: 0

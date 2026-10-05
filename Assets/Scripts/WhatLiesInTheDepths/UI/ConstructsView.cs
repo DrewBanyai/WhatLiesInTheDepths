@@ -15,7 +15,7 @@ using Ursine;
 
 namespace WhatLiesInTheDepths.UI
 {
-    public sealed class ConstructsView : MonoBehaviour
+    public sealed class ConstructsView : MonoBehaviour, IStageFit
     {
         [Header("View row — the menu's name left, the toggle right")]
         public TMP_Text menuName;
@@ -23,6 +23,12 @@ namespace WhatLiesInTheDepths.UI
 
         [Header("Views")]
         public GameObject mapView;
+        /// <summary>The map is the one surface in the center that is a drawing rather than
+        /// a list: the palace grounds, the buildings on them and the court card are placed
+        /// against each other, so a short stage scales the whole thing rather than cropping
+        /// it or reflowing it. Its own type comes down with it, which is the price — and it
+        /// is still larger than it was, because everything around it grew by more.</summary>
+        const float MapH = 860f, MapY = 36f;
         public GameObject listView;
 
         [Header("List")]
@@ -91,6 +97,20 @@ namespace WhatLiesInTheDepths.UI
         ConstructDef _open;
 
         readonly List<ConstructCardView> _cards = new List<ConstructCardView>();
+
+        /// <summary>Scaled to whatever height the track has left under the view row, and kept
+        /// centered across the column so the margin it gives up is split either side rather than
+        /// all falling to the right. Never scaled up: 1 is how the map is drawn.</summary>
+        public void Fit(StageProfile profile)
+        {
+            var rt = mapView != null ? mapView.transform as RectTransform : null;
+            if (rt == null) return;
+
+            float room = profile.TrackH - MapY;
+            float k = Mathf.Clamp(room / MapH, 0.5f, 1f);
+            rt.localScale = new Vector3(k, k, 1f);
+            rt.anchoredPosition = new Vector2(Layout.CenterColumnW * (1f - k) * 0.5f, -MapY);
+        }
 
         void Start()
         {

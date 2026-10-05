@@ -13,8 +13,12 @@ using Ursine;
 
 namespace WhatLiesInTheDepths.UI
 {
-    public sealed class OptionsView : MonoBehaviour
+    public sealed class OptionsView : MonoBehaviour, IStageFit
     {
+        [Tooltip("The column of rows. Inset from the top of the track when there is room, and "
+               + "sitting nearer it when there is not.")]
+        public RectTransform page;
+
         [Header("Sound")]
         public VolumeBar master;
         public VolumeBar music;
@@ -28,10 +32,21 @@ namespace WhatLiesInTheDepths.UI
 
         [Header("Display")]
         public ToggleSwitch fullScreen;
+        [Tooltip("How large the whole page is drawn, as a fraction of what fits on the "
+               + "screen. The top of the bar is the fit itself; there is nothing above it.")]
+        public VolumeBar uiScale;
+        public TMP_Text uiScaleValue;
+        [Tooltip("How much larger than authored the small type is drawn. The readout is the "
+               + "rate the captions move at; prose moves at a quieter one of its own.")]
+        public VolumeBar textSize;
+        public TMP_Text textSizeValue;
         public List<UiButton> paletteCards = new List<UiButton>();
         public List<Image> paletteBorders = new List<Image>();
         public List<Palette> palettes = new List<Palette>();
         public SegmentedToggle contrast;
+        [Tooltip("Auto / Full / Compact. Auto is what almost everyone wants; the other two "
+               + "are for a player who would rather not resize their window to argue with us.")]
+        public SegmentedToggle layout;
 
         [Header("The save")]
         public TMP_Text saveLine;
@@ -72,6 +87,44 @@ namespace WhatLiesInTheDepths.UI
             PaintSave();
         }
 
+        /// <summary>The page is a fixed column of rows — about 754 of them with the Layout
+        /// control in, against a short track of 765. In the tall stage it is inset 60 and has
+        /// air beneath it; in the short one the air is what gives, and the page simply sits
+        /// higher. Nothing reflows: it is the same page.
+        ///
+        /// The margin there is thin enough that one more row would push it off the bottom, so
+        /// rather than leave that to a number someone has to remember to update, the page is
+        /// measured and taken down by however much it is over — which today is nothing, and if
+        /// it ever is something it will be a percent or two rather than a row gone missing.</summary>
+        public void Fit(StageProfile profile)
+        {
+            if (page == null) return;
+            float inset = profile.IsShort ? 10f : 60f;
+            float room = profile.TrackH - inset * 2f;
+
+            page.anchoredPosition = new Vector2(page.anchoredPosition.x, -inset);
+            page.sizeDelta = new Vector2(page.sizeDelta.x, room);
+
+            float need = Extent();
+            float k = need > room && need > 1f ? room / need : 1f;
+            page.localScale = new Vector3(k, k, 1f);
+        }
+
+        /// <summary>How far the lowest row reaches. The page's children are placed absolutely
+        /// from its head, so this is the page's real height however many rows it grows.</summary>
+        float Extent()
+        {
+            float most = 0f;
+            for (int i = 0; i < page.childCount; i++)
+            {
+                var c = page.GetChild(i) as RectTransform;
+                if (c == null || !c.gameObject.activeSelf) continue;
+                float bottom = -c.anchoredPosition.y + c.rect.height;
+                if (bottom > most) most = bottom;
+            }
+            return most;
+        }
+
         void Start()
         {
             // The page opens showing what is in effect — what was saved, or the defaults —
@@ -82,7 +135,12 @@ namespace WhatLiesInTheDepths.UI
             _muted = GameSettings.Muted;
             PaintMute();
             if (contrast != null) contrast.SetSilently((int)GameSettings.ContrastLevel);
+            if (layout != null) layout.SetSilently((int)GameSettings.LayoutMode);
             if (fullScreen != null) fullScreen.Set(Screen.fullScreen, false);
+            if (uiScale != null) uiScale.Set(ScaleToBar(GameSettings.UiScale), false);
+            if (textSize != null) textSize.Set(GameSettings.TextSize, false);
+            PaintUiScale();
+            PaintTextSize();
 
             Hook(master, masterValue);
             Hook(music, musicValue);
@@ -104,6 +162,9 @@ namespace WhatLiesInTheDepths.UI
 
             if (contrast != null)
                 contrast.Selected += i => GameSettings.SetContrast((Contrast)Mathf.Clamp(i, 0, 2));
+
+            if (layout != null)
+                layout.Selected += i => GameSettings.SetLayoutMode((StageMode)Mathf.Clamp(i, 0, 3));
 
             if (save != null)
             {
@@ -134,6 +195,21 @@ namespace WhatLiesInTheDepths.UI
 
             if (fullScreen != null)
                 fullScreen.Changed += on => Screen.fullScreen = on;
+
+            if (uiScale != null)
+                uiScale.Changed += v =>
+                {
+                    GameSettings.SetUiScale(BarToScale(v));
+                    PaintUiScale();
+                };
+
+            // The bar is the amount, 0 to 1, so it needs no mapping of its own.
+            if (textSize != null)
+                textSize.Changed += v =>
+                {
+                    GameSettings.SetTextSize(v);
+                    PaintTextSize();
+                };
 
             PaintPalettes(GameSettings.PaletteIndex);
         }
@@ -237,6 +313,22 @@ namespace WhatLiesInTheDepths.UI
                 saveLabel.color = Theme.Get(just ? Tok.TealD : Tok.IrisD);
             }
             if (saveBorder != null) saveBorder.color = Theme.Get(just ? Tok.TealD : hover ? Tok.Iris : Tok.IrisB);
+        }
+
+        // The bar runs the whole way across, but the stage only goes from the smallest size
+        // worth offering up to the fit, so the two are mapped onto each other rather than
+        // the bar being left mostly unusable at its left end.
+        static float BarToScale(float bar) => Mathf.Lerp(FixedStage.MinScale, 1f, Mathf.Clamp01(bar));
+        static float ScaleToBar(float scale) => Mathf.InverseLerp(FixedStage.MinScale, 1f, scale);
+
+        void PaintUiScale()
+        {
+            if (uiScaleValue != null) uiScaleValue.text = Fmt.Percent(GameSettings.UiScale * 100);
+        }
+
+        void PaintTextSize()
+        {
+            if (textSizeValue != null) textSizeValue.text = Fmt.Percent(Ursine.Text.TextScale.Percent);
         }
 
         /// <summary>A palette is a whole token set, not a filter. Switching one rewrites all

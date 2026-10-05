@@ -31,7 +31,7 @@ namespace WhatLiesInTheDepths.UI
     /// one utility that drives the center and therefore lights.</summary>
     public sealed class UtilityBinder : MonoBehaviour
     {
-        public enum Which { Options, Exit, Outward, Achievements }
+        public enum Which { Options, Exit, Outward, Achievements, Resources, Depths }
 
         public Which utility;
         public BarItem item;
@@ -58,6 +58,18 @@ namespace WhatLiesInTheDepths.UI
                                    () => Router.I?.ToggleAchievements());
                     if (GameState.I != null) GameState.I.Changed += SyncAchievements;
                     SyncAchievements();
+                    break;
+                // The two drawer handles. Each is there only in the shape that folds its own
+                // column away: a control for a panel already standing in the row is noise, and
+                // the two shapes never fold the same one, so only ever one of these is shown.
+                // Both light while the drawer is open, as Options lights.
+                case Which.Resources:
+                case Which.Depths:
+                    item.Configure(() => ColumnDrawer.I != null && ColumnDrawer.I.IsOpen, () => false,
+                                   () => ColumnDrawer.I?.Toggle());
+                    StageDirector.Changed += OnStageChanged;
+                    if (GameState.I != null) GameState.I.Changed += SyncHandle;
+                    SyncHandle();
                     break;
                 case Which.Exit:
                     // A web page cannot close itself, so on the web there is no Exit at all.
@@ -93,7 +105,31 @@ namespace WhatLiesInTheDepths.UI
         void OnDestroy()
         {
             if (Router.I != null && item != null) Router.I.Changed -= item.Refresh;
-            if (GameState.I != null) GameState.I.Changed -= SyncAchievements;
+            if (GameState.I != null)
+            {
+                GameState.I.Changed -= SyncAchievements;
+                GameState.I.Changed -= SyncHandle;
+            }
+            StageDirector.Changed -= OnStageChanged;
+        }
+
+        /// <summary>Shown only while the column is in the drawer, and only once the ledger has
+        /// arrived at all — a handle for a panel the dream has not opened yet is a promise.</summary>
+        void OnStageChanged(StageProfile _) => SyncHandle();
+
+        /// <summary>Shown only while this handle's own column is in the drawer, and only once
+        /// the dream has opened that panel at all — a handle for a panel that has not arrived
+        /// is a promise.</summary>
+        void SyncHandle()
+        {
+            if (item == null) return;
+            var s = GameState.I;
+            bool ledger = utility == Which.Resources;
+            bool folded = ColumnDrawer.I != null
+                          && ColumnDrawer.I.Holds(ledger ? Folded.Ledger : Folded.Gauge);
+            bool arrived = s == null || (ledger ? s.LedgerOpen : s.GaugeOpen);
+            bool on = folded && arrived;
+            if (item.gameObject.activeSelf != on) item.gameObject.SetActive(on);
         }
 
         void SyncAchievements()

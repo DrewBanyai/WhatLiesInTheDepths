@@ -1745,6 +1745,16 @@
     "ui.built.one_of_these.caps": "ONE OF THESE",
     "ui.built.whichever_you_realize_the_other_goes_and_does_no": "Whichever you realize, the other goes, and does not come back.",
     "ui.built.realized": "Realized",
-    "ui.built.given_up.caps": "GIVEN UP"
+    "ui.built.given_up.caps": "GIVEN UP",
+    "ui.built.interface_size": "Interface size",
+    "ui.built.resources.caps": "RESOURCES",
+    "ui.built.layout": "Layout",
+    "ui.built.auto": "Auto",
+    "ui.built.full": "Full",
+    "ui.built.compact": "Compact",
+    "ui.built.depths.caps": "DEPTHS",
+    "ui.built.compact_1": "Compact 1",
+    "ui.built.compact_2": "Compact 2",
+    "ui.built.small_text": "Small text"
   }
 }

@@ -140,8 +140,9 @@ namespace WhatLiesInTheDepths.EditorTools
             h.childForceExpandWidth = false;
             h.childForceExpandHeight = false;
 
-            var panel = Panel("Pane", root, 0, 46f, W, 939f, 14);
+            var panel = Stretch(Panel("Pane", root, 0, 46f, W, 939f, 14), 0f, 46f, 0f, 0f);
             var (scroll, content) = Scroll("Scroll", panel, 1f, 1f, W - 2f, 937f);
+            Stretch((RectTransform)scroll.transform, 1f, 1f, 1f, 1f);
             Stack(content, 0f, new RectOffset(26, 26, 4, 0));
 
             var view = root.gameObject.AddComponent<JournalView>();
@@ -294,6 +295,7 @@ namespace WhatLiesInTheDepths.EditorTools
                                TextAlignmentOptions.MidlineLeft);
 
             var (scroll, content) = Scroll("Scroll", root, 0, 52f, W, TrackH - 52f);
+            Stretch((RectTransform)scroll.transform, 0f, 52f, 0f, 0f);
             Stack(content, 0f, new RectOffset(0, 0, 0, 40));
 
             var view = root.gameObject.AddComponent<FocusView>();

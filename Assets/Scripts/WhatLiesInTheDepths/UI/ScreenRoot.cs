@@ -1,6 +1,11 @@
-// What Lies In The Depths — the stage. Fixed 1920 x 1080, three columns absolutely positioned,
-// top-aligned, never stretched: the space between them is margin, not flex. Extra width
-// goes to the outer margins and the columns stay put (spec section 1).
+// What Lies In The Depths — the stage. Three columns absolutely positioned, top-aligned,
+// never stretched: the space between them is margin, not flex. Extra width goes to the outer
+// margins and the columns stay put (spec section 1).
+//
+// The stage comes in two sizes — see StageProfile for why and for the arithmetic. Everything
+// below that moves when the size changes moves HERE, in one place, so that no panel has to
+// know which shape it is in; the handful that cannot simply be made shorter say so by
+// implementing IStageFit and are told.
 using System.Collections.Generic;
 using WhatLiesInTheDepths.Core;
 using UnityEngine;
@@ -11,7 +16,15 @@ namespace WhatLiesInTheDepths.UI
     [DisallowMultipleComponent]
     public sealed class ScreenRoot : MonoBehaviour
     {
+        [Header("The stage")]
+        [Tooltip("The 1920 x 1080 node the columns sit on; resized to the profile.")]
+        public RectTransform stage;
+        [Tooltip("The center column's track, which every destination and page is sized to.")]
+        public RectTransform surfaces;
+
         [Header("Columns")]
+        [Tooltip("Where a side column goes when the row has no room for it.")]
+        public ColumnDrawer drawer;
         public RectTransform leftColumn;
         public RectTransform centerColumn;
         public RectTransform rightColumn;
@@ -38,6 +51,91 @@ namespace WhatLiesInTheDepths.UI
         Router _router;
         GameObject _ledgerPanel, _gaugePanel;
         Coroutine _endingFade;
+        StageProfile _profile;
+
+        // ---- the two shapes ----------------------------------------------------------
+
+        /// <summary>Puts the columns where the profile says they go and makes every center
+        /// surface as tall as its track. Called by the director on start and whenever the
+        /// window crosses the breakpoint; safe to call with the profile already in effect.</summary>
+        public void ApplyProfile(StageProfile p)
+        {
+            if (p == null) return;
+            _profile = p;
+
+            if (stage != null) stage.sizeDelta = new Vector2(p.StageW, p.StageH);
+
+            // The center is the only column this places. The two side columns belong to the
+            // drawer in every shape — one of them may be in it — so there is one owner for
+            // where they are rather than two that have to agree.
+            Place(centerColumn, p.CenterX, p.ColumnH);
+            Bars(p);
+            if (drawer != null) drawer.SetProfile(p, leftColumn, rightColumn);
+
+            if (surfaces != null)
+                surfaces.sizeDelta = new Vector2(Layout.CenterColumnW, p.TrackH);
+            for (int i = 0; i < destinations.Count; i++) Track(destinations[i], p);
+            Track(optionsPage, p);
+            Track(exitQuestion, p);
+            Track(hardResetQuestion, p);
+            Track(achievementsPage, p);
+
+            // The ending is not in a column: it is the whole stage, so it takes the stage.
+            if (ending != null)
+            {
+                var rt = ending.transform as RectTransform;
+                if (rt != null) rt.sizeDelta = new Vector2(p.StageW, p.StageH);
+            }
+
+            // Inactive ones too: a destination that is told its track only when it is opened
+            // would be laid out at the old height for the frame in which it opens.
+            foreach (var fit in GetComponentsInChildren<IStageFit>(true)) fit.Fit(p);
+        }
+
+        /// <summary>Which bar sits over which side column. The standing one carries the
+        /// system bar, because Achievements, Options and Exit have to be reachable and a folded
+        /// column is not; the folded one gets the community bar, which can wait behind a drawer.
+        /// In Full and Compact 1 that is already where they are, so only Compact 2 moves them.
+        ///
+        /// The system bar pins to whichever screen edge its column stands against — the far
+        /// corner is the point of it, and in Compact 2 the far corner is the other one.</summary>
+        void Bars(StageProfile p)
+        {
+            var social = p.SwapBars ? rightColumn : leftColumn;
+            var system = p.SwapBars ? leftColumn : rightColumn;
+            Rehome(leftBar, social);
+            Rehome(rightBar, system);
+            if (rightBar != null)
+                rightBar.Align(p.SwapBars ? TextAnchor.LowerLeft : TextAnchor.LowerRight);
+        }
+
+        /// <summary>Both side columns are 450 wide in every shape, so a bar moving between them
+        /// keeps the size and the local place the builder gave it and needs nothing re-laid.</summary>
+        static void Rehome(BarView bar, RectTransform column)
+        {
+            if (bar == null || column == null) return;
+            var rt = bar.transform as RectTransform;
+            if (rt == null || rt.parent == column) return;
+            rt.SetParent(column, false);
+            rt.SetAsFirstSibling();
+            rt.anchoredPosition = Vector2.zero;
+        }
+
+        /// <summary>Columns are placed from the top left, x across and y down, and their width
+        /// never changes — only where they start and how far they fall.</summary>
+        static void Place(RectTransform column, float x, float h)
+        {
+            if (column == null) return;
+            column.anchoredPosition = new Vector2(x, -Layout.ColumnY);
+            column.sizeDelta = new Vector2(column.sizeDelta.x, h);
+        }
+
+        static void Track(GameObject surface, StageProfile p)
+        {
+            if (surface == null) return;
+            var rt = surface.transform as RectTransform;
+            if (rt != null) rt.sizeDelta = new Vector2(rt.sizeDelta.x, p.TrackH);
+        }
 
         /// <summary>The panel a column holds, as opposed to its bar: the direct child of the
         /// column that contains the given view.</summary>
@@ -59,6 +157,9 @@ namespace WhatLiesInTheDepths.UI
             if (s == null) return;
             Arrive(_ledgerPanel, s.LedgerOpen);
             Arrive(_gaugePanel, s.GaugeOpen);
+            // The drawer's handles follow the panel they open: before the ledger arrives there
+            // is nothing behind them, and a control for nothing is a promise.
+            if (drawer != null) drawer.SetArrived(s.LedgerOpen, s.GaugeOpen);
 
             // The last place taken ends the story. It is shown once; Continue puts the dream back.
             if (s.unlocks.Has("gameover") && s.unlocks.Add("gameover:shown") && _router != null)
@@ -153,6 +254,9 @@ namespace WhatLiesInTheDepths.UI
         /// interface's one hard rule survives the last screen intact.</summary>
         void ShowEnding(bool on)
         {
+            // The ending is drawn over everything, so the drawer shuts and its tab goes with
+            // it rather than sitting on the last screen of the game waiting to be pressed.
+            if (drawer != null) drawer.Seal(on);
             if (ending != null) ending.SetActive(true);
             if (_endingFade != null) StopCoroutine(_endingFade);
             _endingFade = StartCoroutine(FadeRoutine(on));

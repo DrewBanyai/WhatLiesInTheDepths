@@ -88,7 +88,7 @@ namespace WhatLiesInTheDepths.UI
                     if (t == null) continue;
                     t.text = f.Replace("<b>", "<b><color=" + teal + ">").Replace("</b>", "</color></b>");
                     t.color = Theme.Get(Tok.Prose);
-                    t.fontSize = 12f;
+                    Ursine.Text.Typeset.Resize(t, 12f);
                 }
             }
 

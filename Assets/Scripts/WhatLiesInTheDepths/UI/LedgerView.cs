@@ -37,6 +37,7 @@ namespace WhatLiesInTheDepths.UI
         void Start()
         {
             Build();
+            LedgerAttention.Sync();
             if (GameState.I != null) GameState.I.Changed += RefreshAll;
             Theme.Changed += RefreshAll;
         }
@@ -97,7 +98,8 @@ namespace WhatLiesInTheDepths.UI
             float rows = LayoutUtility.GetPreferredHeight(content);
             // Its floor is the top of the Now Playing line at the foot of the column, with a
             // little mist between them.
-            float most = Layout.ColumnH - Layout.NowPlayingH - (Layout.PanelTopY - Layout.ColumnY) - 16f;
+            float most = StageProfile.Current.ColumnH - Layout.NowPlayingH
+                         - (Layout.PanelTopY - Layout.ColumnY) - 16f;
             float h = Mathf.Clamp(Mathf.Ceil(rows + padding), minHeight, most);
             if (!Mathf.Approximately(panel.sizeDelta.y, h))
                 panel.sizeDelta = new Vector2(panel.sizeDelta.x, h);
@@ -115,6 +117,12 @@ namespace WhatLiesInTheDepths.UI
 
         void RefreshAll()
         {
+            // Taking stock is a walk of fifteen resources on a change the dream announces, not
+            // something done every frame, so it is done on every change rather than only when
+            // a row appears: seen-ness can move without the set of rows moving — a debugger
+            // forgetting an unlock does exactly that — and a cheap check that is always right
+            // beats a cheaper one that is usually right. See LedgerAttention.
+            LedgerAttention.Sync();
             if (Signature() != _built) { Build(); return; }
             foreach (var r in _rows) r.Refresh();
         }
