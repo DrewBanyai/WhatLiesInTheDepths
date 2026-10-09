@@ -633,6 +633,17 @@ namespace WhatLiesInTheDepths.EditorTools
             var reason = Txt("ReasonLine", root, 14f, 358f, 404f, 16f, "", TypeRole.Label400, 11f, Tok.Ink3);
             reason.fontStyle = FontStyles.Italic;
 
+            // At its limit: the foot (price, Build) gives way to one gold band saying so — gold
+            // being the color of a ceiling. ConstructCardView shows it.
+            var limit = Node("Limit", root, 14f, 322f, 404f, 34f);
+            Img(limit, SpriteFactory.Round(9), Tok.GoldL);
+            Img(Stretch(Node("Border", limit)), SpriteFactory.Outline(9), Tok.GoldB);
+            var limitCap = Caps("Caption", limit, 12f, 0f, 120f, 34f, "AT ITS LIMIT", 8.5f, Tok.GoldD, 0.18f,
+                                TextAlignmentOptions.MidlineLeft);
+            var limitLine = Txt("Line", limit, 112f, 0f, 282f, 34f, "", TypeRole.SerifItalic, 13.5f, Tok.Ink2,
+                                TextAlignmentOptions.MidlineRight);
+            limit.gameObject.SetActive(false);
+
             // As above: the reason line ends at 374, plus 14 of padding.
             At(root, 0, 0, 432f, 388f);
 
@@ -655,6 +666,9 @@ namespace WhatLiesInTheDepths.EditorTools
             view.buildGround = build.ground;
             view.buildLabel = build.label;
             view.reasonLine = reason;
+            view.limit = limit.gameObject;
+            view.limitCaption = limitCap;
+            view.limitLine = limitLine;
             view.dot = dot;
 
             Save(root.gameObject, "UI_ConstructCard");

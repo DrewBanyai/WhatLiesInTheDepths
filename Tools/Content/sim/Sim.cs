@@ -31,6 +31,7 @@ static class Sim
     {
         if (args.Length > 0) path = args[0];
         verbose = args.Contains("-v");
+        saturate = args.Contains("--saturate");
         var da = args.FirstOrDefault(a => a.StartsWith("--dump="));
         if (da != null) dumpAt = double.Parse(da.Substring(7)) * 60;
         var sa = args.FirstOrDefault(a => a.StartsWith("--seed="));
@@ -124,7 +125,12 @@ static class Sim
             if (bindAcc >= 4) { bindAcc = 0; Bind(); }
             Milestones();
             if (dumpAt > 0 && t >= dumpAt && t - dt < dumpAt) { Log("DUMP"); Dump(); }
-            if (d.unlocks.Has("gameover")) { Log("THE END (" + (d.unlocks.Has("ending:bad") ? "bad" : "good") + ")"); Summary(); return; }
+            if (d.unlocks.Has("gameover"))
+            {
+                Log("THE END (" + (d.unlocks.Has("ending:bad") ? "bad" : "good") + ")"); Summary();
+                if (saturate) Saturate();
+                return;
+            }
             if (d.unlocks.Count != lastCount || d.Army > lastArmy * 1.03 + 1) { lastCount = d.unlocks.Count; lastArmy = d.Army; lastProgress = t; }
             if (t - lastProgress > 7200) { Log("STALLED"); Dump(); return; }
         }
@@ -150,6 +156,51 @@ static class Sim
                 u.StartsWith("menu:") || u.StartsWith("upgrade:") || u.StartsWith("lost:any") || (u.StartsWith("parted:") && int.Parse(u.Substring(7)) % 5 == 0))
                 Log(u + (u.StartsWith("won:") ? $"  army {d.Army:0}" : "")
                     + (u.StartsWith("parted:") ? $"  silt {siltEarned:0} earned, {siltLocked / 60:0} min held full, {d.constructs.FirstOrDefault(c => c.g == "cistern")?.owned ?? 0} cisterns" : ""));
+        }
+    }
+
+    static bool saturate;
+
+    // --saturate: after the end, play on with unlimited time. Every store is kept full, every
+    // Revelation and Vision still open is taken, and every construct is built until its next
+    // price stands above a ceiling — which, with every store full, is the only thing that can
+    // stop it. Repeats until nothing more can be built: a Cistern raises the ceilings that
+    // the next Cistern (and everything priced in Silt) is judged against, so it settles in
+    // rounds. Prints each construct's count at that point: the most that can ever stand,
+    // which is what design.MOST holds.
+    static void Saturate()
+    {
+        void Fill() { foreach (var r in d.resources) if (r.m > 0) r.c = r.m; }
+        for (int round = 0; round < 500; round++)
+        {
+            bool any = false;
+            Fill(); d.Dirty();
+            foreach (var r in d.revelations.ToList())
+            {
+                if (r.realized || d.Withdrawn(r) || !d.Shown(r)) continue;
+                Fill();
+                if (d.Judge(r.cost) == Refusal.None && d.Realize(r)) any = true;
+            }
+            foreach (var v in d.visions.Where(x => d.Shown(x) && !x.rep).ToList()) { d.CompleteVision(v); any = true; }
+            foreach (var c in d.ShownConstructs.ToList())
+            {
+                for (int i = 0; i < 100000; i++)
+                {
+                    if (c.once && c.owned > 0) break;
+                    Fill(); d.Dirty();
+                    if (d.Judge(c.cost) != Refusal.None || !d.Build(c)) break;
+                    any = true;
+                }
+            }
+            if (!any) break;
+        }
+        Fill(); d.Dirty();
+        Console.WriteLine("SATURATED");
+        foreach (var c in d.constructs)
+        {
+            string why = string.Join(" ", c.cost.Where(a => d.AboveCeiling(a.k, a.n)).Select(a => $"{a.k}:{a.n:0}>{d.Ceiling(a.k):0}"));
+            string open = string.Join(" ", c.cost.Where(a => d.Ceiling(a.k) <= 0).Select(a => a.k));
+            Console.WriteLine($"MAX {c.g} {c.owned} shown={d.Shown(c)} once={c.once} blockedBy=[{why}] uncapped=[{open}]");
         }
     }
 

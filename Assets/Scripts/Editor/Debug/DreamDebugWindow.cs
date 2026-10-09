@@ -259,17 +259,22 @@ namespace WhatLiesInTheDepths.EditorTools
                     {
                         if (GUILayout.Button("Give it back", GUILayout.Width(96f)))
                         {
-                            l.won = false;
-                            l.tookWith = 0;
-                            if (l.costScale > 0 && l.costScale != 1.0) d.musterCostScale /= l.costScale;
+                            // The road is taken in order, so everything past this goes back too,
+                            // last first, and this place is the one faced next.
+                            int at = d.road.IndexOf(l);
+                            for (int i = d.road.Count - 1; i >= at; i--) d.GiveBack(d.road[i]);
                             Changed();
+                            GUIUtility.ExitGUI();
                         }
                     }
                     else if (GUILayout.Button("Take it", GUILayout.Width(96f)))
                     {
-                        // Exactly what winning it does: the discount, the unit, the grants.
-                        d.TakePlace(l, Army());
+                        // Exactly what winning it does: the discount, the unit, the grants. The
+                        // road is taken in order, so every place before it is taken first.
+                        int at = d.road.IndexOf(l);
+                        for (int i = 0; i <= at; i++) d.TakePlace(d.road[i], Army());
                         Changed();
+                        GUIUtility.ExitGUI();
                     }
                 }
             }

@@ -75,6 +75,7 @@ namespace WhatLiesInTheDepths.UI
         readonly System.Random _rng = new System.Random();
 
         RoadLocation _reading;
+        string _roadSig;
         Battle _battle;
         Told _told;
         float _toldUntil;
@@ -211,6 +212,7 @@ namespace WhatLiesInTheDepths.UI
         {
             var s = GameState.I;
             if (s == null) return;
+            _roadSig = RoadSignature();
             foreach (var p in _pins) if (p != null) Destroy(p.gameObject);
             _pins.Clear();
 
@@ -489,6 +491,16 @@ namespace WhatLiesInTheDepths.UI
         /// appearing, or an upgrade renaming or redrawing one.</summary>
         string _roster;
 
+        /// <summary>Which places are taken, so a change made from outside the view is seen.</summary>
+        static string RoadSignature()
+        {
+            var s = GameState.I;
+            if (s == null) return "";
+            var sb = new System.Text.StringBuilder(s.road.Count);
+            foreach (var l in s.road) sb.Append(l.won ? '1' : '0');
+            return sb.ToString();
+        }
+
         static string RosterSignature()
         {
             var s = GameState.I;
@@ -501,6 +513,14 @@ namespace WhatLiesInTheDepths.UI
 
         void Refresh()
         {
+            // The road changed without a battle here (the Dream Debugger took or gave back a
+            // place): the pins, the road walked and the place being read all follow it.
+            if (_battle == null && RoadSignature() != _roadSig)
+            {
+                _reading = Next();
+                _told = null;
+                DrawMap();
+            }
             if (RosterSignature() != _roster) DrawRoster();
             DrawBand();
             DrawSlot();

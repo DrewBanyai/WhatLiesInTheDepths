@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Regenerates the content, compiles the dream headlessly with Mono's mcs, and plays it.
 #   Tools/Content/sim/run.sh good|bad [-v]
+#   ... --saturate   after the end, play on until every construct is at its limit and print
+#                    the most of each that can ever stand (design.MOST)
 # Needs python3 and mono (apt install mono-mcs). Unity is not involved: the Dream is a plain
 # class, so the whole path can be played as fast as the machine allows.
 set -e

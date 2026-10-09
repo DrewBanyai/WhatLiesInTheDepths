@@ -421,6 +421,8 @@ namespace WhatLiesInTheDepths.UI
         {
             Color A(Tok t, float a) { var c = Theme.Get(t); c.a = a; return c; }
             var s = GameState.I;
+            // At its limit (ConstructDef.AtLimit) is read as gold below: its price is above a
+            // ceiling, now for good.
             bool finished = b.def.once && b.def.owned > 0;
             bool can = !finished && s != null && s.Judge(b.def.cost) == Refusal.None;
             bool beyond = !finished && !can && s != null && b.def.cost != null

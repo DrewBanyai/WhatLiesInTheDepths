@@ -98,6 +98,13 @@ namespace WhatLiesInTheDepths.Data
         /// <see cref="growth"/> with every one built.</summary>
         public List<Amount> baseCost;
         public double growth = 1.15;
+        /// <summary>The most that can ever stand: past it the next price is above a ceiling no
+        /// matter what else is built (design.MOST, found by the simulator). 0 = not known, or a
+        /// one-of-a-kind build, whose limit is 1.</summary>
+        public int most;
+        /// <summary>Built to the most that will ever stand. A one-of-a-kind build is not counted
+        /// here: it is simply built (see <see cref="once"/>).</summary>
+        public bool AtLimit => !once && most > 0 && owned >= most;
     }
 
     [Serializable]

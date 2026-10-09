@@ -291,6 +291,7 @@ for c in D.CONSTRUCTS:
     w(f'            c = Build(s, "{g}", ConstructKind.{c["kind"]}, {amounts(c["cost"])}, {c.get("housing", 0)}, '
       f'{effs(c.get("fx"))}, {strs(c.get("requires"))}, {c["pos"][0]}, {c["pos"][1]});')
     if c.get("once"): w("            c.once = true;")
+    if g in D.MOST: w(f"            c.most = {D.MOST[g]};")
     if c.get("growth"): w(f"            c.growth = {c['growth']};")
     if c.get("landmark"):
         w('            c.landmark = true; c.kindLabel = T("construct.altar.kind"); c.line = T("construct.altar.line");')
@@ -511,6 +512,17 @@ ACH = [("drift", ["parted:1"], None, None, None),
 for k, when, n, hint, req in ACH:
     w(f'            Ach(s, "{k}", "story", "drift", {strs(when)});')
     if n: S[f"ach.{k}.name"] = n; S[f"ach.{k}.hint"] = hint; S[f"ach.{k}.req"] = req
+# The Mind Palace: constructs built to the most that will ever stand (design.MOST). The counts
+# are of kinds with a limit of their own; one-of-a-kind builds join only the last, "all".
+S["ach.group.palace"] = "Mind Palace"
+ACH_PALACE = [("most1", ["maxed>=1"], "As Far As It Goes", "Build one kind of construct as far as it will go.", "Built one kind of construct to its limit."),
+              ("most3", ["maxed>=3"], "Settled", "Build three kinds of construct as far as they will go.", "Built three kinds of construct to their limits."),
+              ("most6", ["maxed>=6"], "Every Room Spoken For", "Build six kinds of construct as far as they will go.", "Built six kinds of construct to their limits."),
+              ("most10", ["maxed>=10"], "The Grounds Are Full", "Build ten kinds of construct as far as they will go.", "Built ten kinds of construct to their limits."),
+              ("mostall", ["maxedall>=1"], "Nothing More Will Fit", "Build everything the Mind Palace can hold.", "Built every construct to its limit.")]
+for k, when, n, hint, req in ACH_PALACE:
+    w(f'            Ach(s, "{k}", "palace", "palace", {strs(when)});')
+    S[f"ach.{k}.name"] = n; S[f"ach.{k}.hint"] = hint; S[f"ach.{k}.req"] = req
 w("        }")
 w("    }")
 w("}")

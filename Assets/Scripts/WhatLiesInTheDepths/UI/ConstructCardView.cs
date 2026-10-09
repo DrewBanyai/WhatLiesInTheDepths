@@ -32,6 +32,10 @@ namespace WhatLiesInTheDepths.UI
         public Image buildGround;
         public TMP_Text buildLabel;
         public TMP_Text reasonLine;
+        [Tooltip("The gold band that takes the foot's place once the most that can ever stand is built.")]
+        public GameObject limit;
+        public TMP_Text limitCaption;
+        public TMP_Text limitLine;
         public AttentionDot dot;
 
         ConstructDef _c;
@@ -200,17 +204,36 @@ namespace WhatLiesInTheDepths.UI
 
             // Something built once and done — The Silent Altar — has nothing left to buy: no
             // count, no price and no Build, so it never looks like something to buy more of.
-            bool finished = _c.once && _c.owned > 0;
+            // So has one built to the most that will ever stand (ConstructDef.most): its next
+            // price is above a ceiling for good. It keeps its count, and the foot becomes a gold
+            // band saying it is at its limit, at full opacity — it is done, not refused.
+            bool atLimit = _c.AtLimit;
+            bool finished = (_c.once && _c.owned > 0) || atLimit;
             var state = finished ? Refusal.None : GameState.I.Judge(_c.cost);
             _c.state = state;
             if (_foot == null) _foot = FootParts();
             foreach (var part in _foot)
                 if (part != null && part.activeSelf == finished) part.SetActive(!finished);
+            if (limit != null && limit.activeSelf != atLimit) limit.SetActive(atLimit);
+            if (atLimit)
+            {
+                if (limitCaption != null)
+                {
+                    limitCaption.text = Strings.T("ui.constructs.limitCap").ToUpperInvariant();
+                    limitCaption.color = Theme.Get(Tok.GoldD);
+                }
+                if (limitLine != null)
+                {
+                    limitLine.text = Strings.T("ui.constructs.limitLine", Fmt.Count(_c.most));
+                    limitLine.color = Theme.Get(Tok.Ink2);
+                }
+            }
 
             if (ownedCount != null)
             {
                 // The card appears reading x2, never x0 — the stock carries across an upgrade.
                 ownedCount.text = "×" + Fmt.Count(_c.owned);
+                ownedCount.color = Theme.Get(atLimit ? Tok.GoldD : Tok.IrisD);
                 // The pill behind the figure goes with it: a one-of-a-kind build (The Nightlight,
                 // the Altar) and a card with none built yet show no count and no empty pill.
                 bool counted = _c.owned > 0 && !_c.once;
@@ -255,6 +278,7 @@ namespace WhatLiesInTheDepths.UI
             {
                 // When several costs fail the sentence names only the largest shortfall.
                 string reason = state == Refusal.None ? null : GameState.I.ReasonLine(_c.cost);
+                if (finished) reason = null;
                 reasonLine.gameObject.SetActive(!string.IsNullOrEmpty(reason));
                 reasonLine.text = reason ?? string.Empty;
             }
@@ -306,7 +330,7 @@ namespace WhatLiesInTheDepths.UI
         {
             // Hover rings and lightens the card, and there is no lift — the card is not
             // pressable, so it must not look it. Suppressed on both refusal states.
-            bool allow = hovered && _c != null && _c.state == Refusal.None && !(_c.once && _c.owned > 0);
+            bool allow = hovered && _c != null && _c.state == Refusal.None && !(_c.once && _c.owned > 0) && !_c.AtLimit;
             if (cardBorder != null) cardBorder.color = Theme.Get(allow ? Tok.IrisB : Tok.Haze);
             if (cardGround != null) cardGround.color = allow ? Theme.Get(Tok.Lit) : Theme.Get(Tok.Veil);
             if (ring != null) ring.color = Theme.Get(Tok.Iris, allow ? 0.10f : 0f);

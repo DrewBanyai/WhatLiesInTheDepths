@@ -218,6 +218,19 @@ CONSTRUCTS = [
          pos=(170, 250), requires=["rev:fear"]),
 ]
 
+# ---- the most of each construct that can ever stand
+# Worked out by the simulator (Tools/Content/sim, run with --saturate): after the end it plays
+# on with unlimited time — every store kept full, every Revelation and Vision taken — and builds
+# each construct until its next price stands above a ceiling, round after round until nothing
+# more fits (a Cistern raises the very ceiling the next Cistern is judged against). The same on
+# both paths and on every seed. Rerun it and update these after any change to a construct's
+# price, its growth, or anything that raises a ceiling. One-of-a-kind builds are 1.
+MOST = {
+    "hut": 28, "cistern": 317, "spindle": 39, "moonwell": 35, "winch": 26, "press": 26,
+    "lamprow": 24, "longhouse": 19, "reliquary": 24, "scriptorium": 8, "saltpans": 10,
+    "rampart": 19, "chorusstone": 16, "belltower": 16, "hallmany": 12, "hallstrengths": 22,
+}
+
 # ---- upgrades: id, target, of, when, fields
 UPGRADES = [
     dict(id="abode", target="Construct", of="hut", when=["rev:walls"], n="Abode", art="abode",

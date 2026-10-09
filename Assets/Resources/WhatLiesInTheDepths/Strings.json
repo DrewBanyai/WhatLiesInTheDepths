@@ -144,6 +144,8 @@
     "ui.gauge.partSub": "the way back closes behind you",
     "ui.constructs.menu": "Constructs",
     "ui.constructs.build": "Build",
+    "ui.constructs.limitCap": "At its limit",
+    "ui.constructs.limitLine": "{0} built, and no more will ever fit",
     "ui.revelations.realize": "Realize",
     "ui.revelations.within.one": "{0} realization within reach",
     "ui.revelations.within.many": "{0} realizations within reach",
@@ -849,7 +851,7 @@
       "the Journal gains an entry"
     ],
     "rev.fear.name": "Fear Is Also Strength",
-    "rev.fear.kind": "the nightmares wake",
+    "rev.fear.kind": "a choice · the nightmares wake",
     "rev.fear.text": "It made itself out of my fear. I can make something out of it too, and mine will be bigger.",
     "rev.fear.fx": [
       "<b>Sing Together</b> falls silent",
@@ -859,16 +861,18 @@
       "unlocks the <b>Dredge the Nightmares</b> focus",
       "unlocks <b>The Night Kiln</b>",
       "every Sworn unit becomes its nightmare, <b>×2.5</b>",
-      "the Journal gains an entry"
+      "the Journal gains an entry",
+      "the other choice is gone for good"
     ],
     "rev.shut.name": "Some Doors Stay Shut",
-    "rev.shut.kind": "the nightmares sleep",
+    "rev.shut.kind": "a choice · the nightmares sleep",
     "rev.shut.text": "I have spent my whole life pushing fear somewhere else. I will not do it to them. These stay with me, and stay asleep.",
     "rev.shut.fx": [
       "Sworn units <b>+25%</b> strength",
       "<b>Rally</b> gives <b>+100%</b>",
       "unlocks the <b>Let It Go</b> focus",
-      "the Journal gains an entry"
+      "the Journal gains an entry",
+      "the other choice is gone for good"
     ],
     "vision.door.name": "The Door Left Ajar",
     "vision.door.text": "A bedroom, a door open a hand's width, a voice down the hall saying there is nobody there. You watch the boy decide to believe it. You watch what he decided not to feel slip out through the gap.",
@@ -1755,6 +1759,22 @@
     "ui.built.depths.caps": "DEPTHS",
     "ui.built.compact_1": "Compact 1",
     "ui.built.compact_2": "Compact 2",
-    "ui.built.small_text": "Small text"
+    "ui.built.small_text": "Small text",
+    "ach.group.palace": "Mind Palace",
+    "ach.most1.name": "As Far As It Goes",
+    "ach.most1.hint": "Build one kind of construct as far as it will go.",
+    "ach.most1.req": "Built one kind of construct to its limit.",
+    "ach.most3.name": "Settled",
+    "ach.most3.hint": "Build three kinds of construct as far as they will go.",
+    "ach.most3.req": "Built three kinds of construct to their limits.",
+    "ach.most6.name": "Every Room Spoken For",
+    "ach.most6.hint": "Build six kinds of construct as far as they will go.",
+    "ach.most6.req": "Built six kinds of construct to their limits.",
+    "ach.most10.name": "The Grounds Are Full",
+    "ach.most10.hint": "Build ten kinds of construct as far as they will go.",
+    "ach.most10.req": "Built ten kinds of construct to their limits.",
+    "ach.mostall.name": "Nothing More Will Fit",
+    "ach.mostall.hint": "Build everything the Mind Palace can hold.",
+    "ach.mostall.req": "Built every construct to its limit."
   }
 }

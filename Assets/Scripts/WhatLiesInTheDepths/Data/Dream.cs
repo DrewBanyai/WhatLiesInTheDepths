@@ -278,7 +278,8 @@ namespace WhatLiesInTheDepths.Data
         ///   or any id a rule or a grant sets —
         /// or a count compared with >= :
         ///   done:&lt;focus&gt;>=n · owned:&lt;construct&gt;>=n · fathoms>=n (all time) ·
-        ///   held:&lt;res&gt;>=n · sunk>=n (the current veil) · won>=n (places taken).
+        ///   held:&lt;res&gt;>=n · sunk>=n (the current veil) · won>=n (places taken) ·
+        ///   maxed>=n (kinds of construct at their limit) · maxedall>=1 (every one at it).
         /// Battles set won:&lt;place&gt;, lost:&lt;place&gt; and lost:any; upgrades set
         /// upgrade:&lt;id&gt;; a withdrawn Realization sets withdrawn:&lt;k&gt;.
         /// </summary>
@@ -313,6 +314,25 @@ namespace WhatLiesInTheDepths.Data
                 case "won": return road.Count(l => l.won);
                 case "vdone": { var v = FindVision(id); return v != null ? v.done : 0; }
                 case "parted": return veilIndex + (AtBottom ? 1 : 0);
+                // Kinds of construct built to their limit (one-of-a-kind builds not counted).
+                case "maxed": return constructs.Count(c => c.AtLimit);
+                // 1 when every construct this path can ever have is built to its limit — a
+                // one-of-a-kind one simply built. One whose Revelation was withdrawn by the
+                // choice (The Night Kiln, on the path that keeps the nightmares asleep) is not
+                // asked for; nor is one with no known limit.
+                case "maxedall":
+                {
+                    bool any = false;
+                    foreach (var c in constructs)
+                    {
+                        if (!c.once && c.most <= 0) continue;
+                        if (c.requires != null && c.requires.Any(r => r.StartsWith("rev:")
+                                && unlocks.Has("withdrawn:" + r.Substring(4)))) continue;
+                        any = true;
+                        if (c.once ? c.owned < 1 : !c.AtLimit) return 0;
+                    }
+                    return any ? 1 : 0;
+                }
             }
             Debug.LogWarning($"[What Lies In The Depths] Unknown count '{what}'.");
             return 0;
@@ -402,6 +422,24 @@ namespace WhatLiesInTheDepths.Data
             unlocks.AddRange(place.grants);
             Dirty();
         }
+
+#if UNITY_EDITOR
+        /// <summary>The debugger's undo of <see cref="TakePlace"/>: the place is untaken, the war
+        /// dearer again by its discount, and won:&lt;k&gt; and its grants are withdrawn (a grant
+        /// another taken place also gives stays). A unit it handed over stays on the roster.</summary>
+        public void GiveBack(RoadLocation place)
+        {
+            if (place == null || !place.won) return;
+            place.won = false;
+            place.tookWith = 0;
+            if (place.costScale > 0 && place.costScale != 1.0) musterCostScale /= place.costScale;
+            unlocks.EditorRemove("won:" + place.k);
+            if (place.grants != null)
+                foreach (var g in place.grants)
+                    if (!road.Any(l => l.won && l.grants != null && l.grants.Contains(g))) unlocks.EditorRemove(g);
+            Dirty();
+        }
+#endif
 
         /// <summary>Driven back. The losses are the view's to take; this records that it happened,
         /// so a Realization can wait on a first defeat.</summary>

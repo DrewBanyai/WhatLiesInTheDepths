@@ -144,26 +144,42 @@ namespace WhatLiesInTheDepths.Data
             c.landmark = true; c.kindLabel = T("construct.altar.kind"); c.line = T("construct.altar.line");
             c.grants = L("col:gauge");
             c = Build(s, "hut", ConstructKind.Dwellings, C("reverie", 10, "echo", 5), 1, null, L("rev:listening"), 736, 206);
+            c.most = 28;
             c = Build(s, "cistern", ConstructKind.Reservoirs, C("silt", 12), 0, Fx_(E(Fx.Cap, "silt", 20), E(Fx.Cap, "reverie", 5), E(Fx.Cap, "echo", 3)), L("rev:room"), 212, 716);
+            c.most = 317;
             c.growth = 1.02;
             c = Build(s, "spindle", ConstructKind.Works, C("reverie", 12, "silt", 10), 0, Fx_(E(Fx.Rate, "reverie", 0.2)), L("rev:hums"), 132, 148);
+            c.most = 39;
             c = Build(s, "moonwell", ConstructKind.Reservoirs, C("reverie", 20, "silt", 10), 0, Fx_(E(Fx.Cap, "reverie", 25), E(Fx.Rate, "reverie", 0.1), E(Fx.Cap, "lucidity", 3)), L("rev:stillkeeps"), 138, 566);
+            c.most = 35;
             c = Build(s, "winch", ConstructKind.Works, C("moonsilver", 15, "silt", 12), 0, Fx_(E(Fx.Rate, "moonsilver", 0.15), E(Fx.Cap, "moonsilver", 20)), L("rev:seam"), 296, 236);
+            c.most = 26;
             c = Build(s, "press", ConstructKind.Works, C("silt", 12, "ember", 8), 0, Fx_(E(Fx.Rate, "tallow", 0.15), E(Fx.Cap, "tallow", 15), E(Fx.Cap, "ember", 5)), L("rev:fat"), 286, 96);
+            c.most = 26;
             c = Build(s, "lamprow", ConstructKind.Works, C("tallow", 15, "moonsilver", 10), 0, Fx_(E(Fx.DiveCost, null, 0.04), E(Fx.Rate, "tallow", 0.05)), L("rev:lamps"), 118, 330);
+            c.most = 24;
             c = Build(s, "longhouse", ConstructKind.Dwellings, C("moonsilver", 40, "salt", 20, "echo", 30), 6, null, L("rev:tidefolk"), 700, 82);
+            c.most = 19;
             c = Build(s, "reliquary", ConstructKind.Reservoirs, C("echo", 30, "moonsilver", 20), 0, Fx_(E(Fx.Cap, "echo", 40), E(Fx.Cap, "nacre", 20)), L("rev:somewhere"), 376, 766);
+            c.most = 24;
             c = Build(s, "scriptorium", ConstructKind.Works, C("hush", 20, "moonsilver", 25), 0, Fx_(E(Fx.Rate, "vellum", 0.05), E(Fx.Cap, "vellum", 20)), L("rev:written"), 236, 396);
+            c.most = 8;
             c = Build(s, "saltpans", ConstructKind.Works, C("silt", 25, "hush", 15), 0, Fx_(E(Fx.Rate, "salt", 0.15), E(Fx.Cap, "salt", 30)), L("rev:letsea"), 56, 244);
+            c.most = 10;
             c = Build(s, "nightlight", ConstructKind.Wards, C("tallow", 60, "ember", 30, "moonsilver", 40), 0, Fx_(E(Fx.Rate, "dread", -0.5), E(Fx.Cap, "ward", 10)), L("vision:vigil"), 560, 600);
             c.once = true;
             c = Build(s, "rampart", ConstructKind.Wards, C("moonsilver", 40, "salt", 25), 0, Fx_(E(Fx.Rate, "dread", -0.1), E(Fx.Cap, "ward", 8)), L("rev:holds"), 750, 576);
+            c.most = 19;
             c = Build(s, "chorusstone", ConstructKind.Wards, C("echo", 50, "salt", 40), 0, Fx_(E(Fx.Cap, "ward", 12), E(Fx.Cap, "chorus", 20)), L("rev:manyvoices"), 636, 734);
+            c.most = 16;
             c = Build(s, "belltower", ConstructKind.Works, C("moonsilver", 60, "chorus", 20), 0, Fx_(E(Fx.Rate, "chorus", 0.1)), L("won:bell"), 404, 76);
+            c.most = 16;
             c = Build(s, "forge", ConstructKind.Works, C("moonsilver", 150, "ember", 60, "chorus", 40, "vellum", 30), 0, Fx_(E(Fx.Cap, "mettle", 100)), L("rev:made"), 340, 300);
             c.once = true;
             c = Build(s, "hallmany", ConstructKind.Dwellings, C("moonsilver", 120, "chorus", 60, "salt", 60), 12, Fx_(E(Fx.Speed, "*", 0.03)), L("rev:everypeople"), 560, 250);
+            c.most = 12;
             c = Build(s, "hallstrengths", ConstructKind.Works, C("mettle", 20, "vellum", 20), 0, Fx_(E(Fx.Power, "Sworn", 0.05), E(Fx.Cap, "mettle", 15)), L("rev:goodat"), 60, 420);
+            c.most = 22;
             c = Build(s, "beacon", ConstructKind.Wards, C("tallow", 200, "ember", 100, "mettle", 40), 0, Fx_(E(Fx.Enemy, null, 0.3)), L("parted>=90"), 800, 700);
             c.once = true;
             c = Build(s, "kiln", ConstructKind.Works, C("mettle", 60, "ember", 60), 0, Fx_(E(Fx.Rate, "umbra", 1), E(Fx.Rate, "dread", 0.3), E(Fx.Exodus, null, 1)), L("rev:fear"), 170, 250);
@@ -533,6 +549,11 @@ namespace WhatLiesInTheDepths.Data
             Ach(s, "bottom", "story", "drift", L("parted>=100"));
             Ach(s, "good", "story", "drift", L("won:nobody", "ending:good"));
             Ach(s, "bad", "story", "drift", L("won:nobody", "ending:bad"));
+            Ach(s, "most1", "palace", "palace", L("maxed>=1"));
+            Ach(s, "most3", "palace", "palace", L("maxed>=3"));
+            Ach(s, "most6", "palace", "palace", L("maxed>=6"));
+            Ach(s, "most10", "palace", "palace", L("maxed>=10"));
+            Ach(s, "mostall", "palace", "palace", L("maxedall>=1"));
         }
     }
 }
